@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ProEduHut — ServiceNow Interview Q&A</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#ffffff;
+  --surface:#f7f5ff;
+  --surface2:#ede9ff;
+  --border:#e0d9f7;
+  --border2:#c9bff0;
+  --text:#1a0a3c;
+  --muted:#7a6fa0;
+  --purple:#6b21e8;
+  --purple-dark:#4c0fbf;
+  --purple-light:#ede9ff;
+  --orange:#ff6b00;
+  --orange-light:#fff3eb;
+  --white:#ffffff;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;line-height:1.6}
+
+/* HEADER */
+.header{padding:0 32px;height:58px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;background:var(--purple);box-shadow:0 2px 16px rgba(107,33,232,0.13)}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-icon{width:34px;height:34px;background:var(--white);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:18px;color:var(--purple);font-weight:700}
+.logo-text{font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;color:var(--white);letter-spacing:-0.01em}
+.logo-text span{color:var(--orange);font-weight:700}
+.header-right{display:flex;align-items:center;gap:10px}
+.header-badge{font-size:12px;color:rgba(255,255,255,0.7);padding:4px 12px;border:1px solid rgba(255,255,255,0.25);border-radius:20px;background:rgba(255,255,255,0.08)}
+
+/* LAYOUT */
+.layout{display:flex;height:calc(100vh - 58px)}
+
+/* SIDEBAR */
+.sidebar{width:256px;min-width:256px;border-right:1.5px solid var(--border);overflow-y:auto;background:var(--white);display:flex;flex-direction:column}
+.sidebar-top{padding:18px 16px 12px;border-bottom:1px solid var(--border)}
+.sidebar-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:12px}
+.search-box{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.15s}
+.search-box::placeholder{color:var(--muted)}
+.search-box:focus{border-color:var(--purple)}
+.topic-nav{flex:1;padding:10px 0}
+.topic-btn{width:100%;padding:10px 16px;background:none;border:none;text-align:left;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:space-between;transition:all 0.15s;border-left:3px solid transparent}
+.topic-btn:hover{background:var(--surface);color:var(--purple)}
+.topic-btn.active{background:var(--purple-light);color:var(--purple);border-left-color:var(--purple);font-weight:500}
+.topic-btn .tc{font-size:11px;background:var(--surface2);padding:2px 8px;border-radius:10px;color:var(--muted);font-weight:500}
+.topic-btn.active .tc{background:rgba(107,33,232,0.15);color:var(--purple)}
+.add-topic-wrap{padding:12px 14px;border-top:1px solid var(--border)}
+.add-topic-btn{width:100%;padding:9px 14px;background:none;border:1.5px dashed var(--border2);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
+.add-topic-btn:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-light)}
+
+/* MAIN */
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
+.main-header{padding:20px 32px 16px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--white)}
+.main-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text)}
+.main-title span{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);font-weight:400;margin-left:8px}
+.add-q-btn{padding:9px 20px;background:var(--orange);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;box-shadow:0 2px 8px rgba(255,107,0,0.25)}
+.add-q-btn:hover{background:#e05e00;box-shadow:0 4px 16px rgba(255,107,0,0.3)}
+
+/* QUESTIONS */
+.q-list{padding:0 32px 40px;flex:1;background:var(--bg)}
+.q-item{border-bottom:1px solid var(--border);overflow:hidden}
+.q-item:last-child{border-bottom:none}
+.q-header{padding:18px 0;display:flex;align-items:flex-start;gap:14px;cursor:pointer;transition:all 0.15s}
+.q-header:hover .q-text{color:var(--purple)}
+.q-num{font-size:12px;font-weight:700;color:var(--orange);min-width:28px;padding-top:2px;font-family:'DM Sans',sans-serif}
+.q-text{font-size:15px;font-weight:500;flex:1;color:var(--text);line-height:1.45}
+.q-arrow{font-size:16px;color:var(--muted);transition:transform 0.25s;padding-top:3px}
+.q-item.open .q-arrow{transform:rotate(180deg);color:var(--purple)}
+.q-item.open .q-num{color:var(--purple)}
+.q-answer{max-height:0;overflow:hidden;transition:max-height 0.3s ease}
+.q-item.open .q-answer{max-height:2000px}
+.q-answer-inner{padding:0 0 20px 42px}
+.q-answer-inner p{font-size:14px;color:#4a3d6b;line-height:1.8;margin-bottom:8px}
+.q-answer-inner p:last-of-type{margin-bottom:12px}
+.q-actions{display:flex;gap:8px;margin-top:6px}
+.q-act{padding:5px 14px;background:none;border:1.5px solid var(--border2);border-radius:6px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
+.q-act:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-light)}
+.q-act.del:hover{border-color:#e24b4a;color:#e24b4a;background:#fff0f0}
+
+/* TOPIC BADGE in search */
+.t-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;background:var(--orange-light);color:var(--orange);border:1px solid rgba(255,107,0,0.2);margin-bottom:4px}
+
+/* HIGHLIGHT */
+mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;color:inherit;font-style:normal}
+
+/* EMPTY */
+.empty{padding:60px 32px;text-align:center}
+.empty-icon{font-size:40px;margin-bottom:14px;opacity:0.35}
+.empty p{color:var(--muted);font-size:14px}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(26,10,60,0.5);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-bg.open{display:flex}
+.modal{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:28px;width:540px;max-width:calc(100vw - 40px);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(107,33,232,0.15)}
+.modal h3{font-family:'DM Serif Display',serif;font-size:21px;margin-bottom:20px;color:var(--text)}
+.modal label{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;font-weight:600}
+.modal input,.modal textarea,.modal select{width:100%;padding:10px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);margin-bottom:16px;outline:none;transition:border-color 0.15s}
+.modal input:focus,.modal textarea:focus,.modal select:focus{border-color:var(--purple)}
+.modal textarea{min-height:130px;resize:vertical;line-height:1.6}
+.modal select{cursor:pointer}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:4px}
+.btn-primary{padding:10px 24px;background:var(--purple);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;box-shadow:0 2px 10px rgba(107,33,232,0.25)}
+.btn-primary:hover{background:var(--purple-dark)}
+.btn-cancel{padding:10px 18px;background:none;border:1.5px solid var(--border2);border-radius:8px;font-size:14px;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.btn-cancel:hover{border-color:var(--purple);color:var(--purple)}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+@media(max-width:640px){
+  .sidebar{width:190px;min-width:190px}
+  .main-header{padding:14px 16px}
+  .q-list{padding:0 16px 40px}
+  .q-answer-inner{padding:0 0 14px 30px}
+  .header{padding:0 16px}
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="logo">
+    <div class="logo-text">Pro<span>Edu</span>Hut</div>
+  </div>
+  <div class="header-right">
+    <span class="header-badge" id="headerCount"></span>
+  </div>
+</div>
+
+<div class="layout">
+  <div class="sidebar">
+    <div class="sidebar-top">
+      <div class="sidebar-label">Topics</div>
+      <input class="search-box" type="text" placeholder="Search questions..." id="searchBox" oninput="doSearch()">
+    </div>
+    <div class="topic-nav" id="topicNav"></div>
+    <div class="add-topic-wrap">
+      <button class="add-topic-btn" onclick="openAddTopic()">+ Add new topic</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <div class="main-header">
+      <div class="main-title" id="mainTitle">Select a topic <span id="mainCount"></span></div>
+      <button class="add-q-btn" onclick="openAddQ()">+ Add Question</button>
+    </div>
+    <div class="q-list" id="qList"></div>
+  </div>
+</div>
+
+<div class="modal-bg" id="modalBg">
+  <div class="modal" id="modalBox"></div>
+</div>
+
+<script>
+const DATA = {
+  topics: [
+    {
+      id: "client-scripts",
+      name: "Client Scripts",
+      questions: [
+        {
+          q: "What are the different ways to access server-side data in a Client Script?",
+          a: "There are several ways:\n\n1. getReference() method — retrieves reference field data asynchronously from the server.\n\n2. GlideAjax — calls Script Includes from a Client Script, sending data to the server and retrieving results asynchronously.\n\n3. Display Business Rule — executes server-side logic and returns data to the client-side when a form is loaded."
+        },
+        {
+          q: "What is the order of execution between UI Policies and Client Scripts?",
+          a: "UI Policies execute after Client Scripts. If both are triggered by the same action, the Client Script runs first, followed by the UI Policy."
+        },
+        {
+          q: "What are the different ways to make a field mandatory?",
+          a: "1. Client Script — dynamically set a field as mandatory based on conditions.\n\n2. UI Policy — make fields mandatory based on form interactions.\n\n3. Data Policy — enforces field rules at both client and server levels.\n\n4. Field Dictionary Level — set a field as mandatory at the dictionary/schema level."
+        }
+      ]
+    },
+    {
+      id: "integration",
+      name: "Integration",
+      questions: [
+        { q: "What is ServiceNow Integration?", a: "A ServiceNow integration is an information exchange between the ServiceNow Platform and another system or source." },
+        { q: "What is inbound integration in ServiceNow?", a: "Inbound integration is making a call from a third-party application to ServiceNow's REST API to get information from ServiceNow, or to create/update records.\n\nExample: OEM to ServiceNow." },
+        { q: "What is outbound integration in ServiceNow?", a: "Outbound integration is making calls from ServiceNow to other applications APIs to get information or create/update records.\n\nExample: ServiceNow instance to ServiceNow instance." },
+        { q: "What is a MID Server?", a: "A Management, Instrumentation and Discovery (MID) Server is a Java application that runs on a server on your local network. It facilitates communication and data movement between a single ServiceNow instance and external applications, data sources, and services.\n\nA MID Server sits inside the firewall, collects information from infrastructure CIs, then sends that info to the ServiceNow instance in the cloud." },
+        { q: "Types of HTTP methods?", a: "GET — retrieves information.\nPOST — creates new records.\nPUT — updates if record exists, otherwise creates it.\nPATCH — updates an existing record.\nDELETE — deletes a record." },
+        { q: "What is the difference between PUT, POST and PATCH?", a: "POST is used only to create records. PATCH is used only to update an existing record. PUT is a combination: if the record exists it updates it, otherwise it creates a new one." },
+        { q: "What is OAuth?", a: "OAuth is an open standard for token-based authentication. It allows users to access instance resources by obtaining a token rather than entering login credentials with each request." },
+        { q: "What is the Table API and Import Set API?", a: "Table API — allows CRUD (create, read, update, delete) operations on existing tables.\n\nImport Set API — allows interaction with import set tables, used for bulk data loading and transformation." },
+        { q: "What is the ServiceNow REST API Explorer?", a: "An application to construct and test API requests to a ServiceNow instance. Available to users with the rest_api_explorer or admin role." },
+        { q: "What is a Scripted REST API?", a: "Scripted REST APIs allow application developers to build custom web service APIs. You can define service endpoints, query parameters, and headers, as well as scripts to manage the request and response.\n\nUsed for inbound integrations when OOB Table APIs are not sufficient and custom business logic is required." },
+        { q: "What is the difference between SOAP and REST?", a: "SOAP = Simple Object Access Protocol. REST = Representational State Transfer.\n\nREST uses SSL/HTTPS for security. SOAP uses SSL + WS-Security (preferred for banking/financial data).\n\nSOAP supports XML only. REST supports JSON, XML, and others.\n\nSOAP requires more bandwidth. REST requires less.\n\n✅ Normal integrations, web/mobile apps → REST preferred\n✅ Banking, financial transactions, sensitive data → SOAP preferred" },
+        { q: "What is a Retry Mechanism?", a: "Retry mechanism handles REST call failures by automatically retrying the request.\n\nIn our project, we implemented it using ServiceNow OOB HTTP Retry Policy — configured to retry 3 times with a 30-second interval before failing." },
+        { q: "How do you integrate ServiceNow with any other tool? (Prerequisites)", a: "1. Understand the business requirement and identify fields to be sent to the target system.\n2. Prepare an API Specification Document (endpoint, auth method, request payload, response format, field mappings).\n3. Share the spec with the external team and finalise the integration design.\n4. Obtain authentication details (Client ID, Client Secret, or Username/Password).\n5. Create and configure a Connection & Credential Alias in ServiceNow.\n6. Create the integration using Flow Designer REST Step or REST Message.\n7. Configure endpoint URL, HTTP method, headers, authentication, and request body.\n8. Map ServiceNow fields to target system fields.\n9. Test the API call and validate request/response.\n10. Perform end-to-end testing." },
+        { q: "Why Connection & Credential Alias?", a: "Connection & Credential Alias is used to securely store authentication details (Client ID, Client Secret, Username, Password) so that credentials are not hardcoded in the integration." },
+        { q: "How do you test integrations in ServiceNow?", a: "You can test integrations using:\n1. ServiceNow REST API Explorer (built-in tool).\n2. Third-party tools like Postman." },
+        { q: "How do you set up OAuth 2.0 authentication?", a: "Set up OAuth 2.0 by creating a new record in Application Registry of the source application with the Client ID and Client Secret." },
+        { q: "What is error 500?", a: "Internal Server Error — an unexpected error occurred while processing the request. The response contains additional information about the error." },
+        { q: "What are the REST API authentication methods in ServiceNow?", a: "ServiceNow REST APIs support:\n1. Basic Authentication\n2. Mutual Authentication\n3. OAuth" },
+        { q: "What steps do you follow for OAuth Integration?", a: "1. Create Application Registry records.\n2. Create Credentials.\n3. Create Connection.\n4. Create Connection & Credential Alias.\n5. Test the connection." },
+        { q: "What roles are required for Inbound and Outbound REST integration?", a: "Inbound — For OEM Event Management integration, we used evt_mgmt_integration_user role (OEM sends events to the JSONv2 Event Management API).\n\nOutbound — For ServiceNow-to-ServiceNow integration, rest_service and itil roles, along with Web Service Access Only, to allow API access and record creation/update." },
+        { q: "What is the difference between 200 and 201 status codes?", a: "200 — Request was successful.\n201 — Request was successful and a new record was created." },
+        { q: "What is E-Bonding?", a: "Integration between one ServiceNow instance and another ServiceNow instance." },
+        { q: "How do you handle errors in REST API?", a: "Handle errors based on the response status code. Errors return codes in the 400 series:\n\n401 — Basic authorization error.\n402 — Incorrect user details.\n404 — The URL does not exist, or the resource you are trying to access does not exist.\n500 — Internal Server Error." },
+        { q: "What are the drawbacks of the Table API?", a: "The Table API provides direct access to the table. If not properly controlled, external systems can accidentally create, update, or delete records.\n\nScripted REST API gives more control over what operations are allowed.\n\nIn our project, we used the ServiceNow Event Management JSONv2 API endpoint (/api/global/em/jsonv2) instead of Table API or a custom Scripted REST API." },
+        { q: "What is an ACL?", a: "An Access Control List (ACL) is a security rule defined to restrict the permissions of a user from viewing and interacting with data." },
+        { q: "What is a Script Include?", a: "A Script Include is a reusable server-side script that contains methods or functions which can be called from other server-side scripts such as Business Rules, other Script Includes, or GlideAjax calls from Client Scripts. They promote code reuse and keep logic modular." }
+      ]
+    }
+  ]
+};
+
+let activeTopicId = DATA.topics[0].id;
+let editingQ = null;
+let searchMode = false;
+let currentQs = [];
+
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+function renderTopics() {
+  const nav = document.getElementById('topicNav');
+  nav.innerHTML = DATA.topics.map(t => `
+    <button class="topic-btn${t.id===activeTopicId&&!searchMode?' active':''}" onclick="selectTopic('${t.id}')">
+      <span>${esc(t.name)}</span>
+      <span class="tc">${t.questions.length}</span>
+    </button>
+  `).join('');
+  const total = DATA.topics.reduce((s,t)=>s+t.questions.length,0);
+  document.getElementById('headerCount').textContent = `${DATA.topics.length} topics · ${total} Q&As`;
+}
+
+function selectTopic(id) {
+  activeTopicId = id;
+  searchMode = false;
+  document.getElementById('searchBox').value = '';
+  renderTopics();
+  renderQuestions();
+}
+
+function renderQuestions(qs, highlight) {
+  const topic = DATA.topics.find(t => t.id === activeTopicId);
+  if (!topic && !searchMode) return;
+  currentQs = qs || topic.questions;
+  const title = searchMode ? 'Search Results' : topic.name;
+  const count = currentQs.length;
+  document.getElementById('mainTitle').innerHTML = `${esc(title)} <span>${count} question${count!==1?'s':''}</span>`;
+
+  const list = document.getElementById('qList');
+  if (!currentQs.length) {
+    list.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p>No questions found.</p></div>';
+    return;
+  }
+
+  list.innerHTML = currentQs.map((qa, i) => {
+    let qText = esc(qa.q);
+    if (highlight) {
+      const re = new RegExp(`(${highlight.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi');
+      qText = qText.replace(re, '<mark class="highlight">$1</mark>');
+    }
+    const ansHtml = qa.a.split('\n').filter(l=>l.trim()).map(l=>`<p>${esc(l)}</p>`).join('');
+    const topicName = searchMode ? DATA.topics.find(t=>t.questions.includes(qa))?.name : null;
+    const badge = topicName ? `<span class="t-badge">${esc(topicName)}</span><br>` : '';
+    return `
+      <div class="q-item" id="qi-${i}">
+        <div class="q-header" onclick="toggleQ(${i})">
+          <span class="q-num">${i+1}.</span>
+          <span class="q-text">${badge}${qText}</span>
+          <span class="q-arrow">▾</span>
+        </div>
+        <div class="q-answer">
+          <div class="q-answer-inner">
+            ${ansHtml}
+            <div class="q-actions">
+              <button class="q-act" onclick="openEditQ(${i});event.stopPropagation()">Edit</button>
+              <button class="q-act del" onclick="deleteQ(${i});event.stopPropagation()">Delete</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleQ(i) {
+  const el = document.getElementById(`qi-${i}`);
+  const isOpen = el.classList.contains('open');
+  document.querySelectorAll('.q-item.open').forEach(x=>x.classList.remove('open'));
+  if (!isOpen) el.classList.add('open');
+}
+
+function doSearch() {
+  const raw = document.getElementById('searchBox').value;
+  const q = raw.trim().toLowerCase();
+  if (!q) { searchMode = false; renderTopics(); renderQuestions(); return; }
+  searchMode = true;
+  const all = [];
+  DATA.topics.forEach(t => t.questions.forEach(qa => {
+    if (qa.q.toLowerCase().includes(q) || qa.a.toLowerCase().includes(q)) all.push(qa);
+  }));
+  renderTopics();
+  renderQuestions(all, raw.trim());
+}
+
+function openModal(html) {
+  document.getElementById('modalBox').innerHTML = html;
+  document.getElementById('modalBg').classList.add('open');
+}
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); editingQ = null; }
+
+function openAddTopic() {
+  openModal(`
+    <h3>Add New Topic</h3>
+    <label>Topic Name</label>
+    <input type="text" id="mInput" placeholder="e.g. Business Rules, Flow Designer...">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveTopic()">Add Topic</button>
+    </div>
+  `);
+  setTimeout(()=>{ const el=document.getElementById('mInput'); if(el)el.focus(); },60);
+}
+
+function saveTopic() {
+  const name = document.getElementById('mInput').value.trim();
+  if (!name) return;
+  const id = 'topic-' + Date.now();
+  DATA.topics.push({ id, name, questions: [] });
+  closeModal();
+  activeTopicId = id;
+  searchMode = false;
+  renderTopics();
+  renderQuestions();
+}
+
+function openAddQ() {
+  const topicSelect = DATA.topics.map(t=>`<option value="${t.id}"${t.id===activeTopicId?' selected':''}>${esc(t.name)}</option>`).join('');
+  openModal(`
+    <h3>Add Question</h3>
+    <label>Topic</label>
+    <select id="mTopic">${topicSelect}</select>
+    <label>Question</label>
+    <input type="text" id="mQ" placeholder="Type the interview question...">
+    <label>Answer</label>
+    <textarea id="mA" placeholder="Type the answer here...&#10;&#10;Use blank lines to separate points or paragraphs."></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveQ()">Add Question</button>
+    </div>
+  `);
+  setTimeout(()=>{ const el=document.getElementById('mQ'); if(el)el.focus(); },60);
+}
+
+function openEditQ(i) {
+  editingQ = i;
+  const qa = currentQs[i];
+  openModal(`
+    <h3>Edit Question</h3>
+    <label>Question</label>
+    <input type="text" id="mQ" value="${esc(qa.q)}">
+    <label>Answer</label>
+    <textarea id="mA">${esc(qa.a)}</textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveQ()">Save Changes</button>
+    </div>
+  `);
+  setTimeout(()=>{ const el=document.getElementById('mQ'); if(el)el.focus(); },60);
+}
+
+function saveQ() {
+  const q = document.getElementById('mQ').value.trim();
+  const a = document.getElementById('mA').value.trim();
+  if (!q || !a) return;
+  if (editingQ !== null) {
+    const qa = currentQs[editingQ];
+    qa.q = q; qa.a = a;
+  } else {
+    const topicId = document.getElementById('mTopic').value;
+    const topic = DATA.topics.find(t => t.id === topicId);
+    topic.questions.push({ q, a });
+    activeTopicId = topicId;
+  }
+  closeModal();
+  searchMode = false;
+  document.getElementById('searchBox').value = '';
+  renderTopics();
+  renderQuestions();
+}
+
+function deleteQ(i) {
+  if (!confirm('Delete this question?')) return;
+  const qa = currentQs[i];
+  DATA.topics.forEach(t => {
+    const idx = t.questions.indexOf(qa);
+    if (idx > -1) t.questions.splice(idx, 1);
+  });
+  renderTopics();
+  renderQuestions();
+}
+
+document.getElementById('modalBg').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
+document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+
+renderTopics();
+renderQuestions();
+</script>
+</body>
+</html>
