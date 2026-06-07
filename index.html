@@ -25,50 +25,59 @@
 html{scroll-behavior:smooth}
 body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;line-height:1.6}
 
-/* HEADER */
 .header{padding:0 32px;height:58px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;background:var(--purple);box-shadow:0 2px 16px rgba(107,33,232,0.13)}
-.logo{display:flex;align-items:center;gap:10px}
-.logo-icon{width:34px;height:34px;background:var(--white);border-radius:8px;display:flex;align-items:center;justify-content:center;font-family:'DM Serif Display',serif;font-size:18px;color:var(--purple);font-weight:700}
-.logo-text{font-family:'DM Sans',sans-serif;font-size:17px;font-weight:600;color:var(--white);letter-spacing:-0.01em}
-.logo-text span{color:var(--orange);font-weight:700}
+.logo-text{font-family:'DM Sans',sans-serif;font-size:19px;font-weight:700;color:#fff;letter-spacing:-0.01em}
+.logo-text span{color:var(--orange)}
 .header-right{display:flex;align-items:center;gap:10px}
-.header-badge{font-size:12px;color:rgba(255,255,255,0.7);padding:4px 12px;border:1px solid rgba(255,255,255,0.25);border-radius:20px;background:rgba(255,255,255,0.08)}
+.header-badge{font-size:12px;color:rgba(255,255,255,0.75);padding:4px 12px;border:1px solid rgba(255,255,255,0.25);border-radius:20px;background:rgba(255,255,255,0.08)}
+.admin-btn{padding:6px 14px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.3);border-radius:20px;font-size:12px;color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
+.admin-btn:hover{background:rgba(255,255,255,0.22)}
+.admin-badge{padding:5px 12px;background:var(--orange);border:none;border-radius:20px;font-size:12px;color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600}
 
-/* LAYOUT */
 .layout{display:flex;height:calc(100vh - 58px)}
 
-/* SIDEBAR */
-.sidebar{width:256px;min-width:256px;border-right:1.5px solid var(--border);overflow-y:auto;background:var(--white);display:flex;flex-direction:column}
+.sidebar{width:260px;min-width:260px;border-right:1.5px solid var(--border);overflow-y:auto;background:var(--white);display:flex;flex-direction:column}
 .sidebar-top{padding:18px 16px 12px;border-bottom:1px solid var(--border)}
 .sidebar-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:12px}
 .search-box{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.15s}
 .search-box::placeholder{color:var(--muted)}
 .search-box:focus{border-color:var(--purple)}
+
 .topic-nav{flex:1;padding:10px 0}
-.topic-btn{width:100%;padding:10px 16px;background:none;border:none;text-align:left;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);display:flex;align-items:center;justify-content:space-between;transition:all 0.15s;border-left:3px solid transparent}
+.topic-btn{width:100%;padding:10px 12px 10px 16px;background:none;border:none;text-align:left;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px;transition:all 0.15s;border-left:3px solid transparent}
 .topic-btn:hover{background:var(--surface);color:var(--purple)}
 .topic-btn.active{background:var(--purple-light);color:var(--purple);border-left-color:var(--purple);font-weight:500}
-.topic-btn .tc{font-size:11px;background:var(--surface2);padding:2px 8px;border-radius:10px;color:var(--muted);font-weight:500}
-.topic-btn.active .tc{background:rgba(107,33,232,0.15);color:var(--purple)}
-.add-topic-wrap{padding:12px 14px;border-top:1px solid var(--border)}
+.topic-num{font-size:11px;font-weight:700;color:var(--orange);min-width:18px}
+.topic-btn.active .topic-num{color:var(--purple)}
+.topic-name{flex:1}
+.topic-tc{font-size:11px;background:var(--surface2);padding:2px 7px;border-radius:10px;color:var(--muted);font-weight:500}
+.topic-btn.active .topic-tc{background:rgba(107,33,232,0.15);color:var(--purple)}
+.drag-handle{font-size:14px;color:var(--border2);cursor:grab;padding:2px 4px;display:none;line-height:1}
+.drag-handle:active{cursor:grabbing}
+
+/* show drag handle only in admin */
+.admin-mode .drag-handle{display:block}
+
+.topic-btn.dragging{opacity:0.4}
+.topic-btn.drag-over{border-top:2px solid var(--purple);background:var(--purple-light)}
+
+.add-topic-wrap{padding:12px 14px;border-top:1px solid var(--border);display:none}
 .add-topic-btn{width:100%;padding:9px 14px;background:none;border:1.5px dashed var(--border2);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
 .add-topic-btn:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-light)}
 
-/* MAIN */
 .main{flex:1;overflow-y:auto;display:flex;flex-direction:column}
 .main-header{padding:20px 32px 16px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--white)}
 .main-title{font-family:'DM Serif Display',serif;font-size:22px;color:var(--text)}
 .main-title span{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);font-weight:400;margin-left:8px}
-.add-q-btn{padding:9px 20px;background:var(--orange);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;box-shadow:0 2px 8px rgba(255,107,0,0.25)}
-.add-q-btn:hover{background:#e05e00;box-shadow:0 4px 16px rgba(255,107,0,0.3)}
+.add-q-btn{padding:9px 20px;background:var(--orange);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;box-shadow:0 2px 8px rgba(255,107,0,0.2);display:none}
+.add-q-btn:hover{background:#e05e00}
 
-/* QUESTIONS */
 .q-list{padding:0 32px 40px;flex:1;background:var(--bg)}
 .q-item{border-bottom:1px solid var(--border);overflow:hidden}
 .q-item:last-child{border-bottom:none}
-.q-header{padding:18px 0;display:flex;align-items:flex-start;gap:14px;cursor:pointer;transition:all 0.15s}
+.q-header{padding:18px 0;display:flex;align-items:flex-start;gap:14px;cursor:pointer}
 .q-header:hover .q-text{color:var(--purple)}
-.q-num{font-size:12px;font-weight:700;color:var(--orange);min-width:28px;padding-top:2px;font-family:'DM Sans',sans-serif}
+.q-num{font-size:12px;font-weight:700;color:var(--orange);min-width:28px;padding-top:2px}
 .q-text{font-size:15px;font-weight:500;flex:1;color:var(--text);line-height:1.45}
 .q-arrow{font-size:16px;color:var(--muted);transition:transform 0.25s;padding-top:3px}
 .q-item.open .q-arrow{transform:rotate(180deg);color:var(--purple)}
@@ -83,18 +92,13 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .q-act:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-light)}
 .q-act.del:hover{border-color:#e24b4a;color:#e24b4a;background:#fff0f0}
 
-/* TOPIC BADGE in search */
 .t-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;background:var(--orange-light);color:var(--orange);border:1px solid rgba(255,107,0,0.2);margin-bottom:4px}
+mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;color:inherit}
 
-/* HIGHLIGHT */
-mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;color:inherit;font-style:normal}
-
-/* EMPTY */
 .empty{padding:60px 32px;text-align:center}
 .empty-icon{font-size:40px;margin-bottom:14px;opacity:0.35}
 .empty p{color:var(--muted);font-size:14px}
 
-/* MODAL */
 .modal-bg{display:none;position:fixed;inset:0;background:rgba(26,10,60,0.5);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
 .modal-bg.open{display:flex}
 .modal{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:28px;width:540px;max-width:calc(100vw - 40px);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(107,33,232,0.15)}
@@ -103,35 +107,25 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
 .modal input,.modal textarea,.modal select{width:100%;padding:10px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);margin-bottom:16px;outline:none;transition:border-color 0.15s}
 .modal input:focus,.modal textarea:focus,.modal select:focus{border-color:var(--purple)}
 .modal textarea{min-height:130px;resize:vertical;line-height:1.6}
-.modal select{cursor:pointer}
 .modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:4px}
-.btn-primary{padding:10px 24px;background:var(--purple);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;box-shadow:0 2px 10px rgba(107,33,232,0.25)}
+.btn-primary{padding:10px 24px;background:var(--purple);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
 .btn-primary:hover{background:var(--purple-dark)}
-.btn-cancel{padding:10px 18px;background:none;border:1.5px solid var(--border2);border-radius:8px;font-size:14px;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.btn-cancel{padding:10px 18px;background:none;border:1.5px solid var(--border2);border-radius:8px;font-size:14px;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif}
 .btn-cancel:hover{border-color:var(--purple);color:var(--purple)}
+.error-msg{color:#e24b4a;font-size:13px;margin-top:-10px;margin-bottom:12px;display:none}
 
-/* SCROLLBAR */
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-
-@media(max-width:640px){
-  .sidebar{width:190px;min-width:190px}
-  .main-header{padding:14px 16px}
-  .q-list{padding:0 16px 40px}
-  .q-answer-inner{padding:0 0 14px 30px}
-  .header{padding:0 16px}
-}
 </style>
 </head>
 <body>
 
 <div class="header">
-  <div class="logo">
-    <div class="logo-text">Pro<span>Edu</span>Hut</div>
-  </div>
+  <div class="logo-text">Pro<span>Edu</span>Hut</div>
   <div class="header-right">
     <span class="header-badge" id="headerCount"></span>
+    <button class="admin-btn" id="adminToggleBtn" onclick="handleAdminClick()">🔒 Admin</button>
   </div>
 </div>
 
@@ -142,7 +136,7 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
       <input class="search-box" type="text" placeholder="Search questions..." id="searchBox" oninput="doSearch()">
     </div>
     <div class="topic-nav" id="topicNav"></div>
-    <div class="add-topic-wrap">
+    <div class="add-topic-wrap" id="addTopicWrap">
       <button class="add-topic-btn" onclick="openAddTopic()">+ Add new topic</button>
     </div>
   </div>
@@ -150,7 +144,7 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
   <div class="main">
     <div class="main-header">
       <div class="main-title" id="mainTitle">Select a topic <span id="mainCount"></span></div>
-      <button class="add-q-btn" onclick="openAddQ()">+ Add Question</button>
+      <button class="add-q-btn" id="addQBtn" onclick="openAddQ()">+ Add Question</button>
     </div>
     <div class="q-list" id="qList"></div>
   </div>
@@ -161,24 +155,18 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
 </div>
 
 <script>
-const DATA = {
+const ADMIN_PASS = 'PArjun@2022';
+const STORAGE_KEY = 'proeduhut_data_v2';
+
+const DEFAULT_DATA = {
   topics: [
     {
       id: "client-scripts",
       name: "Client Scripts",
       questions: [
-        {
-          q: "What are the different ways to access server-side data in a Client Script?",
-          a: "There are several ways:\n\n1. getReference() method — retrieves reference field data asynchronously from the server.\n\n2. GlideAjax — calls Script Includes from a Client Script, sending data to the server and retrieving results asynchronously.\n\n3. Display Business Rule — executes server-side logic and returns data to the client-side when a form is loaded."
-        },
-        {
-          q: "What is the order of execution between UI Policies and Client Scripts?",
-          a: "UI Policies execute after Client Scripts. If both are triggered by the same action, the Client Script runs first, followed by the UI Policy."
-        },
-        {
-          q: "What are the different ways to make a field mandatory?",
-          a: "1. Client Script — dynamically set a field as mandatory based on conditions.\n\n2. UI Policy — make fields mandatory based on form interactions.\n\n3. Data Policy — enforces field rules at both client and server levels.\n\n4. Field Dictionary Level — set a field as mandatory at the dictionary/schema level."
-        }
+        { q: "What are the different ways to access server-side data in a Client Script?", a: "There are several ways:\n\n1. getReference() method — retrieves reference field data asynchronously from the server.\n\n2. GlideAjax — calls Script Includes from a Client Script, sending data to the server and retrieving results asynchronously.\n\n3. Display Business Rule — executes server-side logic and returns data to the client-side when a form is loaded." },
+        { q: "What is the order of execution between UI Policies and Client Scripts?", a: "UI Policies execute after Client Scripts. If both are triggered by the same action, the Client Script runs first, followed by the UI Policy." },
+        { q: "What are the different ways to make a field mandatory?", a: "1. Client Script — dynamically set a field as mandatory based on conditions.\n\n2. UI Policy — make fields mandatory based on form interactions.\n\n3. Data Policy — enforces field rules at both client and server levels.\n\n4. Field Dictionary Level — set a field as mandatory at the dictionary/schema level." }
       ]
     },
     {
@@ -204,31 +192,96 @@ const DATA = {
         { q: "What is error 500?", a: "Internal Server Error — an unexpected error occurred while processing the request. The response contains additional information about the error." },
         { q: "What are the REST API authentication methods in ServiceNow?", a: "ServiceNow REST APIs support:\n1. Basic Authentication\n2. Mutual Authentication\n3. OAuth" },
         { q: "What steps do you follow for OAuth Integration?", a: "1. Create Application Registry records.\n2. Create Credentials.\n3. Create Connection.\n4. Create Connection & Credential Alias.\n5. Test the connection." },
-        { q: "What roles are required for Inbound and Outbound REST integration?", a: "Inbound — For OEM Event Management integration, we used evt_mgmt_integration_user role (OEM sends events to the JSONv2 Event Management API).\n\nOutbound — For ServiceNow-to-ServiceNow integration, rest_service and itil roles, along with Web Service Access Only, to allow API access and record creation/update." },
+        { q: "What roles are required for Inbound and Outbound REST integration?", a: "Inbound — For OEM Event Management integration, we used evt_mgmt_integration_user role.\n\nOutbound — For ServiceNow-to-ServiceNow integration, rest_service and itil roles, along with Web Service Access Only." },
         { q: "What is the difference between 200 and 201 status codes?", a: "200 — Request was successful.\n201 — Request was successful and a new record was created." },
         { q: "What is E-Bonding?", a: "Integration between one ServiceNow instance and another ServiceNow instance." },
-        { q: "How do you handle errors in REST API?", a: "Handle errors based on the response status code. Errors return codes in the 400 series:\n\n401 — Basic authorization error.\n402 — Incorrect user details.\n404 — The URL does not exist, or the resource you are trying to access does not exist.\n500 — Internal Server Error." },
-        { q: "What are the drawbacks of the Table API?", a: "The Table API provides direct access to the table. If not properly controlled, external systems can accidentally create, update, or delete records.\n\nScripted REST API gives more control over what operations are allowed.\n\nIn our project, we used the ServiceNow Event Management JSONv2 API endpoint (/api/global/em/jsonv2) instead of Table API or a custom Scripted REST API." },
+        { q: "How do you handle errors in REST API?", a: "Handle errors based on the response status code:\n\n401 — Basic authorization error.\n402 — Incorrect user details.\n404 — URL or resource does not exist.\n500 — Internal Server Error." },
+        { q: "What are the drawbacks of the Table API?", a: "The Table API provides direct access to the table. If not properly controlled, external systems can accidentally create, update, or delete records.\n\nScripted REST API gives more control over what operations are allowed.\n\nIn our project, we used the ServiceNow Event Management JSONv2 API endpoint (/api/global/em/jsonv2)." },
         { q: "What is an ACL?", a: "An Access Control List (ACL) is a security rule defined to restrict the permissions of a user from viewing and interacting with data." },
-        { q: "What is a Script Include?", a: "A Script Include is a reusable server-side script that contains methods or functions which can be called from other server-side scripts such as Business Rules, other Script Includes, or GlideAjax calls from Client Scripts. They promote code reuse and keep logic modular." }
+        { q: "What is a Script Include?", a: "A Script Include is a reusable server-side script that contains methods or functions which can be called from other server-side scripts such as Business Rules, other Script Includes, or GlideAjax calls from Client Scripts." }
       ]
     }
   ]
 };
 
-let activeTopicId = DATA.topics[0].id;
+let isAdmin = false;
+let activeTopicId = 'client-scripts';
 let editingQ = null;
 let searchMode = false;
 let currentQs = [];
+let dragSrcIdx = null;
+
+function loadData() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(DEFAULT_DATA));
+  } catch(e) { return JSON.parse(JSON.stringify(DEFAULT_DATA)); }
+}
+function saveData() { localStorage.setItem(STORAGE_KEY, JSON.stringify(DATA)); }
+let DATA = loadData();
 
 function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
+// --- Admin ---
+function handleAdminClick() { isAdmin ? logoutAdmin() : openLoginModal(); }
+function openLoginModal() {
+  openModal(`
+    <h3>Admin Login</h3>
+    <label>Password</label>
+    <input type="password" id="adminPass" placeholder="Enter admin password">
+    <div class="error-msg" id="loginErr">Incorrect password. Try again.</div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="doLogin()">Login</button>
+    </div>
+  `);
+  setTimeout(()=>{ const el=document.getElementById('adminPass'); if(el){ el.focus(); el.addEventListener('keydown',e=>{ if(e.key==='Enter') doLogin(); }); } },60);
+}
+function doLogin() {
+  const val = document.getElementById('adminPass').value;
+  if (val === ADMIN_PASS) { isAdmin = true; closeModal(); updateAdminUI(); }
+  else { document.getElementById('loginErr').style.display='block'; document.getElementById('adminPass').value=''; document.getElementById('adminPass').focus(); }
+}
+function logoutAdmin() { isAdmin = false; updateAdminUI(); }
+function updateAdminUI() {
+  const btn = document.getElementById('adminToggleBtn');
+  const addQ = document.getElementById('addQBtn');
+  const addTopic = document.getElementById('addTopicWrap');
+  const layout = document.querySelector('.layout');
+  if (isAdmin) {
+    btn.textContent = '🔓 Logout Admin';
+    btn.className = 'admin-badge';
+    addQ.style.display = 'flex';
+    addTopic.style.display = 'block';
+    layout.classList.add('admin-mode');
+  } else {
+    btn.textContent = '🔒 Admin';
+    btn.className = 'admin-btn';
+    addQ.style.display = 'none';
+    addTopic.style.display = 'none';
+    layout.classList.remove('admin-mode');
+  }
+  renderTopics();
+  renderQuestions();
+}
+
+// --- Topics ---
 function renderTopics() {
   const nav = document.getElementById('topicNav');
-  nav.innerHTML = DATA.topics.map(t => `
-    <button class="topic-btn${t.id===activeTopicId&&!searchMode?' active':''}" onclick="selectTopic('${t.id}')">
-      <span>${esc(t.name)}</span>
-      <span class="tc">${t.questions.length}</span>
+  nav.innerHTML = DATA.topics.map((t, i) => `
+    <button class="topic-btn${t.id===activeTopicId&&!searchMode?' active':''}"
+      id="tbtn-${t.id}"
+      onclick="selectTopic('${t.id}')"
+      draggable="${isAdmin}"
+      ondragstart="onDragStart(event,${i})"
+      ondragover="onDragOver(event,${i})"
+      ondragleave="onDragLeave(event)"
+      ondrop="onDrop(event,${i})"
+      ondragend="onDragEnd(event)">
+      ${isAdmin ? `<span class="drag-handle" title="Drag to reorder">⠿</span>` : ''}
+      <span class="topic-num">${i+1}.</span>
+      <span class="topic-name">${esc(t.name)}</span>
+      <span class="topic-tc">${t.questions.length}</span>
     </button>
   `).join('');
   const total = DATA.topics.reduce((s,t)=>s+t.questions.length,0);
@@ -243,6 +296,35 @@ function selectTopic(id) {
   renderQuestions();
 }
 
+// --- Drag & Drop ---
+function onDragStart(e, idx) {
+  dragSrcIdx = idx;
+  e.currentTarget.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+}
+function onDragOver(e, idx) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  if (idx !== dragSrcIdx) e.currentTarget.classList.add('drag-over');
+}
+function onDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function onDrop(e, idx) {
+  e.preventDefault();
+  e.currentTarget.classList.remove('drag-over');
+  if (dragSrcIdx === null || dragSrcIdx === idx) return;
+  const moved = DATA.topics.splice(dragSrcIdx, 1)[0];
+  DATA.topics.splice(idx, 0, moved);
+  dragSrcIdx = null;
+  saveData();
+  renderTopics();
+}
+function onDragEnd(e) {
+  e.currentTarget.classList.remove('dragging');
+  document.querySelectorAll('.topic-btn').forEach(b=>b.classList.remove('drag-over'));
+  dragSrcIdx = null;
+}
+
+// --- Questions ---
 function renderQuestions(qs, highlight) {
   const topic = DATA.topics.find(t => t.id === activeTopicId);
   if (!topic && !searchMode) return;
@@ -250,13 +332,11 @@ function renderQuestions(qs, highlight) {
   const title = searchMode ? 'Search Results' : topic.name;
   const count = currentQs.length;
   document.getElementById('mainTitle').innerHTML = `${esc(title)} <span>${count} question${count!==1?'s':''}</span>`;
-
   const list = document.getElementById('qList');
   if (!currentQs.length) {
     list.innerHTML = '<div class="empty"><div class="empty-icon">📭</div><p>No questions found.</p></div>';
     return;
   }
-
   list.innerHTML = currentQs.map((qa, i) => {
     let qText = esc(qa.q);
     if (highlight) {
@@ -266,6 +346,11 @@ function renderQuestions(qs, highlight) {
     const ansHtml = qa.a.split('\n').filter(l=>l.trim()).map(l=>`<p>${esc(l)}</p>`).join('');
     const topicName = searchMode ? DATA.topics.find(t=>t.questions.includes(qa))?.name : null;
     const badge = topicName ? `<span class="t-badge">${esc(topicName)}</span><br>` : '';
+    const adminActions = isAdmin ? `
+      <div class="q-actions">
+        <button class="q-act" onclick="openEditQ(${i});event.stopPropagation()">Edit</button>
+        <button class="q-act del" onclick="deleteQ(${i});event.stopPropagation()">Delete</button>
+      </div>` : '';
     return `
       <div class="q-item" id="qi-${i}">
         <div class="q-header" onclick="toggleQ(${i})">
@@ -274,16 +359,9 @@ function renderQuestions(qs, highlight) {
           <span class="q-arrow">▾</span>
         </div>
         <div class="q-answer">
-          <div class="q-answer-inner">
-            ${ansHtml}
-            <div class="q-actions">
-              <button class="q-act" onclick="openEditQ(${i});event.stopPropagation()">Edit</button>
-              <button class="q-act del" onclick="deleteQ(${i});event.stopPropagation()">Delete</button>
-            </div>
-          </div>
+          <div class="q-answer-inner">${ansHtml}${adminActions}</div>
         </div>
-      </div>
-    `;
+      </div>`;
   }).join('');
 }
 
@@ -297,21 +375,19 @@ function toggleQ(i) {
 function doSearch() {
   const raw = document.getElementById('searchBox').value;
   const q = raw.trim().toLowerCase();
-  if (!q) { searchMode = false; renderTopics(); renderQuestions(); return; }
+  if (!q) { searchMode=false; renderTopics(); renderQuestions(); return; }
   searchMode = true;
   const all = [];
-  DATA.topics.forEach(t => t.questions.forEach(qa => {
-    if (qa.q.toLowerCase().includes(q) || qa.a.toLowerCase().includes(q)) all.push(qa);
+  DATA.topics.forEach(t=>t.questions.forEach(qa=>{
+    if(qa.q.toLowerCase().includes(q)||qa.a.toLowerCase().includes(q)) all.push(qa);
   }));
   renderTopics();
   renderQuestions(all, raw.trim());
 }
 
-function openModal(html) {
-  document.getElementById('modalBox').innerHTML = html;
-  document.getElementById('modalBg').classList.add('open');
-}
-function closeModal() { document.getElementById('modalBg').classList.remove('open'); editingQ = null; }
+// --- Modal ---
+function openModal(html) { document.getElementById('modalBox').innerHTML=html; document.getElementById('modalBg').classList.add('open'); }
+function closeModal() { document.getElementById('modalBg').classList.remove('open'); editingQ=null; }
 
 function openAddTopic() {
   openModal(`
@@ -325,21 +401,18 @@ function openAddTopic() {
   `);
   setTimeout(()=>{ const el=document.getElementById('mInput'); if(el)el.focus(); },60);
 }
-
 function saveTopic() {
   const name = document.getElementById('mInput').value.trim();
   if (!name) return;
-  const id = 'topic-' + Date.now();
-  DATA.topics.push({ id, name, questions: [] });
-  closeModal();
-  activeTopicId = id;
-  searchMode = false;
-  renderTopics();
-  renderQuestions();
+  const id = 'topic-'+Date.now();
+  DATA.topics.push({id,name,questions:[]});
+  saveData(); closeModal();
+  activeTopicId=id; searchMode=false;
+  renderTopics(); renderQuestions();
 }
 
 function openAddQ() {
-  const topicSelect = DATA.topics.map(t=>`<option value="${t.id}"${t.id===activeTopicId?' selected':''}>${esc(t.name)}</option>`).join('');
+  const topicSelect = DATA.topics.map((t,i)=>`<option value="${t.id}"${t.id===activeTopicId?' selected':''}>${i+1}. ${esc(t.name)}</option>`).join('');
   openModal(`
     <h3>Add Question</h3>
     <label>Topic</label>
@@ -347,7 +420,7 @@ function openAddQ() {
     <label>Question</label>
     <input type="text" id="mQ" placeholder="Type the interview question...">
     <label>Answer</label>
-    <textarea id="mA" placeholder="Type the answer here...&#10;&#10;Use blank lines to separate points or paragraphs."></textarea>
+    <textarea id="mA" placeholder="Type the answer here...&#10;&#10;Use blank lines to separate points."></textarea>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
       <button class="btn-primary" onclick="saveQ()">Add Question</button>
@@ -355,10 +428,9 @@ function openAddQ() {
   `);
   setTimeout(()=>{ const el=document.getElementById('mQ'); if(el)el.focus(); },60);
 }
-
 function openEditQ(i) {
-  editingQ = i;
-  const qa = currentQs[i];
+  editingQ=i;
+  const qa=currentQs[i];
   openModal(`
     <h3>Edit Question</h3>
     <label>Question</label>
@@ -372,40 +444,29 @@ function openEditQ(i) {
   `);
   setTimeout(()=>{ const el=document.getElementById('mQ'); if(el)el.focus(); },60);
 }
-
 function saveQ() {
-  const q = document.getElementById('mQ').value.trim();
-  const a = document.getElementById('mA').value.trim();
-  if (!q || !a) return;
-  if (editingQ !== null) {
-    const qa = currentQs[editingQ];
-    qa.q = q; qa.a = a;
-  } else {
-    const topicId = document.getElementById('mTopic').value;
-    const topic = DATA.topics.find(t => t.id === topicId);
-    topic.questions.push({ q, a });
-    activeTopicId = topicId;
+  const q=document.getElementById('mQ').value.trim();
+  const a=document.getElementById('mA').value.trim();
+  if(!q||!a) return;
+  if(editingQ!==null){ const qa=currentQs[editingQ]; qa.q=q; qa.a=a; }
+  else {
+    const topicId=document.getElementById('mTopic').value;
+    DATA.topics.find(t=>t.id===topicId).questions.push({q,a});
+    activeTopicId=topicId;
   }
-  closeModal();
-  searchMode = false;
-  document.getElementById('searchBox').value = '';
-  renderTopics();
-  renderQuestions();
+  saveData(); closeModal();
+  searchMode=false; document.getElementById('searchBox').value='';
+  renderTopics(); renderQuestions();
 }
-
 function deleteQ(i) {
-  if (!confirm('Delete this question?')) return;
-  const qa = currentQs[i];
-  DATA.topics.forEach(t => {
-    const idx = t.questions.indexOf(qa);
-    if (idx > -1) t.questions.splice(idx, 1);
-  });
-  renderTopics();
-  renderQuestions();
+  if(!confirm('Delete this question?')) return;
+  const qa=currentQs[i];
+  DATA.topics.forEach(t=>{ const idx=t.questions.indexOf(qa); if(idx>-1) t.questions.splice(idx,1); });
+  saveData(); renderTopics(); renderQuestions();
 }
 
-document.getElementById('modalBg').addEventListener('click', function(e){ if(e.target===this) closeModal(); });
-document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeModal(); });
+document.getElementById('modalBg').addEventListener('click',function(e){ if(e.target===this) closeModal(); });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') closeModal(); });
 
 renderTopics();
 renderQuestions();
