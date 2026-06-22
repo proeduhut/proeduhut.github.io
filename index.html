@@ -133,13 +133,57 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
 /* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:#1a0a3c;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;z-index:300;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
+
+/* NAV MENU */
+.nav-menu{position:fixed;top:58px;left:0;width:220px;background:var(--white);border:1.5px solid var(--border);border-top:none;border-radius:0 0 12px 12px;box-shadow:0 8px 24px rgba(107,33,232,0.12);z-index:150;display:none;flex-direction:column;overflow:hidden}
+.nav-menu.open{display:flex}
+.nav-item{padding:14px 20px;font-size:14px;font-weight:500;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:10px;transition:all 0.15s;border:none;background:none;text-align:left;font-family:'DM Sans',sans-serif;width:100%}
+.nav-item:hover{background:var(--purple-light);color:var(--purple)}
+.nav-item .nav-icon{font-size:18px;width:24px;text-align:center}
+.nav-item.active{background:var(--purple-light);color:var(--purple);font-weight:600}
+.nav-divider{height:1px;background:var(--border);margin:4px 0}
+
+/* PROJECTS PAGE */
+.projects-page{display:none;flex:1;overflow:hidden}
+.projects-page.active{display:flex}
+.proj-sidebar{width:260px;min-width:260px;border-right:1.5px solid var(--border);background:var(--white);display:flex;flex-direction:column;overflow-y:auto}
+.proj-sidebar-top{padding:18px 16px 12px;border-bottom:1px solid var(--border)}
+.proj-sidebar-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:12px}
+.proj-btn{width:100%;padding:12px 16px;background:none;border:none;text-align:left;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:10px;transition:all 0.15s;border-left:3px solid transparent}
+.proj-btn:hover{background:var(--surface);color:var(--purple)}
+.proj-btn.active{background:var(--purple-light);color:var(--purple);border-left-color:var(--purple);font-weight:500}
+.proj-btn-num{width:26px;height:26px;border-radius:50%;background:var(--surface2);color:var(--orange);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.proj-btn.active .proj-btn-num{background:var(--purple);color:#fff}
+.proj-btn-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.proj-add-wrap{padding:12px 14px;border-top:1px solid var(--border)}
+.proj-add-btn{width:100%;padding:9px 14px;background:none;border:1.5px dashed var(--border2);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
+.proj-add-btn:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-light)}
+
+.proj-main{flex:1;overflow-y:auto;background:var(--bg)}
+.proj-content{padding:28px 36px 60px}
+.proj-empty{padding:80px 36px;text-align:center;color:var(--muted);font-size:14px}
+.proj-empty-icon{font-size:40px;margin-bottom:14px;opacity:0.35}
+
+.proj-header-bar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:16px}
+.proj-title{font-family:'DM Serif Display',serif;font-size:26px;color:var(--text);line-height:1.2}
+.proj-title-num{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--orange);display:block;margin-bottom:4px;letter-spacing:0.06em;text-transform:uppercase}
+.proj-edit-btn{padding:7px 16px;background:none;border:1.5px solid var(--border2);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s;white-space:nowrap;flex-shrink:0}
+.proj-edit-btn:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-light)}
+.proj-del-btn{padding:7px 16px;background:none;border:1.5px solid var(--border2);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s;white-space:nowrap;flex-shrink:0}
+.proj-del-btn:hover{border-color:#e24b4a;color:#e24b4a;background:#fff0f0}
+
+.proj-section{margin-bottom:28px}
+.proj-section-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:8px}
+.proj-section-content{font-size:14px;color:#4a3d6b;line-height:1.8;background:var(--surface);border-radius:10px;padding:16px 18px;border:1px solid var(--border)}
+.proj-section-content p{margin-bottom:8px}
+.proj-section-content p:last-child{margin-bottom:0}
 </style>
 </head>
 <body>
 
 <div class="header">
   <div class="header-left">
-    <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">☰</button>
+    <button class="sidebar-toggle" onclick="toggleNav()" title="Menu">☰</button>
     <div class="logo-text">Pro<span>Edu</span>Hut</div>
   </div>
   <div class="header-right">
@@ -149,30 +193,55 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
   </div>
 </div>
 
+<!-- NAV MENU -->
+<div class="nav-menu" id="navMenu">
+  <button class="nav-item active" id="navQA" onclick="switchPage('qa')"><span class="nav-icon">📚</span> Q&A</button>
+  <div class="nav-divider"></div>
+  <button class="nav-item" id="navProjects" onclick="switchPage('projects')"><span class="nav-icon">💼</span> Projects</button>
+</div>
+
 <div class="layout">
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-top">
-      <div class="sidebar-label">Topics</div>
-      <input class="search-box" type="text" placeholder="Search questions..." id="searchBox" oninput="doSearch()">
+  <!-- Q&A PAGE -->
+  <div id="qaPage" style="display:flex;flex:1;overflow:hidden;width:100%">
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-top">
+        <div class="sidebar-label">Topics</div>
+        <input class="search-box" type="text" placeholder="Search questions..." id="searchBox" oninput="doSearch()">
+      </div>
+      <div class="topic-nav" id="topicNav"></div>
+      <div class="pagination" id="paginationBar">
+        <button class="page-btn" id="prevBtn" onclick="changePage(-1)">← Prev</button>
+        <span class="page-info" id="pageInfo"></span>
+        <button class="page-btn" id="nextBtn" onclick="changePage(1)">Next →</button>
+      </div>
+      <div class="add-topic-wrap" id="addTopicWrap">
+        <button class="add-topic-btn" onclick="openAddTopic()">+ Add new topic</button>
+      </div>
     </div>
-    <div class="topic-nav" id="topicNav"></div>
-    <div class="pagination" id="paginationBar">
-      <button class="page-btn" id="prevBtn" onclick="changePage(-1)">← Prev</button>
-      <span class="page-info" id="pageInfo"></span>
-      <button class="page-btn" id="nextBtn" onclick="changePage(1)">Next →</button>
-    </div>
-    <div class="add-topic-wrap" id="addTopicWrap">
-      <button class="add-topic-btn" onclick="openAddTopic()">+ Add new topic</button>
+    <div class="main">
+      <div class="main-header">
+        <div class="main-title" id="mainTitle">Loading... <span id="mainCount"></span></div>
+        <button class="add-q-btn" id="addQBtn" onclick="openAddQ()">+ Add Question</button>
+      </div>
+      <div class="q-list" id="qList">
+        <div class="loading"><div class="loading-spinner"></div>Loading from Firebase...</div>
+      </div>
     </div>
   </div>
 
-  <div class="main">
-    <div class="main-header">
-      <div class="main-title" id="mainTitle">Loading... <span id="mainCount"></span></div>
-      <button class="add-q-btn" id="addQBtn" onclick="openAddQ()">+ Add Question</button>
+  <!-- PROJECTS PAGE -->
+  <div id="projectsPage" style="display:none;flex:1;overflow:hidden;width:100%">
+    <div class="proj-sidebar">
+      <div class="proj-sidebar-top">
+        <div class="proj-sidebar-label">Projects</div>
+      </div>
+      <div id="projNav"></div>
+      <div class="proj-add-wrap" id="projAddWrap" style="display:none">
+        <button class="proj-add-btn" onclick="openAddProject()">+ Add Project</button>
+      </div>
     </div>
-    <div class="q-list" id="qList">
-      <div class="loading"><div class="loading-spinner"></div>Loading from Firebase...</div>
+    <div class="proj-main">
+      <div id="projContent"></div>
     </div>
   </div>
 </div>
@@ -259,34 +328,44 @@ let saveTimeout = null;
 
 // --- Firebase ---
 async function initData() {
+  // Load Q&A data
+  const PROJ_REF = doc(db, "proeduhut", "projects");
   try {
     const snap = await getDoc(DOC_REF);
-    if (snap.exists()) {
-      DATA = snap.data();
-    } else {
-      DATA = JSON.parse(JSON.stringify(DEFAULT_DATA));
-      await setDoc(DOC_REF, DATA);
-    }
+    if (snap.exists()) { DATA = snap.data(); }
+    else { DATA = JSON.parse(JSON.stringify(DEFAULT_DATA)); await setDoc(DOC_REF, DATA); }
     activeTopicId = DATA.topics[0]?.id || null;
-    renderTopics();
-    renderQuestions();
+    renderTopics(); renderQuestions();
   } catch(e) {
     DATA = JSON.parse(JSON.stringify(DEFAULT_DATA));
     activeTopicId = DATA.topics[0]?.id || null;
-    renderTopics();
-    renderQuestions();
+    renderTopics(); renderQuestions();
     showToast('⚠️ Offline mode — changes may not save');
   }
 
-  // Live listener
+  // Load Projects data
+  try {
+    const psnap = await getDoc(PROJ_REF);
+    if (psnap.exists()) { PROJECTS = psnap.data().list || []; }
+    else { PROJECTS = []; }
+    if (PROJECTS.length) activeProjectId = PROJECTS[0].id;
+  } catch(e) { PROJECTS = []; }
+
+  // Live Q&A listener
   onSnapshot(DOC_REF, (snap) => {
     if (snap.exists() && !saveTimeout) {
       DATA = snap.data();
-      if (!activeTopicId || !DATA.topics.find(t=>t.id===activeTopicId)) {
-        activeTopicId = DATA.topics[0]?.id || null;
-      }
+      if (!activeTopicId || !DATA.topics.find(t=>t.id===activeTopicId)) activeTopicId = DATA.topics[0]?.id || null;
       renderTopics();
       if (!searchMode) renderQuestions();
+    }
+  });
+
+  // Live Projects listener
+  onSnapshot(PROJ_REF, (snap) => {
+    if (snap.exists()) {
+      PROJECTS = snap.data().list || [];
+      if (currentPage2 === 'projects') renderProjects();
     }
   });
 }
@@ -315,11 +394,44 @@ function showToast(msg) {
   setTimeout(()=>t.classList.remove('show'), 2500);
 }
 
-// --- Sidebar toggle ---
+// --- Nav Menu ---
+let navOpen = false;
+let currentPage2 = 'qa';
+
+window.toggleNav = function() {
+  navOpen = !navOpen;
+  document.getElementById('navMenu').classList.toggle('open', navOpen);
+};
+
+document.addEventListener('click', function(e) {
+  if (navOpen && !e.target.closest('#navMenu') && !e.target.closest('.sidebar-toggle')) {
+    navOpen = false;
+    document.getElementById('navMenu').classList.remove('open');
+  }
+});
+
+window.switchPage = function(page) {
+  currentPage2 = page;
+  navOpen = false;
+  document.getElementById('navMenu').classList.remove('open');
+  document.getElementById('qaPage').style.display = page==='qa' ? 'flex' : 'none';
+  document.getElementById('projectsPage').style.display = page==='projects' ? 'flex' : 'none';
+  document.getElementById('navQA').classList.toggle('active', page==='qa');
+  document.getElementById('navProjects').classList.toggle('active', page==='projects');
+  if (page==='projects') renderProjects();
+};
+
+// --- Sidebar toggle (only for QA) ---
 window.toggleSidebar = function() {
   sidebarOpen = !sidebarOpen;
   document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
 };
+
+// --- Projects ---
+let PROJECTS = [];
+let activeProjectId = null;
+let editingProject = null;
+const PROJ_DOC_REF_KEY = "projects";
 
 // --- Admin ---
 window.handleAdminClick = function() { isAdmin ? logoutAdmin() : openLoginModal(); };
@@ -357,6 +469,7 @@ function updateAdminUI() {
     layout.classList.remove('admin-mode');
   }
   renderTopics(); renderQuestions();
+  if (currentPage2==='projects') renderProjects();
 }
 
 // --- Topics + Pagination ---
@@ -519,6 +632,165 @@ window.deleteQ = function(i) {
 
 document.getElementById('modalBg').addEventListener('click',function(e){ if(e.target===this) window.closeModal(); });
 document.addEventListener('keydown',function(e){ if(e.key==='Escape') window.closeModal(); });
+
+// --- Projects save ---
+async function saveProjects() {
+  document.getElementById('syncIndicator').classList.add('show');
+  try {
+    const PROJ_REF = doc(db, "proeduhut", "projects");
+    await setDoc(PROJ_REF, { list: PROJECTS });
+    showToast('✅ Saved');
+  } catch(e) { showToast('❌ Save failed'); }
+  document.getElementById('syncIndicator').classList.remove('show');
+}
+
+// --- Projects render ---
+function renderProjects() {
+  const nav = document.getElementById('projNav');
+  const addWrap = document.getElementById('projAddWrap');
+  addWrap.style.display = isAdmin ? 'block' : 'none';
+
+  if (!PROJECTS.length) {
+    nav.innerHTML = '';
+    document.getElementById('projContent').innerHTML = `<div class="proj-empty"><div class="proj-empty-icon">💼</div><p>${isAdmin ? 'No projects yet. Click "+ Add Project" to get started.' : 'No projects added yet.'}</p></div>`;
+    return;
+  }
+
+  nav.innerHTML = PROJECTS.map((p,i) => `
+    <button class="proj-btn${p.id===activeProjectId?' active':''}" onclick="selectProject('${p.id}')">
+      <span class="proj-btn-num">${i+1}</span>
+      <span class="proj-btn-name">${esc(p.name)}</span>
+    </button>
+  `).join('');
+
+  const proj = PROJECTS.find(p=>p.id===activeProjectId) || PROJECTS[0];
+  if (proj) renderProjectDetail(proj);
+}
+
+function formatContent(text) {
+  if (!text) return '';
+  const lines = text.split('\n').filter(l => l.trim());
+  return lines.map(l => {
+    const numbered = l.match(/^(\d+)\.\s+(.+)/);
+    if (numbered) {
+      return `<p style="padding-left:20px;position:relative"><span style="position:absolute;left:0;font-weight:600;color:var(--orange)">${numbered[1]}.</span>${esc(numbered[2])}</p>`;
+    }
+    return `<p>${esc(l)}</p>`;
+  }).join('');
+}
+  const idx = PROJECTS.indexOf(proj);
+  const adminBtns = isAdmin ? `
+    <div style="display:flex;gap:8px">
+      <button class="proj-edit-btn" onclick="openEditProject('${proj.id}')">Edit</button>
+      <button class="proj-del-btn" onclick="deleteProject('${proj.id}')">Delete</button>
+    </div>` : '';
+
+  const fields = [
+    { label: 'Project Name', key: 'name' },
+    { label: 'Project Objective', key: 'objective' },
+    { label: 'Project Description', key: 'description' },
+    { label: 'Project Explanation', key: 'explanation' },
+    { label: 'Role & Responsibilities', key: 'role' }
+  ];
+
+  document.getElementById('projContent').innerHTML = `
+    <div class="proj-content">
+      <div class="proj-header-bar">
+        <div>
+          <span class="proj-title-num">Project ${idx+1}</span>
+          <div class="proj-title">${esc(proj.name)}</div>
+        </div>
+        ${adminBtns}
+      </div>
+      ${fields.map(f => proj[f.key] ? `
+        <div class="proj-section">
+          <div class="proj-section-label">${f.label}</div>
+          <div class="proj-section-content">${formatContent(proj[f.key])}</div>
+        </div>` : '').join('')}
+    </div>`;
+}
+
+window.selectProject = function(id) {
+  activeProjectId = id;
+  renderProjects();
+};
+
+window.openAddProject = function() {
+  editingProject = null;
+  const nextNum = PROJECTS.length + 1;
+  openModal(`
+    <h3>Add Project</h3>
+    <label>Project Number</label>
+    <input type="text" value="Project ${nextNum}" disabled style="opacity:0.6;cursor:not-allowed">
+    <label>Project Name</label>
+    <input type="text" id="pName" placeholder="e.g. IFS Event Management Integration">
+    <label>Project Objective</label>
+    <textarea id="pObjective" placeholder="What was the goal of this project?"></textarea>
+    <label>Project Description</label>
+    <textarea id="pDescription" placeholder="Brief overview of the project..."></textarea>
+    <label>Project Explanation</label>
+    <textarea id="pExplanation" placeholder="Detailed technical explanation..."></textarea>
+    <label>Role & Responsibilities</label>
+    <textarea id="pRole" placeholder="Your role and what you were responsible for..."></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveProject()">Add Project</button>
+    </div>
+  `);
+  setTimeout(()=>{ const el=document.getElementById('pName'); if(el)el.focus(); },60);
+};
+
+window.openEditProject = function(id) {
+  const proj = PROJECTS.find(p=>p.id===id);
+  if (!proj) return;
+  editingProject = id;
+  openModal(`
+    <h3>Edit Project</h3>
+    <label>Project Name</label>
+    <input type="text" id="pName" value="${esc(proj.name)}">
+    <label>Project Objective</label>
+    <textarea id="pObjective">${esc(proj.objective||'')}</textarea>
+    <label>Project Description</label>
+    <textarea id="pDescription">${esc(proj.description||'')}</textarea>
+    <label>Project Explanation</label>
+    <textarea id="pExplanation">${esc(proj.explanation||'')}</textarea>
+    <label>Role & Responsibilities</label>
+    <textarea id="pRole">${esc(proj.role||'')}</textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveProject()">Save Changes</button>
+    </div>
+  `);
+  setTimeout(()=>{ const el=document.getElementById('pName'); if(el)el.focus(); },60);
+};
+
+window.saveProject = function() {
+  const name = document.getElementById('pName').value.trim();
+  if (!name) return;
+  const proj = {
+    id: editingProject || 'proj-'+Date.now(),
+    name,
+    objective: document.getElementById('pObjective').value.trim(),
+    description: document.getElementById('pDescription').value.trim(),
+    explanation: document.getElementById('pExplanation').value.trim(),
+    role: document.getElementById('pRole').value.trim()
+  };
+  if (editingProject) {
+    const idx = PROJECTS.findIndex(p=>p.id===editingProject);
+    if (idx>-1) PROJECTS[idx] = proj;
+  } else {
+    PROJECTS.push(proj);
+    activeProjectId = proj.id;
+  }
+  saveProjects(); closeModal(); renderProjects();
+};
+
+window.deleteProject = function(id) {
+  if (!confirm('Delete this project?')) return;
+  PROJECTS = PROJECTS.filter(p=>p.id!==id);
+  if (activeProjectId===id) activeProjectId = PROJECTS[0]?.id || null;
+  saveProjects(); renderProjects();
+};
 
 initData();
 </script>
