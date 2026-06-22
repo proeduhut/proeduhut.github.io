@@ -532,6 +532,9 @@ window.closeMobileSidebar = function() {
   document.getElementById('sidebar').classList.remove('mobile-open');
   document.getElementById('projSidebar').classList.remove('mobile-open');
   document.getElementById('overlay').classList.remove('show');
+  // Force z-index reset so content is accessible
+  document.getElementById('sidebar').style.zIndex = '90';
+  document.getElementById('projSidebar').style.zIndex = '90';
 };
 
 // ===== ADMIN =====
@@ -654,10 +657,14 @@ function clearQAPanel() {
 }
 
 window.selectTopic = function(id) {
-  activeTopicId=id; searchMode=false;
-  document.getElementById('searchBox').value='';
-  if (window.innerWidth<=768) closeMobileSidebar();
-  renderTopics(); renderQuestions();
+  activeTopicId = id; searchMode = false;
+  document.getElementById('searchBox').value = '';
+  closeMobileSidebar();
+  setTimeout(() => {
+    renderTopics();
+    renderQuestions();
+    document.querySelector('.q-list')?.scrollTo(0, 0);
+  }, 100);
 };
 
 // ===== DRAG DROP =====
@@ -830,9 +837,13 @@ function renderProjectDetail(proj) {
 }
 
 window.selectProject = function(id) {
-  activeProjectId=id;
-  if(window.innerWidth<=768) closeMobileSidebar();
-  setTimeout(() => renderProjects(), 50);
+  activeProjectId = id;
+  closeMobileSidebar();
+  setTimeout(() => {
+    renderProjects();
+    document.getElementById('projContent').scrollTop = 0;
+    document.querySelector('.proj-main')?.scrollTo(0, 0);
+  }, 100);
 };
 
 window.openAddProject = function() {
