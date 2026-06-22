@@ -686,9 +686,7 @@ function renderProjectDetail(proj) {
     </div>` : '';
 
   const fields = [
-    { label: 'Project Name', key: 'name' },
     { label: 'Project Objective', key: 'objective' },
-    { label: 'Project Description', key: 'description' },
     { label: 'Project Explanation', key: 'explanation' },
     { label: 'Role & Responsibilities', key: 'role' }
   ];
@@ -726,8 +724,6 @@ window.openAddProject = function() {
     <input type="text" id="pName" placeholder="e.g. IFS Event Management Integration">
     <label>Project Objective</label>
     <textarea id="pObjective" placeholder="What was the goal of this project?"></textarea>
-    <label>Project Description</label>
-    <textarea id="pDescription" placeholder="Brief overview of the project..."></textarea>
     <label>Project Explanation</label>
     <textarea id="pExplanation" placeholder="Detailed technical explanation..."></textarea>
     <label>Role & Responsibilities</label>
@@ -750,8 +746,6 @@ window.openEditProject = function(id) {
     <input type="text" id="pName" value="${esc(proj.name)}">
     <label>Project Objective</label>
     <textarea id="pObjective">${esc(proj.objective||'')}</textarea>
-    <label>Project Description</label>
-    <textarea id="pDescription">${esc(proj.description||'')}</textarea>
     <label>Project Explanation</label>
     <textarea id="pExplanation">${esc(proj.explanation||'')}</textarea>
     <label>Role & Responsibilities</label>
@@ -771,7 +765,6 @@ window.saveProject = function() {
     id: editingProject || 'proj-'+Date.now(),
     name,
     objective: document.getElementById('pObjective').value.trim(),
-    description: document.getElementById('pDescription').value.trim(),
     explanation: document.getElementById('pExplanation').value.trim(),
     role: document.getElementById('pRole').value.trim()
   };
