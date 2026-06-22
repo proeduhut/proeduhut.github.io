@@ -8,287 +8,322 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#ffffff;--surface:#f7f5ff;--surface2:#ede9ff;--border:#e0d9f7;--border2:#c9bff0;
+  --bg:#fff;--surface:#f7f5ff;--surface2:#ede9ff;--border:#e0d9f7;--border2:#c9bff0;
   --text:#1a0a3c;--muted:#7a6fa0;--purple:#6b21e8;--purple-dark:#4c0fbf;--purple-light:#ede9ff;
-  --orange:#ff6b00;--orange-light:#fff3eb;--white:#ffffff;--sidebar-w:260px;
+  --orange:#ff6b00;--orange-light:#fff3eb;--white:#fff;--header-h:58px;--bottom-nav-h:60px;
 }
 html{scroll-behavior:smooth}
-body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;line-height:1.6}
+body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min-height:100vh;line-height:1.6;overflow:hidden}
 
-/* HEADER */
-.header{padding:0 20px;height:58px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;background:var(--purple);box-shadow:0 2px 16px rgba(107,33,232,0.2)}
+/* ===== HEADER ===== */
+.header{height:var(--header-h);padding:0 20px;display:flex;align-items:center;justify-content:space-between;position:fixed;top:0;left:0;right:0;z-index:100;background:var(--purple);box-shadow:0 2px 16px rgba(107,33,232,0.2)}
 .header-left{display:flex;align-items:center;gap:10px}
-.sidebar-toggle{background:none;border:none;color:#fff;cursor:pointer;font-size:20px;padding:4px 8px;border-radius:6px;line-height:1;transition:background 0.15s}
+.sidebar-toggle{background:none;border:none;color:#fff;cursor:pointer;font-size:20px;padding:4px 8px;border-radius:6px;transition:background 0.15s}
 .sidebar-toggle:hover{background:rgba(255,255,255,0.15)}
-.logo-text{font-size:19px;font-weight:700;color:#fff;letter-spacing:-0.01em}
+.logo-text{font-size:19px;font-weight:700;color:#fff;cursor:pointer;letter-spacing:-0.01em}
 .logo-text span{color:var(--orange)}
-.header-right{display:flex;align-items:center;gap:10px}
-.header-badge{font-size:12px;color:rgba(255,255,255,0.75);padding:4px 12px;border:1px solid rgba(255,255,255,0.25);border-radius:20px;background:rgba(255,255,255,0.08)}
-.admin-btn{padding:6px 14px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.3);border-radius:20px;font-size:12px;color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
+.header-right{display:flex;align-items:center;gap:6px}
+.nav-link{background:none;border:none;color:rgba(255,255,255,0.75);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;padding:6px 12px;border-radius:20px;transition:all 0.15s}
+.nav-link:hover{background:rgba(255,255,255,0.15);color:#fff}
+.nav-link.active{background:rgba(255,255,255,0.2);color:#fff;font-weight:600}
+.admin-btn{padding:6px 12px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.3);border-radius:20px;font-size:12px;color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
 .admin-btn:hover{background:rgba(255,255,255,0.22)}
 .admin-badge{padding:5px 12px;background:var(--orange);border:none;border-radius:20px;font-size:12px;color:#fff;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:600}
-.sync-indicator{font-size:11px;color:rgba(255,255,255,0.6);display:none;align-items:center;gap:4px}
-.sync-indicator.show{display:flex}
+.sync-dot-wrap{display:none;align-items:center;gap:4px;font-size:11px;color:rgba(255,255,255,0.6)}
+.sync-dot-wrap.show{display:flex}
 .sync-dot{width:6px;height:6px;border-radius:50%;background:#4caf84;animation:pulse 1.5s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 
-/* LAYOUT */
-.layout{display:flex;height:calc(100vh - 58px);overflow:hidden}
+/* ===== APP SHELL ===== */
+.app{position:fixed;top:var(--header-h);left:0;right:0;bottom:0;display:flex;overflow:hidden}
 
-/* SIDEBAR */
-.sidebar{width:var(--sidebar-w);min-width:var(--sidebar-w);border-right:1.5px solid var(--border);overflow-y:auto;background:var(--white);display:flex;flex-direction:column;transition:all 0.25s ease;position:relative}
-.sidebar.collapsed{width:0;min-width:0;border-right:none;overflow:hidden}
-.sidebar-top{padding:16px 14px 12px;border-bottom:1px solid var(--border);flex-shrink:0}
+/* ===== SIDEBAR ===== */
+.sidebar{width:260px;min-width:260px;background:var(--white);border-right:1.5px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:all 0.25s ease;flex-shrink:0}
+.sidebar.collapsed{width:0;min-width:0;border-right:none}
+.sidebar-inner{display:flex;flex-direction:column;height:100%;min-width:260px}
+.sidebar-top{padding:14px 14px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
 .sidebar-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:10px}
+.search-wrap{position:relative}
 .search-box{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.15s}
-.search-box::placeholder{color:var(--muted)}
 .search-box:focus{border-color:var(--purple)}
-.topic-nav{flex:1;padding:8px 0;overflow-y:auto}
-.topic-btn{width:100%;padding:9px 12px 9px 14px;background:none;border:none;text-align:left;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px;transition:all 0.15s;border-left:3px solid transparent;white-space:nowrap}
+.search-box::placeholder{color:var(--muted)}
+.topic-list{flex:1;overflow-y:auto;padding:8px 0}
+.module-header{padding:8px 14px 4px;font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);font-weight:700}
+.topic-btn{width:100%;padding:8px 12px 8px 14px;background:none;border:none;text-align:left;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:6px;transition:all 0.15s;border-left:3px solid transparent}
 .topic-btn:hover{background:var(--surface);color:var(--purple)}
 .topic-btn.active{background:var(--purple-light);color:var(--purple);border-left-color:var(--purple);font-weight:500}
 .topic-num{font-size:11px;font-weight:700;color:var(--orange);min-width:20px;flex-shrink:0}
 .topic-btn.active .topic-num{color:var(--purple)}
-.topic-name{flex:1;overflow:hidden;text-overflow:ellipsis}
+.topic-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .topic-tc{font-size:11px;background:var(--surface2);padding:2px 7px;border-radius:10px;color:var(--muted);font-weight:500;flex-shrink:0}
 .topic-btn.active .topic-tc{background:rgba(107,33,232,0.15);color:var(--purple)}
-.drag-handle{font-size:14px;color:var(--border2);cursor:grab;padding:2px 2px;display:none;flex-shrink:0}
-.drag-handle:active{cursor:grabbing}
+.topic-progress{height:2px;background:var(--border);margin:0 14px 2px;border-radius:2px;overflow:hidden}
+.topic-progress-bar{height:100%;background:var(--orange);border-radius:2px;transition:width 0.3s}
+.drag-handle{font-size:14px;color:var(--border2);cursor:grab;display:none;flex-shrink:0}
 .admin-mode .drag-handle{display:block}
 .topic-btn.dragging{opacity:0.4}
 .topic-btn.drag-over{border-top:2px solid var(--purple);background:var(--purple-light)}
-
-/* PAGINATION */
-.pagination{padding:10px 14px;border-top:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
-.page-btn{padding:5px 10px;background:none;border:1.5px solid var(--border2);border-radius:6px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
-.page-btn:hover:not(:disabled){border-color:var(--purple);color:var(--purple);background:var(--purple-light)}
-.page-btn:disabled{opacity:0.35;cursor:default}
-.page-info{font-size:12px;color:var(--muted)}
-
-.add-topic-wrap{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;display:none}
+.sidebar-footer{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;display:none}
 .add-topic-btn{width:100%;padding:8px 12px;background:none;border:1.5px dashed var(--border2);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
 .add-topic-btn:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-light)}
 
-/* MAIN */
-.main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0}
-.main-header{padding:18px 28px 14px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--white);gap:12px}
-.main-title{font-family:'DM Serif Display',serif;font-size:21px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.main-title span{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);font-weight:400;margin-left:8px}
-.add-q-btn{padding:8px 18px;background:var(--orange);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;box-shadow:0 2px 8px rgba(255,107,0,0.2);display:none;white-space:nowrap;flex-shrink:0}
+/* ===== MAIN ===== */
+.main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
+
+/* ===== HOME PAGE ===== */
+.home-page{flex:1;overflow-y:auto;display:flex;align-items:center;justify-content:center;background:var(--white)}
+.home-content{text-align:center;padding:40px 24px;max-width:600px}
+.home-title{font-family:'DM Serif Display',serif;font-size:52px;color:var(--purple);line-height:1.1;margin-bottom:12px}
+.home-title span{color:var(--orange)}
+.home-tagline{font-size:17px;color:var(--muted);margin-bottom:36px;line-height:1.6}
+.home-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.home-btn-primary{padding:12px 28px;background:var(--purple);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.home-btn-primary:hover{background:var(--purple-dark)}
+.home-btn-secondary{padding:12px 28px;background:#fff;color:var(--purple);border:1.5px solid var(--purple);border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.home-btn-secondary:hover{background:var(--purple-light)}
+
+/* ===== Q&A PAGE ===== */
+.qa-page{flex:1;display:none;overflow:hidden;flex-direction:row}
+.qa-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.qa-header{padding:16px 24px 12px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--white);gap:12px}
+.qa-title{font-family:'DM Serif Display',serif;font-size:21px;color:var(--text)}
+.qa-title span{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);font-weight:400;margin-left:8px}
+.qa-header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.qa-badge{font-size:12px;color:var(--muted);padding:4px 10px;border:1px solid var(--border2);border-radius:20px;white-space:nowrap}
+.add-q-btn{padding:8px 16px;background:var(--orange);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;display:none;white-space:nowrap}
 .add-q-btn:hover{background:#e05e00}
-
-/* LOADING */
-.loading{padding:40px 28px;text-align:center;color:var(--muted);font-size:14px}
-.loading-spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* QUESTIONS */
-.q-list{padding:0 28px 40px;flex:1;background:var(--bg)}
+.q-list{flex:1;overflow-y:auto;padding:0 24px 40px}
 .q-item{border-bottom:1px solid var(--border);overflow:hidden}
 .q-item:last-child{border-bottom:none}
-.q-header{padding:16px 0;display:flex;align-items:flex-start;gap:12px;cursor:pointer}
+.q-header{padding:15px 0;display:flex;align-items:flex-start;gap:12px;cursor:pointer}
 .q-header:hover .q-text{color:var(--purple)}
-.q-num{font-size:12px;font-weight:700;color:var(--orange);min-width:26px;padding-top:2px}
+.q-num{font-size:12px;font-weight:700;color:var(--orange);min-width:26px;padding-top:2px;flex-shrink:0}
 .q-text{font-size:15px;font-weight:500;flex:1;color:var(--text);line-height:1.45}
 .q-arrow{font-size:16px;color:var(--muted);transition:transform 0.25s;padding-top:3px;flex-shrink:0}
 .q-item.open .q-arrow{transform:rotate(180deg);color:var(--purple)}
 .q-item.open .q-num{color:var(--purple)}
 .q-answer{max-height:0;overflow:hidden;transition:max-height 0.3s ease}
 .q-item.open .q-answer{max-height:2000px}
-.q-answer-inner{padding:0 0 18px 38px}
+.q-answer-inner{padding:0 0 16px 38px}
 .q-answer-inner p{font-size:14px;color:#4a3d6b;line-height:1.8;margin-bottom:8px}
 .q-answer-inner p:last-of-type{margin-bottom:10px}
 .q-actions{display:flex;gap:8px;margin-top:6px}
-.q-act{padding:5px 12px;background:none;border:1.5px solid var(--border2);border-radius:6px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
+.q-act{padding:4px 12px;background:none;border:1.5px solid var(--border2);border-radius:6px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
 .q-act:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-light)}
 .q-act.del:hover{border-color:#e24b4a;color:#e24b4a;background:#fff0f0}
-
-.t-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;background:var(--orange-light);color:var(--orange);border:1px solid rgba(255,107,0,0.2);margin-bottom:4px}
 mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;color:inherit}
-.empty{padding:60px 28px;text-align:center}
+.empty{padding:60px 24px;text-align:center}
 .empty-icon{font-size:40px;margin-bottom:14px;opacity:0.35}
 .empty p{color:var(--muted);font-size:14px}
+.loading{padding:40px 24px;text-align:center;color:var(--muted);font-size:14px}
+.loading-spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--purple);border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 14px}
+@keyframes spin{to{transform:rotate(360deg)}}
 
-/* MODAL */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(26,10,60,0.5);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
-.modal-bg.open{display:flex}
-.modal{background:var(--white);border:1.5px solid var(--border);border-radius:16px;padding:26px;width:520px;max-width:calc(100vw - 32px);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(107,33,232,0.15)}
-.modal h3{font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:18px;color:var(--text)}
-.modal label{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px;font-weight:600}
-.modal input,.modal textarea,.modal select{width:100%;padding:9px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);margin-bottom:14px;outline:none;transition:border-color 0.15s}
-.modal input:focus,.modal textarea:focus,.modal select:focus{border-color:var(--purple)}
-.modal textarea{min-height:120px;resize:vertical;line-height:1.6}
-.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:4px}
-.btn-primary{padding:9px 22px;background:var(--purple);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
-.btn-primary:hover{background:var(--purple-dark)}
-.btn-primary:disabled{opacity:0.6;cursor:default}
-.btn-cancel{padding:9px 16px;background:none;border:1.5px solid var(--border2);border-radius:8px;font-size:14px;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif}
-.btn-cancel:hover{border-color:var(--purple);color:var(--purple)}
-.error-msg{color:#e24b4a;font-size:13px;margin-top:-10px;margin-bottom:12px;display:none}
-
-::-webkit-scrollbar{width:4px}
-::-webkit-scrollbar-track{background:transparent}
-::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
-
-/* RESPONSIVE */
-.proj-sidebar{transition:all 0.25s ease}
-.proj-sidebar.collapsed{width:0;min-width:0;border-right:none;overflow:hidden}
-
-@media(max-width:768px){
-  :root{--sidebar-w:0px}
-  .sidebar{position:fixed;top:58px;left:0;height:calc(100vh - 58px);z-index:90;box-shadow:4px 0 16px rgba(107,33,232,0.15);transform:translateX(-100%);transition:transform 0.25s ease}
-  .sidebar.mobile-open{transform:translateX(0);width:260px;min-width:260px}
-  .sidebar.collapsed{transform:translateX(-100%)}
-  .proj-sidebar{position:fixed;top:58px;left:0;height:calc(100vh - 58px);z-index:90;box-shadow:4px 0 16px rgba(107,33,232,0.15);transform:translateX(-100%);transition:transform 0.25s ease}
-  .proj-sidebar.mobile-open{transform:translateX(0);width:260px;min-width:260px}
-  .overlay{display:block}
-  .main-header{padding:14px 16px}
-  .q-list{padding:0 16px 40px}
-  .q-answer-inner{padding:0 0 14px 30px}
-  .header{padding:0 16px}
-  .proj-content{padding:20px 16px 60px}
-  .proj-header-bar{flex-direction:column;gap:10px}
-}
-
-.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:89;top:58px}
-.overlay.show{display:block}
-
-/* HEADER NAV */
-.header-nav{display:flex;align-items:center;gap:4px}
-.nav-link{background:none;border:none;color:rgba(255,255,255,0.75);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;padding:6px 14px;border-radius:20px;transition:all 0.15s}
-.nav-link:hover{background:rgba(255,255,255,0.15);color:#fff}
-.nav-link.active{background:rgba(255,255,255,0.2);color:#fff;font-weight:600}
-@media(max-width:600px){.nav-link{font-size:12px;padding:5px 10px}.header-badge{display:none}}
-
-/* TOAST */
-.toast{position:fixed;bottom:24px;right:24px;background:#1a0a3c;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;z-index:300;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none}
-.toast.show{opacity:1;transform:translateY(0)}
-
-/* NAV MENU */
-.nav-menu{position:fixed;top:58px;left:0;width:220px;background:var(--white);border:1.5px solid var(--border);border-top:none;border-radius:0 0 12px 12px;box-shadow:0 8px 24px rgba(107,33,232,0.12);z-index:150;display:none;flex-direction:column;overflow:hidden}
-.nav-menu.open{display:flex}
-.nav-item{padding:14px 20px;font-size:14px;font-weight:500;color:var(--text);cursor:pointer;display:flex;align-items:center;gap:10px;transition:all 0.15s;border:none;background:none;text-align:left;font-family:'DM Sans',sans-serif;width:100%}
-.nav-item:hover{background:var(--purple-light);color:var(--purple)}
-.nav-item .nav-icon{font-size:18px;width:24px;text-align:center}
-.nav-item.active{background:var(--purple-light);color:var(--purple);font-weight:600}
-.nav-divider{height:1px;background:var(--border);margin:4px 0}
-
-/* PROJECTS PAGE */
-.projects-page{display:none;flex:1;overflow:hidden}
-.projects-page.active{display:flex}
-.proj-sidebar{width:260px;min-width:260px;border-right:1.5px solid var(--border);background:var(--white);display:flex;flex-direction:column;overflow-y:auto}
-.proj-sidebar-top{padding:18px 16px 12px;border-bottom:1px solid var(--border)}
-.proj-sidebar-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:12px}
-.proj-btn{width:100%;padding:12px 16px;background:none;border:none;text-align:left;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:10px;transition:all 0.15s;border-left:3px solid transparent}
+/* ===== PROJECTS PAGE ===== */
+.projects-page{flex:1;display:none;overflow:hidden;flex-direction:row}
+.proj-sidebar{width:260px;min-width:260px;border-right:1.5px solid var(--border);background:var(--white);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
+.proj-sidebar-top{padding:16px 14px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
+.proj-sidebar-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:0}
+.proj-nav{flex:1;padding:8px 0}
+.proj-btn{width:100%;padding:10px 14px;background:none;border:none;text-align:left;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:10px;transition:all 0.15s;border-left:3px solid transparent}
 .proj-btn:hover{background:var(--surface);color:var(--purple)}
 .proj-btn.active{background:var(--purple-light);color:var(--purple);border-left-color:var(--purple);font-weight:500}
 .proj-btn-num{width:26px;height:26px;border-radius:50%;background:var(--surface2);color:var(--orange);font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
 .proj-btn.active .proj-btn-num{background:var(--purple);color:#fff}
 .proj-btn-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.proj-add-wrap{padding:12px 14px;border-top:1px solid var(--border)}
-.proj-add-btn{width:100%;padding:9px 14px;background:none;border:1.5px dashed var(--border2);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
+.proj-footer{padding:10px 12px;border-top:1px solid var(--border);display:none}
+.proj-add-btn{width:100%;padding:8px 12px;background:none;border:1.5px dashed var(--border2);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
 .proj-add-btn:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-light)}
-
 .proj-main{flex:1;overflow-y:auto;background:var(--bg)}
-.proj-content{padding:28px 36px 60px}
-.proj-empty{padding:80px 36px;text-align:center;color:var(--muted);font-size:14px}
-.proj-empty-icon{font-size:40px;margin-bottom:14px;opacity:0.35}
-
-.proj-header-bar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:28px;gap:16px}
-.proj-title{font-family:'DM Serif Display',serif;font-size:26px;color:var(--text);line-height:1.2}
-.proj-title-num{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;color:var(--orange);display:block;margin-bottom:4px;letter-spacing:0.06em;text-transform:uppercase}
-.proj-edit-btn{padding:7px 16px;background:none;border:1.5px solid var(--border2);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s;white-space:nowrap;flex-shrink:0}
+.proj-content{padding:24px 32px 60px}
+.proj-empty{padding:60px 24px;text-align:center;color:var(--muted);font-size:14px}
+.proj-header-bar{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;gap:12px}
+.proj-title-num{font-size:11px;font-weight:700;color:var(--orange);letter-spacing:0.1em;text-transform:uppercase;display:block;margin-bottom:4px}
+.proj-title{font-family:'DM Serif Display',serif;font-size:26px;color:var(--text)}
+.proj-edit-btn,.proj-del-btn{padding:6px 14px;background:none;border:1.5px solid var(--border2);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
 .proj-edit-btn:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-light)}
-.proj-del-btn{padding:7px 16px;background:none;border:1.5px solid var(--border2);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s;white-space:nowrap;flex-shrink:0}
 .proj-del-btn:hover{border-color:#e24b4a;color:#e24b4a;background:#fff0f0}
-
-.proj-section{margin-bottom:28px}
+.proj-section{margin-bottom:24px}
 .proj-section-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:8px}
 .proj-section-content{font-size:14px;color:#4a3d6b;line-height:1.8;background:var(--surface);border-radius:10px;padding:16px 18px;border:1px solid var(--border)}
 .proj-section-content p{margin-bottom:8px}
 .proj-section-content p:last-child{margin-bottom:0}
+
+/* ===== LOGIN PAGE ===== */
+.login-page{position:fixed;inset:0;background:var(--purple);display:flex;align-items:center;justify-content:center;z-index:500}
+.login-box{background:#fff;border-radius:16px;padding:36px;width:380px;max-width:calc(100vw - 40px);text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.3)}
+.login-logo{font-family:'DM Serif Display',serif;font-size:32px;color:var(--purple);margin-bottom:6px}
+.login-logo span{color:var(--orange)}
+.login-tagline{font-size:13px;color:var(--muted);margin-bottom:28px}
+.login-label{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:6px;font-weight:600;text-align:left}
+.login-input{width:100%;padding:10px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);outline:none;transition:border-color 0.15s;margin-bottom:14px}
+.login-input:focus{border-color:var(--purple)}
+.login-btn{width:100%;padding:11px;background:var(--purple);color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;margin-bottom:12px}
+.login-btn:hover{background:var(--purple-dark)}
+.login-err{color:#e24b4a;font-size:13px;margin-bottom:10px;display:none}
+
+/* ===== MODAL ===== */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(26,10,60,0.5);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-bg.open{display:flex}
+.modal{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:26px;width:520px;max-width:calc(100vw - 32px);max-height:90vh;overflow-y:auto;box-shadow:0 20px 60px rgba(107,33,232,0.15)}
+.modal h3{font-family:'DM Serif Display',serif;font-size:20px;margin-bottom:18px;color:var(--text)}
+.modal label{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:5px;font-weight:600}
+.modal input,.modal textarea,.modal select{width:100%;padding:9px 13px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--text);margin-bottom:14px;outline:none;transition:border-color 0.15s}
+.modal input:focus,.modal textarea:focus,.modal select:focus{border-color:var(--purple)}
+.modal textarea{min-height:110px;resize:vertical;line-height:1.6}
+.modal-actions{display:flex;gap:10px;justify-content:flex-end;margin-top:4px}
+.btn-primary{padding:9px 22px;background:var(--purple);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s}
+.btn-primary:hover{background:var(--purple-dark)}
+.btn-cancel{padding:9px 16px;background:none;border:1.5px solid var(--border2);border-radius:8px;font-size:14px;cursor:pointer;color:var(--muted);font-family:'DM Sans',sans-serif}
+.btn-cancel:hover{border-color:var(--purple);color:var(--purple)}
+.err-msg{color:#e24b4a;font-size:13px;margin-top:-10px;margin-bottom:12px;display:none}
+
+/* ===== OVERLAY ===== */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:89;top:var(--header-h)}
+.overlay.show{display:block}
+
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:24px;right:24px;background:#1a0a3c;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;z-index:300;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none}
+.toast.show{opacity:1;transform:translateY(0)}
+
+/* ===== SCROLLBAR ===== */
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
+
+/* ===== MOBILE ===== */
+@media(max-width:768px){
+  body{overflow:auto}
+  .app{bottom:var(--bottom-nav-h)}
+  .sidebar{position:fixed;top:var(--header-h);left:0;bottom:var(--bottom-nav-h);z-index:90;box-shadow:4px 0 16px rgba(107,33,232,0.15);transform:translateX(-100%);transition:transform 0.25s ease;width:260px!important;min-width:260px!important}
+  .sidebar.mobile-open{transform:translateX(0)}
+  .proj-sidebar{position:fixed;top:var(--header-h);left:0;bottom:var(--bottom-nav-h);z-index:90;box-shadow:4px 0 16px rgba(107,33,232,0.15);transform:translateX(-100%);transition:transform 0.25s ease;width:260px!important;min-width:260px!important}
+  .proj-sidebar.mobile-open{transform:translateX(0)}
+  .bottom-nav{display:flex}
+  .nav-link{display:none}
+  .sidebar-toggle{display:block}
+  .qa-header{padding:12px 16px}
+  .q-list{padding:0 16px 40px}
+  .q-answer-inner{padding:0 0 14px 30px}
+  .proj-content{padding:16px 16px 60px}
+  .proj-header-bar{flex-direction:column}
+  .home-title{font-size:38px}
+}
+
+/* ===== BOTTOM NAV (mobile) ===== */
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav-h);background:var(--white);border-top:1.5px solid var(--border);z-index:100;align-items:center;justify-content:space-around}
+.bottom-nav-btn{background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 16px;transition:all 0.15s;font-weight:500}
+.bottom-nav-btn .bn-icon{font-size:20px}
+.bottom-nav-btn.active{color:var(--purple)}
+.bottom-nav-btn.active .bn-icon{transform:scale(1.1)}
 </style>
 </head>
 <body>
 
-<div class="overlay" id="overlay" onclick="closeSidebars()"></div>
-<div class="header">
-  <div class="header-left">
-    <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">☰</button>
-    <div class="logo-text">Pro<span>Edu</span>Hut</div>
-  </div>
-  <div class="header-right">
-    <nav class="header-nav">
-      <button class="nav-link active" id="navHome" onclick="switchPage('home')">Home</button>
-      <button class="nav-link" id="navQA" onclick="switchPage('qa')">Q&A</button>
-      <button class="nav-link" id="navProjects" onclick="switchPage('projects')">Projects</button>
-    </nav>
-    <button class="admin-btn" id="adminToggleBtn" onclick="handleAdminClick()">🔒 Admin</button>
+<!-- LOGIN PAGE -->
+<div class="login-page" id="loginPage">
+  <div class="login-box">
+    <div class="login-logo">Pro<span>Edu</span>Hut</div>
+    <div class="login-tagline">ServiceNow Interview Preparation</div>
+    <label class="login-label">Password</label>
+    <input class="login-input" type="password" id="loginPass" placeholder="Enter password">
+    <div class="login-err" id="loginErr">Incorrect password. Try again.</div>
+    <button class="login-btn" onclick="doLogin()">Sign In</button>
   </div>
 </div>
 
-<!-- Nav handled in header -->
-
-<div class="layout">
-  <!-- HOME PAGE -->
-  <div id="homePage" style="display:flex;flex:1;overflow:hidden;width:100%;align-items:center;justify-content:center;background:#ffffff">
-    <div style="text-align:center;padding:40px 24px;max-width:700px">
-      <div style="margin-bottom:16px"><img src="Proeduhut_Last and Final Logo.png" alt="ProEduHut Logo" style="width:100px;height:100px;object-fit:contain"></div>
-      <div style="font-family:'DM Serif Display',serif;font-size:52px;color:#6b21e8;font-weight:400;line-height:1.1;margin-bottom:16px">Pro<span style="color:#ff6b00">Edu</span>Hut</div>
-      <div style="font-size:18px;color:#7a6fa0;font-weight:400;margin-bottom:40px;line-height:1.6">Your one-stop ServiceNow interview preparation platform</div>
-      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-        <button onclick="switchPage('qa')" style="padding:12px 28px;background:#6b21e8;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Browse Q&A →</button>
-        <button onclick="switchPage('projects')" style="padding:12px 28px;background:#fff;color:#6b21e8;border:1.5px solid #6b21e8;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif">View Projects →</button>
-      </div>
-    </div>
+<!-- HEADER -->
+<div class="header" id="mainHeader" style="display:none">
+  <div class="header-left">
+    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+    <div class="logo-text" onclick="switchPage('home')">Pro<span>Edu</span>Hut</div>
   </div>
+  <div class="header-right">
+    <span class="sync-dot-wrap" id="syncIndicator"><span class="sync-dot"></span> Saving...</span>
+    <button class="nav-link active" id="navHome" onclick="switchPage('home')">Home</button>
+    <button class="nav-link" id="navQA" onclick="switchPage('qa')">Q&A</button>
+    <button class="nav-link" id="navProjects" onclick="switchPage('projects')">Projects</button>
+    <button class="admin-btn" id="adminBtn" onclick="handleAdminClick()">🔒 Admin</button>
+    <button class="admin-btn" id="logoutBtn" onclick="doLogout()" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)">Logout</button>
+  </div>
+</div>
 
-  <!-- Q&A PAGE -->
-  <div id="qaPage" style="display:none;flex:1;overflow:hidden;width:100%">
-    <div class="sidebar" id="sidebar">
+<!-- OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeMobileSidebar()"></div>
+
+<!-- APP -->
+<div class="app" id="mainApp" style="display:none">
+
+  <!-- SIDEBAR (Q&A topics) -->
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-inner">
       <div class="sidebar-top">
         <div class="sidebar-label">Topics</div>
         <input class="search-box" type="text" placeholder="Search questions..." id="searchBox" oninput="doSearch()">
       </div>
-      <div class="topic-nav" id="topicNav"></div>
-      <div class="pagination" id="paginationBar">
-        <button class="page-btn" id="prevBtn" onclick="changePage(-1)">← Prev</button>
-        <span class="page-info" id="pageInfo"></span>
-        <button class="page-btn" id="nextBtn" onclick="changePage(1)">Next →</button>
-      </div>
-      <div class="add-topic-wrap" id="addTopicWrap">
+      <div class="topic-list" id="topicList"></div>
+      <div class="sidebar-footer" id="sidebarFooter">
         <button class="add-topic-btn" onclick="openAddTopic()">+ Add new topic</button>
       </div>
     </div>
-    <div class="main">
-      <div class="main-header">
-        <div class="main-title" id="mainTitle">Loading... <span id="mainCount"></span></div>
-        <span id="headerCount" style="font-size:12px;color:var(--muted);padding:4px 12px;border:1px solid var(--border2);border-radius:20px;white-space:nowrap"></span>
-        <button class="add-q-btn" id="addQBtn" onclick="openAddQ()">+ Add Question</button>
-      </div>
-      <div class="q-list" id="qList">
-        <div class="loading"><div class="loading-spinner"></div>Loading from Firebase...</div>
-      </div>
-    </div>
   </div>
 
-  <!-- PROJECTS PAGE -->
-  <div id="projectsPage" style="display:none;flex:1;overflow:hidden;width:100%">
-    <div class="proj-sidebar">
-      <div class="proj-sidebar-top">
-        <div class="proj-sidebar-label">Projects</div>
-      </div>
-      <div id="projNav"></div>
-      <div class="proj-add-wrap" id="projAddWrap" style="display:none">
-        <button class="proj-add-btn" onclick="openAddProject()">+ Add Project</button>
+  <!-- MAIN CONTENT -->
+  <div class="main">
+
+    <!-- HOME PAGE -->
+    <div class="home-page" id="homePage">
+      <div class="home-content">
+        <div class="home-title">Pro<span>Edu</span>Hut</div>
+        <div class="home-tagline">Your one-stop ServiceNow interview preparation platform</div>
+        <div class="home-btns">
+          <button class="home-btn-primary" onclick="switchPage('qa')">Browse Q&A →</button>
+          <button class="home-btn-secondary" onclick="switchPage('projects')">View Projects →</button>
+        </div>
       </div>
     </div>
-    <div class="proj-main">
-      <div id="projContent"></div>
+
+    <!-- Q&A PAGE -->
+    <div class="qa-page" id="qaPage">
+      <div class="qa-content">
+        <div class="qa-header">
+          <div class="qa-title" id="qaTitle">Select a topic <span id="qaCount"></span></div>
+          <div class="qa-header-right">
+            <span class="qa-badge" id="qaBadge"></span>
+            <button class="add-q-btn" id="addQBtn" onclick="openAddQ()">+ Add Question</button>
+          </div>
+        </div>
+        <div class="q-list" id="qList">
+          <div class="loading"><div class="loading-spinner"></div>Loading...</div>
+        </div>
+      </div>
     </div>
+
+    <!-- PROJECTS PAGE -->
+    <div class="projects-page" id="projectsPage">
+      <div class="proj-sidebar" id="projSidebar">
+        <div class="proj-sidebar-top"><div class="proj-sidebar-label">Projects</div></div>
+        <div class="proj-nav" id="projNav"></div>
+        <div class="proj-footer" id="projFooter">
+          <button class="proj-add-btn" onclick="openAddProject()">+ Add Project</button>
+        </div>
+      </div>
+      <div class="proj-main"><div id="projContent"></div></div>
+    </div>
+
   </div>
 </div>
 
+<!-- BOTTOM NAV (mobile) -->
+<div class="bottom-nav" id="bottomNav" style="display:none">
+  <button class="bottom-nav-btn active" id="bnHome" onclick="switchPage('home')"><span class="bn-icon">🏠</span>Home</button>
+  <button class="bottom-nav-btn" id="bnQA" onclick="switchPage('qa')"><span class="bn-icon">📚</span>Q&A</button>
+  <button class="bottom-nav-btn" id="bnProjects" onclick="switchPage('projects')"><span class="bn-icon">💼</span>Projects</button>
+  <button class="bottom-nav-btn" id="bnAdmin" onclick="handleAdminClick()"><span class="bn-icon">🔒</span>Admin</button>
+  <button class="bottom-nav-btn" onclick="doLogout()"><span class="bn-icon">🚪</span>Logout</button>
+</div>
+
+<!-- MODAL -->
 <div class="modal-bg" id="modalBg"><div class="modal" id="modalBox"></div></div>
 <div class="toast" id="toast"></div>
 
@@ -302,114 +337,100 @@ const firebaseConfig = {
   projectId: "proeduhut-c902d",
   storageBucket: "proeduhut-c902d.firebasestorage.app",
   messagingSenderId: "985558838561",
-  appId: "1:985558838561:web:540adaf6fc1fdaf2116260",
-  measurementId: "G-3VNJSBG0EW"
+  appId: "1:985558838561:web:540adaf6fc1fdaf2116260"
 };
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const DOC_REF = doc(db, "proeduhut", "data");
+const DATA_REF = doc(db, "proeduhut", "data");
+const PROJ_REF = doc(db, "proeduhut", "projects");
 
+const STUDENT_PASS = 'Arjun@2022';
 const ADMIN_PASS = 'PArjun@2022';
-const TOPICS_PER_PAGE = 20;
+const LOGIN_KEY = 'proeduhut_auth';
 
-const DEFAULT_DATA = {
-  topics: [
-    {
-      id: "client-scripts", name: "Client Scripts",
-      questions: [
-        { q: "What are the different ways to access server-side data in a Client Script?", a: "There are several ways:\n\n1. getReference() method — retrieves reference field data asynchronously from the server.\n\n2. GlideAjax — calls Script Includes from a Client Script, sending data to the server and retrieving results asynchronously.\n\n3. Display Business Rule — executes server-side logic and returns data to the client-side when a form is loaded." },
-        { q: "What is the order of execution between UI Policies and Client Scripts?", a: "UI Policies execute after Client Scripts. If both are triggered by the same action, the Client Script runs first, followed by the UI Policy." },
-        { q: "What are the different ways to make a field mandatory?", a: "1. Client Script — dynamically set a field as mandatory based on conditions.\n\n2. UI Policy — make fields mandatory based on form interactions.\n\n3. Data Policy — enforces field rules at both client and server levels.\n\n4. Field Dictionary Level — set a field as mandatory at the dictionary/schema level." }
-      ]
-    },
-    {
-      id: "integration", name: "Integration",
-      questions: [
-        { q: "What is ServiceNow Integration?", a: "A ServiceNow integration is an information exchange between the ServiceNow Platform and another system or source." },
-        { q: "What is inbound integration in ServiceNow?", a: "Inbound integration is making a call from a third-party application to ServiceNow's REST API to get information from ServiceNow, or to create/update records.\n\nExample: OEM to ServiceNow." },
-        { q: "What is outbound integration in ServiceNow?", a: "Outbound integration is making calls from ServiceNow to other applications APIs to get information or create/update records.\n\nExample: ServiceNow instance to ServiceNow instance." },
-        { q: "What is a MID Server?", a: "A Management, Instrumentation and Discovery (MID) Server is a Java application that runs on a server on your local network. It facilitates communication and data movement between a single ServiceNow instance and external applications, data sources, and services.\n\nA MID Server sits inside the firewall, collects information from infrastructure CIs, then sends that info to the ServiceNow instance in the cloud." },
-        { q: "Types of HTTP methods?", a: "GET — retrieves information.\nPOST — creates new records.\nPUT — updates if record exists, otherwise creates it.\nPATCH — updates an existing record.\nDELETE — deletes a record." },
-        { q: "What is the difference between PUT, POST and PATCH?", a: "POST is used only to create records. PATCH is used only to update an existing record. PUT is a combination: if the record exists it updates it, otherwise it creates a new one." },
-        { q: "What is OAuth?", a: "OAuth is an open standard for token-based authentication. It allows users to access instance resources by obtaining a token rather than entering login credentials with each request." },
-        { q: "What is the Table API and Import Set API?", a: "Table API — allows CRUD (create, read, update, delete) operations on existing tables.\n\nImport Set API — allows interaction with import set tables, used for bulk data loading and transformation." },
-        { q: "What is the ServiceNow REST API Explorer?", a: "An application to construct and test API requests to a ServiceNow instance. Available to users with the rest_api_explorer or admin role." },
-        { q: "What is a Scripted REST API?", a: "Scripted REST APIs allow application developers to build custom web service APIs. You can define service endpoints, query parameters, and headers, as well as scripts to manage the request and response.\n\nUsed for inbound integrations when OOB Table APIs are not sufficient and custom business logic is required." },
-        { q: "What is the difference between SOAP and REST?", a: "SOAP = Simple Object Access Protocol. REST = Representational State Transfer.\n\nREST uses SSL/HTTPS for security. SOAP uses SSL + WS-Security (preferred for banking/financial data).\n\nSOAP supports XML only. REST supports JSON, XML, and others.\n\nSOAP requires more bandwidth. REST requires less.\n\n✅ Normal integrations, web/mobile apps → REST preferred\n✅ Banking, financial transactions, sensitive data → SOAP preferred" },
-        { q: "What is a Retry Mechanism?", a: "Retry mechanism handles REST call failures by automatically retrying the request.\n\nIn our project, we implemented it using ServiceNow OOB HTTP Retry Policy — configured to retry 3 times with a 30-second interval before failing." },
-        { q: "How do you integrate ServiceNow with any other tool? (Prerequisites)", a: "1. Understand the business requirement and identify fields to be sent to the target system.\n2. Prepare an API Specification Document.\n3. Share the spec with the external team and finalise the integration design.\n4. Obtain authentication details (Client ID, Client Secret, or Username/Password).\n5. Create and configure a Connection & Credential Alias in ServiceNow.\n6. Create the integration using Flow Designer REST Step or REST Message.\n7. Configure endpoint URL, HTTP method, headers, authentication, and request body.\n8. Map ServiceNow fields to target system fields.\n9. Test the API call and validate request/response.\n10. Perform end-to-end testing." },
-        { q: "Why Connection & Credential Alias?", a: "Connection & Credential Alias is used to securely store authentication details (Client ID, Client Secret, Username, Password) so that credentials are not hardcoded in the integration." },
-        { q: "How do you test integrations in ServiceNow?", a: "1. ServiceNow REST API Explorer (built-in tool).\n2. Third-party tools like Postman." },
-        { q: "How do you set up OAuth 2.0 authentication?", a: "Set up OAuth 2.0 by creating a new record in Application Registry of the source application with the Client ID and Client Secret." },
-        { q: "What is error 500?", a: "Internal Server Error — an unexpected error occurred while processing the request." },
-        { q: "What are the REST API authentication methods in ServiceNow?", a: "ServiceNow REST APIs support:\n1. Basic Authentication\n2. Mutual Authentication\n3. OAuth" },
-        { q: "What steps do you follow for OAuth Integration?", a: "1. Create Application Registry records.\n2. Create Credentials.\n3. Create Connection.\n4. Create Connection & Credential Alias.\n5. Test the connection." },
-        { q: "What roles are required for Inbound and Outbound REST integration?", a: "Inbound — evt_mgmt_integration_user role (OEM sends events to the JSONv2 Event Management API).\n\nOutbound — rest_service and itil roles, along with Web Service Access Only." },
-        { q: "What is the difference between 200 and 201 status codes?", a: "200 — Request was successful.\n201 — Request was successful and a new record was created." },
-        { q: "What is E-Bonding?", a: "Integration between one ServiceNow instance and another ServiceNow instance." },
-        { q: "How do you handle errors in REST API?", a: "401 — Basic authorization error.\n402 — Incorrect user details.\n404 — URL or resource does not exist.\n500 — Internal Server Error." },
-        { q: "What are the drawbacks of the Table API?", a: "The Table API provides direct access to the table. If not properly controlled, external systems can accidentally create, update, or delete records.\n\nScripted REST API gives more control. In our project, we used the JSONv2 API endpoint (/api/global/em/jsonv2)." },
-        { q: "What is an ACL?", a: "An Access Control List (ACL) is a security rule defined to restrict the permissions of a user from viewing and interacting with data." },
-        { q: "What is a Script Include?", a: "A Script Include is a reusable server-side script containing methods or functions which can be called from Business Rules, other Script Includes, or GlideAjax calls from Client Scripts." }
-      ]
-    }
-  ]
-};
-
-// State
 let DATA = { topics: [] };
+let PROJECTS = [];
 let isAdmin = false;
+let activePage = 'home';
 let activeTopicId = null;
-let editingQ = null;
+let activeProjectId = null;
 let searchMode = false;
 let currentQs = [];
-let currentPage = 1;
+let editingQ = null;
+let editingProject = null;
 let dragSrcIdx = null;
-let sidebarOpen = true;
 let saveTimeout = null;
+let sidebarOpen = true;
+let readQuestions = JSON.parse(localStorage.getItem('proeduhut_read') || '{}');
 
-// --- Firebase ---
-async function initData() {
-  // Load Q&A data
-  const PROJ_REF = doc(db, "proeduhut", "projects");
-  try {
-    const snap = await getDoc(DOC_REF);
-    if (snap.exists()) { DATA = snap.data(); }
-    else { DATA = JSON.parse(JSON.stringify(DEFAULT_DATA)); await setDoc(DOC_REF, DATA); }
-    activeTopicId = DATA.topics[0]?.id || null;
-    renderTopics(); renderQuestions();
-    updateHomeStats();
-  } catch(e) {
-    DATA = JSON.parse(JSON.stringify(DEFAULT_DATA));
-    activeTopicId = DATA.topics[0]?.id || null;
-    renderTopics(); renderQuestions();
-    showToast('⚠️ Offline mode — changes may not save');
+// ===== AUTH =====
+function checkAuth() {
+  const auth = localStorage.getItem(LOGIN_KEY);
+  if (auth === 'student' || auth === 'admin') {
+    if (auth === 'admin') isAdmin = true;
+    showApp();
   }
+}
 
-  // Load Projects data
+window.doLogin = function() {
+  const val = document.getElementById('loginPass').value;
+  if (val === ADMIN_PASS) {
+    localStorage.setItem(LOGIN_KEY, 'admin');
+    isAdmin = true;
+    showApp();
+  } else if (val === STUDENT_PASS) {
+    localStorage.setItem(LOGIN_KEY, 'student');
+    showApp();
+  } else {
+    document.getElementById('loginErr').style.display = 'block';
+    document.getElementById('loginPass').value = '';
+    document.getElementById('loginPass').focus();
+  }
+};
+
+document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') window.doLogin(); });
+
+function showApp() {
+  document.getElementById('loginPage').style.display = 'none';
+  document.getElementById('mainHeader').style.display = 'flex';
+  document.getElementById('mainApp').style.display = 'flex';
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    document.getElementById('bottomNav').style.display = 'flex';
+  }
+  initData();
+}
+
+// ===== FIREBASE =====
+async function initData() {
+  try {
+    const snap = await getDoc(DATA_REF);
+    if (snap.exists()) DATA = snap.data();
+    else { DATA = {topics:[]}; await setDoc(DATA_REF, DATA); }
+    if (DATA.topics?.length) activeTopicId = DATA.topics[0].id;
+    renderTopics();
+  } catch(e) { showToast('⚠️ Offline mode'); }
+
   try {
     const psnap = await getDoc(PROJ_REF);
-    if (psnap.exists()) { PROJECTS = psnap.data().list || []; }
-    else { PROJECTS = []; }
+    if (psnap.exists()) PROJECTS = psnap.data().list || [];
     if (PROJECTS.length) activeProjectId = PROJECTS[0].id;
-  } catch(e) { PROJECTS = []; }
+  } catch(e) {}
 
-  // Live Q&A listener
-  onSnapshot(DOC_REF, (snap) => {
+  onSnapshot(DATA_REF, snap => {
     if (snap.exists() && !saveTimeout) {
       DATA = snap.data();
-      if (!activeTopicId || !DATA.topics.find(t=>t.id===activeTopicId)) activeTopicId = DATA.topics[0]?.id || null;
+      if (!activeTopicId || !DATA.topics?.find(t=>t.id===activeTopicId)) activeTopicId = DATA.topics?.[0]?.id || null;
       renderTopics();
-      if (!searchMode) renderQuestions();
+      if (!searchMode && activePage==='qa') renderQuestions();
     }
   });
 
-  // Live Projects listener
-  onSnapshot(PROJ_REF, (snap) => {
+  onSnapshot(PROJ_REF, snap => {
     if (snap.exists()) {
       PROJECTS = snap.data().list || [];
-      if (currentPage2 === 'projects') renderProjects();
+      if (activePage==='projects') renderProjects();
     }
   });
 }
@@ -418,183 +439,172 @@ async function saveData() {
   document.getElementById('syncIndicator').classList.add('show');
   clearTimeout(saveTimeout);
   saveTimeout = setTimeout(async () => {
-    try {
-      await setDoc(DOC_REF, DATA);
-      showToast('✅ Saved');
-    } catch(e) {
-      showToast('❌ Save failed');
-    }
+    try { await setDoc(DATA_REF, DATA); showToast('✅ Saved'); }
+    catch(e) { showToast('❌ Save failed'); }
     document.getElementById('syncIndicator').classList.remove('show');
     saveTimeout = null;
   }, 600);
 }
 
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+async function saveProjects() {
+  document.getElementById('syncIndicator').classList.add('show');
+  try { await setDoc(PROJ_REF, { list: PROJECTS }); showToast('✅ Saved'); }
+  catch(e) { showToast('❌ Save failed'); }
+  document.getElementById('syncIndicator').classList.remove('show');
+}
 
+function saveReadProgress() {
+  localStorage.setItem('proeduhut_read', JSON.stringify(readQuestions));
+}
+
+// ===== HELPERS =====
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 function showToast(msg) {
   const t = document.getElementById('toast');
-  t.textContent = msg;
-  t.classList.add('show');
+  t.textContent = msg; t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'), 2500);
 }
 
-// --- Nav Menu ---
-let currentPage2 = 'qa';
-
-// toggleNav removed - hamburger now directly calls toggleSidebar
-
-window.closeSidebars = function() {
-  document.getElementById('sidebar').classList.remove('mobile-open');
-  document.querySelector('.proj-sidebar').classList.remove('mobile-open');
-  document.getElementById('overlay').classList.remove('show');
-};
-
-
-
+// ===== PAGE SWITCHING =====
 window.switchPage = function(page) {
-  currentPage2 = page;
+  activePage = page;
+  closeMobileSidebar();
   document.getElementById('homePage').style.display = page==='home' ? 'flex' : 'none';
   document.getElementById('qaPage').style.display = page==='qa' ? 'flex' : 'none';
   document.getElementById('projectsPage').style.display = page==='projects' ? 'flex' : 'none';
-  document.getElementById('navHome').classList.toggle('active', page==='home');
-  document.getElementById('navQA').classList.toggle('active', page==='qa');
-  document.getElementById('navProjects').classList.toggle('active', page==='projects');
+  // sidebar visibility
+  document.getElementById('sidebar').style.display = page==='qa' ? '' : (window.innerWidth>768 ? 'none' : '');
+  ['navHome','navQA','navProjects'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+  document.getElementById(page==='home'?'navHome':page==='qa'?'navQA':'navProjects')?.classList.add('active');
+  ['bnHome','bnQA','bnProjects'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+  document.getElementById(page==='home'?'bnHome':page==='qa'?'bnQA':'bnProjects')?.classList.add('active');
+  if (page==='qa' && activeTopicId) renderQuestions();
   if (page==='projects') renderProjects();
-  if (page==='home') updateHomeStats();
 };
 
-function updateHomeStats() {
-  const totalQ = (DATA.topics||[]).reduce((s,t)=>s+t.questions.length,0);
-  const totalT = (DATA.topics||[]).length;
-  const totalP = PROJECTS.length;
-  const qEl = document.getElementById('homeTotalQ');
-  const tEl = document.getElementById('homeTotalT');
-  const pEl = document.getElementById('homeTotalP');
-  if(qEl) qEl.textContent = totalQ;
-  if(tEl) tEl.textContent = totalT;
-  if(pEl) pEl.textContent = totalP;
-};
-
-// --- Sidebar toggle (only for QA) ---
+// ===== SIDEBAR =====
 window.toggleSidebar = function() {
   const isMobile = window.innerWidth <= 768;
   if (isMobile) {
-    if (currentPage2 === 'qa') {
-      const sb = document.getElementById('sidebar');
-      const isOpen = sb.classList.contains('mobile-open');
-      sb.classList.toggle('mobile-open', !isOpen);
-      document.getElementById('overlay').classList.toggle('show', !isOpen);
-    } else {
-      const psb = document.querySelector('.proj-sidebar');
-      const isOpen = psb.classList.contains('mobile-open');
-      psb.classList.toggle('mobile-open', !isOpen);
-      document.getElementById('overlay').classList.toggle('show', !isOpen);
-    }
+    const target = activePage==='projects' ? document.getElementById('projSidebar') : document.getElementById('sidebar');
+    const isOpen = target.classList.contains('mobile-open');
+    target.classList.toggle('mobile-open', !isOpen);
+    document.getElementById('overlay').classList.toggle('show', !isOpen);
   } else {
     sidebarOpen = !sidebarOpen;
     document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
-    document.querySelector('.proj-sidebar').classList.toggle('collapsed', !sidebarOpen);
+    document.getElementById('projSidebar').classList.toggle('collapsed', !sidebarOpen);
   }
 };
 
-// --- Projects ---
-let PROJECTS = [];
-let activeProjectId = null;
-let editingProject = null;
-const PROJ_DOC_REF_KEY = "projects";
+window.closeMobileSidebar = function() {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.getElementById('projSidebar').classList.remove('mobile-open');
+  document.getElementById('overlay').classList.remove('show');
+};
 
-// --- Admin ---
-window.handleAdminClick = function() { isAdmin ? logoutAdmin() : openLoginModal(); };
-function openLoginModal() {
+// ===== ADMIN =====
+window.handleAdminClick = function() { isAdmin ? logoutAdmin() : openAdminLogin(); };
+function openAdminLogin() {
   openModal(`
     <h3>Admin Login</h3>
     <label>Password</label>
     <input type="password" id="adminPass" placeholder="Enter admin password">
-    <div class="error-msg" id="loginErr">Incorrect password. Try again.</div>
+    <div class="err-msg" id="adminErr">Incorrect password.</div>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-primary" onclick="doLogin()">Login</button>
-    </div>
-  `);
-  setTimeout(()=>{ const el=document.getElementById('adminPass'); if(el){ el.focus(); el.addEventListener('keydown',e=>{ if(e.key==='Enter') window.doLogin(); }); } },60);
+      <button class="btn-primary" onclick="doAdminLogin()">Login</button>
+    </div>`);
+  setTimeout(()=>{ const el=document.getElementById('adminPass'); if(el){ el.focus(); el.addEventListener('keydown',e=>{ if(e.key==='Enter') window.doAdminLogin(); }); } },60);
 }
-window.doLogin = function() {
+window.doAdminLogin = function() {
   const val = document.getElementById('adminPass').value;
-  if (val === ADMIN_PASS) { isAdmin=true; closeModal(); updateAdminUI(); showToast('🔓 Admin mode on'); }
-  else { document.getElementById('loginErr').style.display='block'; document.getElementById('adminPass').value=''; document.getElementById('adminPass').focus(); }
+  if (val===ADMIN_PASS) { isAdmin=true; localStorage.setItem(LOGIN_KEY,'admin'); closeModal(); updateAdminUI(); showToast('🔓 Admin mode on'); }
+  else { document.getElementById('adminErr').style.display='block'; document.getElementById('adminPass').value=''; }
 };
-function logoutAdmin() { isAdmin=false; updateAdminUI(); showToast('🔒 Logged out'); }
+function logoutAdmin() { isAdmin=false; localStorage.setItem(LOGIN_KEY,'student'); updateAdminUI(); showToast('🔒 Logged out'); }
+
+window.doLogout = function() {
+  if(!confirm('Are you sure you want to logout?')) return;
+  localStorage.removeItem(LOGIN_KEY);
+  location.reload();
+};
 function updateAdminUI() {
-  const btn = document.getElementById('adminToggleBtn');
-  const addQ = document.getElementById('addQBtn');
-  const addTopic = document.getElementById('addTopicWrap');
-  const layout = document.querySelector('.layout');
+  const btn = document.getElementById('adminBtn');
+  const bnBtn = document.getElementById('bnAdmin');
+  const layout = document.querySelector('.app');
   if (isAdmin) {
-    btn.textContent='🔓 Logout Admin'; btn.className='admin-badge';
-    addQ.style.display='flex'; addTopic.style.display='block';
-    layout.classList.add('admin-mode');
+    btn.textContent='🔓 Logout'; btn.className='admin-badge';
+    if(bnBtn){ bnBtn.querySelector('.bn-icon').textContent='🔓'; }
+    document.getElementById('addQBtn').style.display='flex';
+    document.getElementById('sidebarFooter').style.display='block';
+    document.getElementById('projFooter').style.display='block';
+    layout?.classList.add('admin-mode');
   } else {
     btn.textContent='🔒 Admin'; btn.className='admin-btn';
-    addQ.style.display='none'; addTopic.style.display='none';
-    layout.classList.remove('admin-mode');
+    if(bnBtn){ bnBtn.querySelector('.bn-icon').textContent='🔒'; }
+    document.getElementById('addQBtn').style.display='none';
+    document.getElementById('sidebarFooter').style.display='none';
+    document.getElementById('projFooter').style.display='none';
+    layout?.classList.remove('admin-mode');
   }
-  renderTopics(); renderQuestions();
-  if (currentPage2==='projects') renderProjects();
+  renderTopics();
+  if (activePage==='qa') renderQuestions();
+  if (activePage==='projects') renderProjects();
 }
 
-// --- Topics + Pagination ---
+// ===== TOPICS =====
 function renderTopics() {
-  const nav = document.getElementById('topicNav');
   const topics = DATA.topics || [];
-  const totalPages = Math.ceil(topics.length / TOPICS_PER_PAGE);
-  if (currentPage > totalPages) currentPage = Math.max(1, totalPages);
-  const start = (currentPage-1)*TOPICS_PER_PAGE;
-  const paginated = topics.slice(start, start+TOPICS_PER_PAGE);
+  const nav = document.getElementById('topicList');
+  if (!topics.length) { nav.innerHTML='<div class="empty"><p>No topics yet.</p></div>'; return; }
 
-  nav.innerHTML = paginated.map((t, pi) => {
-    const globalIdx = start + pi;
-    return `
-    <button class="topic-btn${t.id===activeTopicId&&!searchMode?' active':''}"
-      id="tbtn-${t.id}"
-      onclick="selectTopic('${t.id}')"
-      draggable="${isAdmin}"
-      ondragstart="onDragStart(event,${globalIdx})"
-      ondragover="onDragOver(event,${globalIdx})"
-      ondragleave="onDragLeave(event)"
-      ondrop="onDrop(event,${globalIdx})"
-      ondragend="onDragEnd(event)">
-      ${isAdmin ? `<span class="drag-handle" title="Drag to reorder">⠿</span>` : ''}
-      <span class="topic-num">${globalIdx+1}.</span>
-      <span class="topic-name">${esc(t.name)}</span>
-      <span class="topic-tc">${t.questions.length}</span>
-    </button>`;
-  }).join('');
+  // Group by module (for now all ITSM)
+  const modules = {};
+  topics.forEach((t,i) => {
+    const mod = t.module || 'ITSM';
+    if (!modules[mod]) modules[mod] = [];
+    modules[mod].push({...t, _globalIdx: i});
+  });
 
-  // Pagination bar
-  const bar = document.getElementById('paginationBar');
-  if (totalPages <= 1) { bar.style.display='none'; }
-  else {
-    bar.style.display='flex';
-    document.getElementById('prevBtn').disabled = currentPage===1;
-    document.getElementById('nextBtn').disabled = currentPage===totalPages;
-    document.getElementById('pageInfo').textContent = `${currentPage}/${totalPages}`;
-  }
+  nav.innerHTML = Object.entries(modules).map(([modName, modTopics]) => `
+    <div class="module-header">${esc(modName)}</div>
+    ${modTopics.map(t => {
+      const read = (readQuestions[t.id] || []).length;
+      const total = t.questions.length;
+      const pct = total ? Math.round(read/total*100) : 0;
+      return `
+        <button class="topic-btn${t.id===activeTopicId&&!searchMode?' active':''}"
+          onclick="selectTopic('${t.id}')"
+          draggable="${isAdmin}"
+          ondragstart="onDragStart(event,${t._globalIdx})"
+          ondragover="onDragOver(event,${t._globalIdx})"
+          ondragleave="onDragLeave(event)"
+          ondrop="onDrop(event,${t._globalIdx})"
+          ondragend="onDragEnd(event)">
+          ${isAdmin ? '<span class="drag-handle">⠿</span>' : ''}
+          <span class="topic-num">${t._globalIdx+1}.</span>
+          <span class="topic-name">${esc(t.name)}</span>
+          <span class="topic-tc">${total}</span>
+        </button>
+        ${total>0 ? `<div class="topic-progress"><div class="topic-progress-bar" style="width:${pct}%"></div></div>` : ''}`;
+    }).join('')}
+  `).join('');
 
   const total = topics.reduce((s,t)=>s+t.questions.length,0);
-  document.getElementById('headerCount').textContent = `${topics.length} topics · ${total} Q&As`;
+  document.getElementById('qaBadge').textContent = `${topics.length} topics · ${total} Q&As`;
 }
-
-window.changePage = function(dir) { currentPage += dir; renderTopics(); };
 
 window.selectTopic = function(id) {
   activeTopicId=id; searchMode=false;
   document.getElementById('searchBox').value='';
   renderTopics(); renderQuestions();
+  if (window.innerWidth<=768) closeMobileSidebar();
 };
 
-// --- Drag & Drop ---
+// ===== DRAG DROP =====
 window.onDragStart = function(e,idx) { dragSrcIdx=idx; e.currentTarget.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; };
-window.onDragOver = function(e,idx) { e.preventDefault(); e.dataTransfer.dropEffect='move'; if(idx!==dragSrcIdx) e.currentTarget.classList.add('drag-over'); };
+window.onDragOver = function(e,idx) { e.preventDefault(); if(idx!==dragSrcIdx) e.currentTarget.classList.add('drag-over'); };
 window.onDragLeave = function(e) { e.currentTarget.classList.remove('drag-over'); };
 window.onDrop = function(e,idx) {
   e.preventDefault(); e.currentTarget.classList.remove('drag-over');
@@ -609,24 +619,28 @@ window.onDragEnd = function(e) {
   dragSrcIdx=null;
 };
 
-// --- Questions ---
+// ===== QUESTIONS =====
 function renderQuestions(qs, highlight) {
-  const topic = DATA.topics.find(t=>t.id===activeTopicId);
-  if (!topic && !searchMode) { document.getElementById('qList').innerHTML='<div class="empty"><div class="empty-icon">👈</div><p>Select a topic from the sidebar.</p></div>'; return; }
-  currentQs = qs || (topic ? topic.questions : []);
-  const title = searchMode ? 'Search Results' : (topic?.name || '');
-  document.getElementById('mainTitle').innerHTML = `${esc(title)} <span>${currentQs.length} question${currentQs.length!==1?'s':''}</span>`;
+  const topic = DATA.topics?.find(t=>t.id===activeTopicId);
+  if (!topic && !searchMode) {
+    document.getElementById('qList').innerHTML='<div class="empty"><div class="empty-icon">👈</div><p>Select a topic from the sidebar.</p></div>';
+    document.getElementById('qaTitle').innerHTML='Select a topic';
+    return;
+  }
+  currentQs = qs || (topic?.questions || []);
+  const title = searchMode ? 'Search Results' : (topic?.name||'');
+  document.getElementById('qaTitle').innerHTML = `${esc(title)} <span>${currentQs.length} question${currentQs.length!==1?'s':''}</span>`;
 
   const list = document.getElementById('qList');
   if (!currentQs.length) { list.innerHTML='<div class="empty"><div class="empty-icon">📭</div><p>No questions found.</p></div>'; return; }
 
   list.innerHTML = currentQs.map((qa,i) => {
-    let qText=esc(qa.q);
+    let qText = esc(qa.q);
     if(highlight){ const re=new RegExp(`(${highlight.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'); qText=qText.replace(re,'<mark class="highlight">$1</mark>'); }
-    const ansHtml=qa.a.split('\n').filter(l=>l.trim()).map(l=>`<p>${esc(l)}</p>`).join('');
-    const topicName=searchMode?DATA.topics.find(t=>t.questions.includes(qa))?.name:null;
-    const badge=topicName?`<span class="t-badge">${esc(topicName)}</span><br>`:'';
-    const adminActions=isAdmin?`<div class="q-actions"><button class="q-act" onclick="openEditQ(${i});event.stopPropagation()">Edit</button><button class="q-act del" onclick="deleteQ(${i});event.stopPropagation()">Delete</button></div>`:'';
+    const ansHtml = qa.a.split('\n').filter(l=>l.trim()).map(l=>`<p>${esc(l)}</p>`).join('');
+    const topicName = searchMode ? DATA.topics?.find(t=>t.questions?.includes(qa))?.name : null;
+    const badge = topicName ? `<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;background:var(--orange-light);color:var(--orange);border:1px solid rgba(255,107,0,0.2);margin-bottom:4px">${esc(topicName)}</span><br>` : '';
+    const adminActions = isAdmin ? `<div class="q-actions"><button class="q-act" onclick="openEditQ(${i});event.stopPropagation()">Edit</button><button class="q-act del" onclick="deleteQ(${i});event.stopPropagation()">Delete</button></div>` : '';
     return `<div class="q-item" id="qi-${i}">
       <div class="q-header" onclick="toggleQ(${i})">
         <span class="q-num">${i+1}.</span>
@@ -642,7 +656,18 @@ window.toggleQ = function(i) {
   const el=document.getElementById(`qi-${i}`);
   const isOpen=el.classList.contains('open');
   document.querySelectorAll('.q-item.open').forEach(x=>x.classList.remove('open'));
-  if(!isOpen) el.classList.add('open');
+  if(!isOpen){
+    el.classList.add('open');
+    // Track progress
+    if(activeTopicId && !searchMode){
+      if(!readQuestions[activeTopicId]) readQuestions[activeTopicId]=[];
+      if(!readQuestions[activeTopicId].includes(i)) {
+        readQuestions[activeTopicId].push(i);
+        saveReadProgress();
+        renderTopics();
+      }
+    }
+  }
 };
 
 window.doSearch = function() {
@@ -651,13 +676,13 @@ window.doSearch = function() {
   if(!q){ searchMode=false; renderTopics(); renderQuestions(); return; }
   searchMode=true;
   const all=[];
-  DATA.topics.forEach(t=>t.questions.forEach(qa=>{ if(qa.q.toLowerCase().includes(q)||qa.a.toLowerCase().includes(q)) all.push(qa); }));
+  DATA.topics?.forEach(t=>t.questions?.forEach(qa=>{ if(qa.q.toLowerCase().includes(q)||qa.a.toLowerCase().includes(q)) all.push(qa); }));
   renderTopics(); renderQuestions(all, raw.trim());
 };
 
-// --- Modal ---
+// ===== MODAL =====
 function openModal(html){ document.getElementById('modalBox').innerHTML=html; document.getElementById('modalBg').classList.add('open'); }
-window.closeModal = function(){ document.getElementById('modalBg').classList.remove('open'); editingQ=null; };
+window.closeModal = function(){ document.getElementById('modalBg').classList.remove('open'); editingQ=null; editingProject=null; };
 
 window.openAddTopic = function() {
   openModal(`<h3>Add New Topic</h3><label>Topic Name</label><input type="text" id="mInput" placeholder="e.g. Business Rules, Flow Designer..."><div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="saveTopic()">Add Topic</button></div>`);
@@ -666,16 +691,14 @@ window.openAddTopic = function() {
 window.saveTopic = function() {
   const name=document.getElementById('mInput').value.trim();
   if(!name) return;
-  const id='topic-'+Date.now();
-  DATA.topics.push({id,name,questions:[]});
-  saveData(); closeModal();
-  activeTopicId=id; searchMode=false;
-  renderTopics(); renderQuestions();
+  if(!DATA.topics) DATA.topics=[];
+  DATA.topics.push({id:'topic-'+Date.now(),name,module:'ITSM',questions:[]});
+  saveData(); closeModal(); renderTopics();
 };
 
 window.openAddQ = function() {
-  const topicSelect=DATA.topics.map((t,i)=>`<option value="${t.id}"${t.id===activeTopicId?' selected':''}>${i+1}. ${esc(t.name)}</option>`).join('');
-  openModal(`<h3>Add Question</h3><label>Topic</label><select id="mTopic">${topicSelect}</select><label>Question</label><input type="text" id="mQ" placeholder="Type the interview question..."><label>Answer</label><textarea id="mA" placeholder="Type the answer here...&#10;&#10;Use blank lines to separate points."></textarea><div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="saveQ()">Add Question</button></div>`);
+  const topicSelect=(DATA.topics||[]).map((t,i)=>`<option value="${t.id}"${t.id===activeTopicId?' selected':''}>${i+1}. ${esc(t.name)}</option>`).join('');
+  openModal(`<h3>Add Question</h3><label>Topic</label><select id="mTopic">${topicSelect}</select><label>Question</label><input type="text" id="mQ" placeholder="Type the interview question..."><label>Answer</label><textarea id="mA" placeholder="Type the answer here..."></textarea><div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="saveQ()">Add Question</button></div>`);
   setTimeout(()=>{ const el=document.getElementById('mQ'); if(el)el.focus(); },60);
 };
 window.openEditQ = function(i) {
@@ -688,176 +711,129 @@ window.saveQ = function() {
   const a=document.getElementById('mA').value.trim();
   if(!q||!a) return;
   if(editingQ!==null){ const qa=currentQs[editingQ]; qa.q=q; qa.a=a; }
-  else { const topicId=document.getElementById('mTopic').value; DATA.topics.find(t=>t.id===topicId).questions.push({q,a}); activeTopicId=topicId; }
-  saveData(); closeModal();
-  searchMode=false; document.getElementById('searchBox').value='';
+  else { const topicId=document.getElementById('mTopic').value; DATA.topics.find(t=>t.id===topicId)?.questions.push({q,a}); activeTopicId=topicId; }
+  saveData(); closeModal(); searchMode=false; document.getElementById('searchBox').value='';
   renderTopics(); renderQuestions();
 };
 window.deleteQ = function(i) {
   if(!confirm('Delete this question?')) return;
   const qa=currentQs[i];
-  DATA.topics.forEach(t=>{ const idx=t.questions.indexOf(qa); if(idx>-1) t.questions.splice(idx,1); });
+  DATA.topics?.forEach(t=>{ const idx=t.questions?.indexOf(qa); if(idx>-1) t.questions.splice(idx,1); });
   saveData(); renderTopics(); renderQuestions();
 };
 
-document.getElementById('modalBg').addEventListener('click',function(e){ if(e.target===this) window.closeModal(); });
-document.addEventListener('keydown',function(e){ if(e.key==='Escape') window.closeModal(); });
-
-// --- Projects save ---
-async function saveProjects() {
-  document.getElementById('syncIndicator').classList.add('show');
-  try {
-    const PROJ_REF = doc(db, "proeduhut", "projects");
-    await setDoc(PROJ_REF, { list: PROJECTS });
-    showToast('✅ Saved');
-  } catch(e) { showToast('❌ Save failed'); }
-  document.getElementById('syncIndicator').classList.remove('show');
-}
-
-// --- Projects render ---
+// ===== PROJECTS =====
 function renderProjects() {
-  const nav = document.getElementById('projNav');
-  const addWrap = document.getElementById('projAddWrap');
-  addWrap.style.display = isAdmin ? 'block' : 'none';
-
-  if (!PROJECTS.length) {
-    nav.innerHTML = '';
-    document.getElementById('projContent').innerHTML = `<div class="proj-empty"><div class="proj-empty-icon">💼</div><p>${isAdmin ? 'No projects yet. Click "+ Add Project" to get started.' : 'No projects added yet.'}</p></div>`;
+  const nav=document.getElementById('projNav');
+  document.getElementById('projFooter').style.display=isAdmin?'block':'none';
+  if(!PROJECTS.length){
+    nav.innerHTML='';
+    document.getElementById('projContent').innerHTML=`<div class="proj-empty"><div style="font-size:40px;margin-bottom:14px;opacity:0.3">💼</div><p>${isAdmin?'No projects yet. Click "+ Add Project" to start.':'No projects added yet.'}</p></div>`;
     return;
   }
-
-  nav.innerHTML = PROJECTS.map((p,i) => `
+  nav.innerHTML=PROJECTS.map((p,i)=>`
     <button class="proj-btn${p.id===activeProjectId?' active':''}" onclick="selectProject('${p.id}')">
       <span class="proj-btn-num">${i+1}</span>
       <span class="proj-btn-name">${esc(p.name)}</span>
-    </button>
-  `).join('');
-
-  const proj = PROJECTS.find(p=>p.id===activeProjectId) || PROJECTS[0];
-  if (proj) renderProjectDetail(proj);
+    </button>`).join('');
+  const proj=PROJECTS.find(p=>p.id===activeProjectId)||PROJECTS[0];
+  if(proj) renderProjectDetail(proj);
 }
 
-function formatContent(text, autoNumber=false) {
-  if (!text) return '';
-  const lines = text.split('\n').filter(l => l.trim());
-  if (!autoNumber) {
-    return lines.map(l => `<p>${esc(l)}</p>`).join('');
-  }
-  return lines.map((l, i) => {
-    const stripped = l.replace(/^\d+\.\s+/, '');
+function formatContent(text, numbered=false) {
+  if(!text) return '';
+  const lines=text.split('\n').filter(l=>l.trim());
+  if(!numbered) return lines.map(l=>`<p>${esc(l)}</p>`).join('');
+  return lines.map((l,i)=>{
+    const stripped=l.replace(/^\d+\.\s+/,'');
     return `<p style="padding-left:24px;position:relative"><span style="position:absolute;left:0;font-weight:700;color:var(--orange)">${i+1}.</span>${esc(stripped)}</p>`;
   }).join('');
 }
 
 function renderProjectDetail(proj) {
-  const idx = PROJECTS.indexOf(proj);
-  const adminBtns = isAdmin ? `
-    <div style="display:flex;gap:8px">
-      <button class="proj-edit-btn" onclick="openEditProject('${proj.id}')">Edit</button>
-      <button class="proj-del-btn" onclick="deleteProject('${proj.id}')">Delete</button>
-    </div>` : '';
-
-  const fields = [
-    { label: 'Project Objective', key: 'objective' },
-    { label: 'Project Explanation', key: 'explanation' },
-    { label: 'Role & Responsibilities', key: 'role' }
+  const idx=PROJECTS.indexOf(proj);
+  const adminBtns=isAdmin?`<div style="display:flex;gap:8px"><button class="proj-edit-btn" onclick="openEditProject('${proj.id}')">Edit</button><button class="proj-del-btn" onclick="deleteProject('${proj.id}')">Delete</button></div>`:'';
+  const fields=[
+    {label:'Project Objective',key:'objective',numbered:false},
+    {label:'Project Explanation',key:'explanation',numbered:true},
+    {label:'Role & Responsibilities',key:'role',numbered:true}
   ];
-
-  document.getElementById('projContent').innerHTML = `
+  document.getElementById('projContent').innerHTML=`
     <div class="proj-content">
       <div class="proj-header-bar">
-        <div>
-          <span class="proj-title-num">Project ${idx+1}</span>
-          <div class="proj-title">${esc(proj.name)}</div>
-        </div>
+        <div><span class="proj-title-num">Project ${idx+1}</span><div class="proj-title">${esc(proj.name)}</div></div>
         ${adminBtns}
       </div>
-      ${fields.map(f => proj[f.key] ? `
+      ${fields.map(f=>proj[f.key]?`
         <div class="proj-section">
           <div class="proj-section-label">${f.label}</div>
-          <div class="proj-section-content">${formatContent(proj[f.key], f.key==='explanation'||f.key==='role')}</div>
-        </div>` : '').join('')}
+          <div class="proj-section-content">${formatContent(proj[f.key],f.numbered)}</div>
+        </div>`:'').join('')}
     </div>`;
 }
 
 window.selectProject = function(id) {
-  activeProjectId = id;
+  activeProjectId=id;
+  if(window.innerWidth<=768) closeMobileSidebar();
   renderProjects();
 };
 
 window.openAddProject = function() {
-  editingProject = null;
-  const nextNum = PROJECTS.length + 1;
-  openModal(`
-    <h3>Add Project</h3>
-    <label>Project Number</label>
-    <input type="text" value="Project ${nextNum}" disabled style="opacity:0.6;cursor:not-allowed">
-    <label>Project Name</label>
-    <input type="text" id="pName" placeholder="e.g. IFS Event Management Integration">
-    <label>Project Objective</label>
-    <textarea id="pObjective" placeholder="What was the goal of this project?"></textarea>
-    <label>Project Explanation</label>
-    <textarea id="pExplanation" placeholder="Detailed technical explanation..."></textarea>
-    <label>Role & Responsibilities</label>
-    <textarea id="pRole" placeholder="Your role and what you were responsible for..."></textarea>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-primary" onclick="saveProject()">Add Project</button>
-    </div>
-  `);
+  editingProject=null;
+  const nextNum=PROJECTS.length+1;
+  openModal(`<h3>Add Project</h3>
+    <label>Project Number</label><input type="text" value="Project ${nextNum}" disabled style="opacity:0.5;cursor:not-allowed">
+    <label>Project Name</label><input type="text" id="pName" placeholder="e.g. Event Management Integration">
+    <label>Project Objective</label><textarea id="pObjective" placeholder="What was the goal of this project?"></textarea>
+    <label>Project Explanation</label><textarea id="pExplanation" placeholder="Step by step explanation..."></textarea>
+    <label>Role & Responsibilities</label><textarea id="pRole" placeholder="Your role and responsibilities..."></textarea>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="saveProject()">Add Project</button></div>`);
   setTimeout(()=>{ const el=document.getElementById('pName'); if(el)el.focus(); },60);
 };
 
 window.openEditProject = function(id) {
-  const proj = PROJECTS.find(p=>p.id===id);
-  if (!proj) return;
-  editingProject = id;
-  openModal(`
-    <h3>Edit Project</h3>
-    <label>Project Name</label>
-    <input type="text" id="pName" value="${esc(proj.name)}">
-    <label>Project Objective</label>
-    <textarea id="pObjective">${esc(proj.objective||'')}</textarea>
-    <label>Project Explanation</label>
-    <textarea id="pExplanation">${esc(proj.explanation||'')}</textarea>
-    <label>Role & Responsibilities</label>
-    <textarea id="pRole">${esc(proj.role||'')}</textarea>
-    <div class="modal-actions">
-      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
-      <button class="btn-primary" onclick="saveProject()">Save Changes</button>
-    </div>
-  `);
+  editingProject=id;
+  const proj=PROJECTS.find(p=>p.id===id);
+  if(!proj) return;
+  openModal(`<h3>Edit Project</h3>
+    <label>Project Name</label><input type="text" id="pName" value="${esc(proj.name)}">
+    <label>Project Objective</label><textarea id="pObjective">${esc(proj.objective||'')}</textarea>
+    <label>Project Explanation</label><textarea id="pExplanation">${esc(proj.explanation||'')}</textarea>
+    <label>Role & Responsibilities</label><textarea id="pRole">${esc(proj.role||'')}</textarea>
+    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="saveProject()">Save Changes</button></div>`);
   setTimeout(()=>{ const el=document.getElementById('pName'); if(el)el.focus(); },60);
 };
 
 window.saveProject = function() {
-  const name = document.getElementById('pName').value.trim();
-  if (!name) return;
-  const proj = {
-    id: editingProject || 'proj-'+Date.now(),
-    name,
-    objective: document.getElementById('pObjective').value.trim(),
-    explanation: document.getElementById('pExplanation').value.trim(),
-    role: document.getElementById('pRole').value.trim()
+  const name=document.getElementById('pName').value.trim();
+  if(!name) return;
+  const proj={
+    id:editingProject||'proj-'+Date.now(), name,
+    objective:document.getElementById('pObjective').value.trim(),
+    explanation:document.getElementById('pExplanation').value.trim(),
+    role:document.getElementById('pRole').value.trim()
   };
-  if (editingProject) {
-    const idx = PROJECTS.findIndex(p=>p.id===editingProject);
-    if (idx>-1) PROJECTS[idx] = proj;
-  } else {
-    PROJECTS.push(proj);
-    activeProjectId = proj.id;
-  }
+  if(editingProject){ const idx=PROJECTS.findIndex(p=>p.id===editingProject); if(idx>-1) PROJECTS[idx]=proj; }
+  else { PROJECTS.push(proj); activeProjectId=proj.id; }
   saveProjects(); closeModal(); renderProjects();
 };
 
 window.deleteProject = function(id) {
-  if (!confirm('Delete this project?')) return;
-  PROJECTS = PROJECTS.filter(p=>p.id!==id);
-  if (activeProjectId===id) activeProjectId = PROJECTS[0]?.id || null;
+  if(!confirm('Delete this project?')) return;
+  PROJECTS=PROJECTS.filter(p=>p.id!==id);
+  if(activeProjectId===id) activeProjectId=PROJECTS[0]?.id||null;
   saveProjects(); renderProjects();
 };
 
-initData();
+// ===== EVENTS =====
+document.getElementById('modalBg').addEventListener('click',function(e){ if(e.target===this) window.closeModal(); });
+document.addEventListener('keydown',function(e){ if(e.key==='Escape') window.closeModal(); });
+
+// Init
+checkAuth();
+if(window.innerWidth>768){
+  document.getElementById('sidebar').style.display='none';
+}
 </script>
 </body>
 </html>
