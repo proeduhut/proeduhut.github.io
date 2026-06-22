@@ -670,12 +670,10 @@ function renderProjects() {
 function formatContent(text) {
   if (!text) return '';
   const lines = text.split('\n').filter(l => l.trim());
-  return lines.map(l => {
-    const numbered = l.match(/^(\d+)\.\s+(.+)/);
-    if (numbered) {
-      return `<p style="padding-left:20px;position:relative"><span style="position:absolute;left:0;font-weight:600;color:var(--orange)">${numbered[1]}.</span>${esc(numbered[2])}</p>`;
-    }
-    return `<p>${esc(l)}</p>`;
+  // Strip any existing numbers at start
+  return lines.map((l, i) => {
+    const stripped = l.replace(/^\d+\.\s+/, '');
+    return `<p style="padding-left:24px;position:relative"><span style="position:absolute;left:0;font-weight:700;color:var(--orange)">${i+1}.</span>${esc(stripped)}</p>`;
   }).join('');
 }
 
