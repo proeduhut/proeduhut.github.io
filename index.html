@@ -57,12 +57,17 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .topic-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .topic-tc{font-size:11px;background:var(--surface2);padding:2px 7px;border-radius:10px;color:var(--muted);font-weight:500;flex-shrink:0}
 .topic-btn.active .topic-tc{background:rgba(107,33,232,0.15);color:var(--purple)}
-.topic-progress{height:2px;background:var(--border);margin:0 14px 2px;border-radius:2px;overflow:hidden}
-.topic-progress-bar{height:100%;background:var(--orange);border-radius:2px;transition:width 0.3s}
+
 .drag-handle{font-size:14px;color:var(--border2);cursor:grab;display:none;flex-shrink:0}
 .admin-mode .drag-handle{display:block}
 .topic-btn.dragging{opacity:0.4}
 .topic-btn.drag-over{border-top:2px solid var(--purple);background:var(--purple-light)}
+.module-header{display:flex;align-items:center;justify-content:space-between;padding:10px 14px 6px;font-size:11px;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);font-weight:700;cursor:pointer;user-select:none;transition:background 0.15s;border-radius:6px;margin:0 4px}
+.module-header:hover{background:var(--orange-light)}
+.module-arrow{font-size:12px;transition:transform 0.2s;color:var(--orange)}
+.module-header.collapsed .module-arrow{transform:rotate(-90deg)}
+.module-topics{overflow:hidden;transition:max-height 0.3s ease}
+.module-topics.collapsed{max-height:0!important}
 .sidebar-footer{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;display:none}
 .add-topic-btn{width:100%;padding:8px 12px;background:none;border:1.5px dashed var(--border2);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
 .add-topic-btn:hover{border-color:var(--purple);color:var(--purple);background:var(--purple-light)}
@@ -243,7 +248,7 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
     <button class="nav-link active" id="navHome" onclick="switchPage('home')">Home</button>
     <button class="nav-link" id="navQA" onclick="switchPage('qa')">Q&A</button>
     <button class="nav-link" id="navProjects" onclick="switchPage('projects')">Projects</button>
-    <button class="admin-btn" id="adminBtn" onclick="handleAdminClick()">🔒 Admin</button>
+    <button class="admin-btn" id="adminBtn" onclick="handleAdminClick()" style="display:none">🔓 Logout Admin</button>
     <button class="admin-btn" id="logoutBtn" onclick="doLogout()" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)">Logout</button>
   </div>
 </div>
@@ -362,6 +367,7 @@ let editingProject = null;
 let dragSrcIdx = null;
 let saveTimeout = null;
 let sidebarOpen = true;
+let collapsedModules = {};
 let readQuestions = JSON.parse(localStorage.getItem('proeduhut_read') || '{}');
 
 // ===== AUTH =====
@@ -370,6 +376,7 @@ function checkAuth() {
   if (auth === 'student' || auth === 'admin') {
     if (auth === 'admin') isAdmin = true;
     showApp();
+    if (isAdmin) updateAdminUI();
   }
 }
 
@@ -398,6 +405,14 @@ function showApp() {
   const isMobile = window.innerWidth <= 768;
   if (isMobile) {
     document.getElementById('bottomNav').style.display = 'flex';
+  }
+  // Show admin button only for admin
+  if (isAdmin) {
+    document.getElementById('adminBtn').style.display = 'flex';
+    document.getElementById('bnAdmin').style.display = 'flex';
+  } else {
+    document.getElementById('adminBtn').style.display = 'none';
+    document.getElementById('bnAdmin').style.display = 'none';
   }
   initData();
 }
@@ -525,7 +540,6 @@ window.doAdminLogin = function() {
 function logoutAdmin() { isAdmin=false; localStorage.setItem(LOGIN_KEY,'student'); updateAdminUI(); showToast('🔒 Logged out'); }
 
 window.doLogout = function() {
-  if(!confirm('Are you sure you want to logout?')) return;
   localStorage.removeItem(LOGIN_KEY);
   location.reload();
 };
@@ -534,15 +548,15 @@ function updateAdminUI() {
   const bnBtn = document.getElementById('bnAdmin');
   const layout = document.querySelector('.app');
   if (isAdmin) {
-    btn.textContent='🔓 Logout'; btn.className='admin-badge';
-    if(bnBtn){ bnBtn.querySelector('.bn-icon').textContent='🔓'; }
+    btn.style.display='flex'; btn.textContent='🔓 Logout Admin'; btn.className='admin-badge';
+    if(bnBtn){ bnBtn.style.display='flex'; bnBtn.querySelector('.bn-icon').textContent='🔓'; }
     document.getElementById('addQBtn').style.display='flex';
     document.getElementById('sidebarFooter').style.display='block';
     document.getElementById('projFooter').style.display='block';
     layout?.classList.add('admin-mode');
   } else {
-    btn.textContent='🔒 Admin'; btn.className='admin-btn';
-    if(bnBtn){ bnBtn.querySelector('.bn-icon').textContent='🔒'; }
+    btn.style.display='none';
+    if(bnBtn){ bnBtn.style.display='none'; }
     document.getElementById('addQBtn').style.display='none';
     document.getElementById('sidebarFooter').style.display='none';
     document.getElementById('projFooter').style.display='none';
@@ -567,32 +581,60 @@ function renderTopics() {
     modules[mod].push({...t, _globalIdx: i});
   });
 
-  nav.innerHTML = Object.entries(modules).map(([modName, modTopics]) => `
-    <div class="module-header">${esc(modName)}</div>
-    ${modTopics.map(t => {
-      const read = (readQuestions[t.id] || []).length;
-      const total = t.questions.length;
-      const pct = total ? Math.round(read/total*100) : 0;
-      return `
-        <button class="topic-btn${t.id===activeTopicId&&!searchMode?' active':''}"
-          onclick="selectTopic('${t.id}')"
-          draggable="${isAdmin}"
-          ondragstart="onDragStart(event,${t._globalIdx})"
-          ondragover="onDragOver(event,${t._globalIdx})"
-          ondragleave="onDragLeave(event)"
-          ondrop="onDrop(event,${t._globalIdx})"
-          ondragend="onDragEnd(event)">
-          ${isAdmin ? '<span class="drag-handle">⠿</span>' : ''}
-          <span class="topic-num">${t._globalIdx+1}.</span>
-          <span class="topic-name">${esc(t.name)}</span>
-          <span class="topic-tc">${total}</span>
-        </button>
-        ${total>0 ? `<div class="topic-progress"><div class="topic-progress-bar" style="width:${pct}%"></div></div>` : ''}`;
-    }).join('')}
-  `).join('');
+  nav.innerHTML = Object.entries(modules).map(([modName, modTopics]) => {
+    const isCollapsed = collapsedModules[modName] || false;
+    const totalQ = modTopics.reduce((s,t)=>s+t.questions.length,0);
+    return `
+    <div class="module-header${isCollapsed?' collapsed':''}" onclick="toggleModule('${modName}')">
+      <span>${esc(modName)} <span style="font-size:10px;font-weight:400;opacity:0.7">(${modTopics.length} topics · ${totalQ} Q&As)</span></span>
+      <span class="module-arrow">▾</span>
+    </div>
+    <div class="module-topics${isCollapsed?' collapsed':''}" id="mod-${modName}" style="max-height:${isCollapsed?'0':'2000px'}">
+      ${modTopics.map(t => {
+        const total = t.questions.length;
+        return `
+          <button class="topic-btn${t.id===activeTopicId&&!searchMode?' active':''}"
+            onclick="selectTopic('${t.id}')"
+            draggable="${isAdmin}"
+            ondragstart="onDragStart(event,${t._globalIdx})"
+            ondragover="onDragOver(event,${t._globalIdx})"
+            ondragleave="onDragLeave(event)"
+            ondrop="onDrop(event,${t._globalIdx})"
+            ondragend="onDragEnd(event)">
+            ${isAdmin ? '<span class="drag-handle">⠿</span>' : ''}
+            <span class="topic-num">${t._globalIdx+1}.</span>
+            <span class="topic-name">${esc(t.name)}</span>
+            <span class="topic-tc">${total}</span>
+          </button>
+          `;
+      }).join('')}
+    </div>`;
+  }).join('');
 
   const total = topics.reduce((s,t)=>s+t.questions.length,0);
   document.getElementById('qaBadge').textContent = `${topics.length} topics · ${total} Q&As`;
+}
+
+window.toggleModule = function(modName) {
+  collapsedModules[modName] = !collapsedModules[modName];
+  renderTopics();
+  const activeTopic = DATA.topics?.find(t=>t.id===activeTopicId);
+  const activeModule = activeTopic?.module || 'ITSM';
+  if(collapsedModules[activeModule]) {
+    activeTopicId = null;
+    clearQAPanel();
+  }
+};
+
+function clearQAPanel() {
+  document.getElementById('qaTitle').innerHTML = '<span style="color:var(--muted);font-family:DM Sans,sans-serif;font-size:18px;font-weight:400">Select a topic to start reading</span>';
+  document.getElementById('qaBadge').textContent = '';
+  document.getElementById('qList').innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:80px 24px;text-align:center">
+      <div style="font-size:56px;margin-bottom:20px">📖</div>
+      <div style="font-size:17px;font-weight:500;color:var(--purple);margin-bottom:8px">Ready to learn?</div>
+      <div style="font-size:14px;color:var(--muted)">Expand a module from the sidebar and select a topic to start reading.</div>
+    </div>`;
 }
 
 window.selectTopic = function(id) {
@@ -623,8 +665,7 @@ window.onDragEnd = function(e) {
 function renderQuestions(qs, highlight) {
   const topic = DATA.topics?.find(t=>t.id===activeTopicId);
   if (!topic && !searchMode) {
-    document.getElementById('qList').innerHTML='<div class="empty"><div class="empty-icon">👈</div><p>Select a topic from the sidebar.</p></div>';
-    document.getElementById('qaTitle').innerHTML='Select a topic';
+    clearQAPanel();
     return;
   }
   currentQs = qs || (topic?.questions || []);
