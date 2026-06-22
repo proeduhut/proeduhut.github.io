@@ -678,6 +678,8 @@ function formatContent(text) {
     return `<p>${esc(l)}</p>`;
   }).join('');
 }
+
+function renderProjectDetail(proj) {
   const idx = PROJECTS.indexOf(proj);
   const adminBtns = isAdmin ? `
     <div style="display:flex;gap:8px">
