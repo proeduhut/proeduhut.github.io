@@ -239,9 +239,8 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
   .proj-header-bar{flex-direction:column;gap:8px}
   .proj-title{font-size:20px}
 
-  /* Overlay */
-  .overlay{display:none;position:fixed;inset:0;top:var(--header-h);bottom:var(--bottom-nav-h);background:rgba(0,0,0,0.4);z-index:89}
-  .overlay.show{display:block}
+  /* No overlay on mobile - it blocks sidebar item taps */
+  .overlay{display:none!important}
 
   /* Home */
   .home-title{font-size:36px}
@@ -539,17 +538,13 @@ window.switchPage = function(page) {
 
   if(page==='qa'){
     if(window.innerWidth<=900) {
-      // On mobile/tablet: open sidebar first to pick a topic
       document.getElementById('sidebar').classList.add('mobile-open');
-      document.getElementById('overlay').classList.add('show');
     }
     if(activeTopicId) renderQuestions(); else clearQAPanel();
   }
   if(page==='projects'){
     if(window.innerWidth<=900) {
-      // On mobile/tablet: open sidebar first to pick a project
       document.getElementById('projSidebar').classList.add('mobile-open');
-      document.getElementById('overlay').classList.add('show');
     }
     renderProjects();
   }
@@ -562,7 +557,6 @@ window.toggleSidebar = function() {
     const target = activePage==='projects' ? document.getElementById('projSidebar') : document.getElementById('sidebar');
     const isOpen = target.classList.contains('mobile-open');
     target.classList.toggle('mobile-open', !isOpen);
-    document.getElementById('overlay').classList.toggle('show', !isOpen);
   } else {
     sidebarOpen = !sidebarOpen;
     document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
@@ -574,9 +568,6 @@ window.closeMobileSidebar = function() {
   document.getElementById('sidebar').classList.remove('mobile-open');
   document.getElementById('projSidebar').classList.remove('mobile-open');
   document.getElementById('overlay').classList.remove('show');
-  // Force z-index reset so content is accessible
-  document.getElementById('sidebar').style.zIndex = '90';
-  document.getElementById('projSidebar').style.zIndex = '90';
 };
 
 // ===== ADMIN =====
