@@ -670,7 +670,7 @@ function renderProjects() {
 function formatContent(text, autoNumber=false) {
   if (!text) return '';
   const lines = text.split('\n').filter(l => l.trim());
-  if (!autoNumber || lines.length <= 1) {
+  if (!autoNumber) {
     return lines.map(l => `<p>${esc(l)}</p>`).join('');
   }
   return lines.map((l, i) => {
