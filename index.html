@@ -667,10 +667,12 @@ function renderProjects() {
   if (proj) renderProjectDetail(proj);
 }
 
-function formatContent(text) {
+function formatContent(text, autoNumber=false) {
   if (!text) return '';
   const lines = text.split('\n').filter(l => l.trim());
-  // Strip any existing numbers at start
+  if (!autoNumber || lines.length <= 1) {
+    return lines.map(l => `<p>${esc(l)}</p>`).join('');
+  }
   return lines.map((l, i) => {
     const stripped = l.replace(/^\d+\.\s+/, '');
     return `<p style="padding-left:24px;position:relative"><span style="position:absolute;left:0;font-weight:700;color:var(--orange)">${i+1}.</span>${esc(stripped)}</p>`;
@@ -703,7 +705,7 @@ function renderProjectDetail(proj) {
       ${fields.map(f => proj[f.key] ? `
         <div class="proj-section">
           <div class="proj-section-label">${f.label}</div>
-          <div class="proj-section-content">${formatContent(proj[f.key])}</div>
+          <div class="proj-section-content">${formatContent(proj[f.key], f.key==='explanation'||f.key==='role')}</div>
         </div>` : '').join('')}
     </div>`;
 }
