@@ -130,6 +130,36 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
 ::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--border2);border-radius:2px}
 
+/* RESPONSIVE */
+.proj-sidebar{transition:all 0.25s ease}
+.proj-sidebar.collapsed{width:0;min-width:0;border-right:none;overflow:hidden}
+
+@media(max-width:768px){
+  :root{--sidebar-w:0px}
+  .sidebar{position:fixed;top:58px;left:0;height:calc(100vh - 58px);z-index:90;box-shadow:4px 0 16px rgba(107,33,232,0.15);transform:translateX(-100%);transition:transform 0.25s ease}
+  .sidebar.mobile-open{transform:translateX(0);width:260px;min-width:260px}
+  .sidebar.collapsed{transform:translateX(-100%)}
+  .proj-sidebar{position:fixed;top:58px;left:0;height:calc(100vh - 58px);z-index:90;box-shadow:4px 0 16px rgba(107,33,232,0.15);transform:translateX(-100%);transition:transform 0.25s ease}
+  .proj-sidebar.mobile-open{transform:translateX(0);width:260px;min-width:260px}
+  .overlay{display:block}
+  .main-header{padding:14px 16px}
+  .q-list{padding:0 16px 40px}
+  .q-answer-inner{padding:0 0 14px 30px}
+  .header{padding:0 16px}
+  .proj-content{padding:20px 16px 60px}
+  .proj-header-bar{flex-direction:column;gap:10px}
+}
+
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.3);z-index:89;top:58px}
+.overlay.show{display:block}
+
+/* HEADER NAV */
+.header-nav{display:flex;align-items:center;gap:4px}
+.nav-link{background:none;border:none;color:rgba(255,255,255,0.75);cursor:pointer;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;padding:6px 14px;border-radius:20px;transition:all 0.15s}
+.nav-link:hover{background:rgba(255,255,255,0.15);color:#fff}
+.nav-link.active{background:rgba(255,255,255,0.2);color:#fff;font-weight:600}
+@media(max-width:600px){.nav-link{font-size:12px;padding:5px 10px}.header-badge{display:none}}
+
 /* TOAST */
 .toast{position:fixed;bottom:24px;right:24px;background:#1a0a3c;color:#fff;padding:10px 18px;border-radius:10px;font-size:13px;z-index:300;opacity:0;transform:translateY(10px);transition:all 0.3s;pointer-events:none}
 .toast.show{opacity:1;transform:translateY(0)}
@@ -181,28 +211,40 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
 </head>
 <body>
 
+<div class="overlay" id="overlay" onclick="closeSidebars()"></div>
 <div class="header">
   <div class="header-left">
-    <button class="sidebar-toggle" onclick="toggleNav()" title="Menu">☰</button>
+    <button class="sidebar-toggle" onclick="toggleSidebar()" title="Toggle sidebar">☰</button>
     <div class="logo-text">Pro<span>Edu</span>Hut</div>
   </div>
   <div class="header-right">
-    <span class="sync-indicator" id="syncIndicator"><span class="sync-dot"></span> Saving...</span>
-    <span class="header-badge" id="headerCount">Loading...</span>
+    <nav class="header-nav">
+      <button class="nav-link active" id="navHome" onclick="switchPage('home')">Home</button>
+      <button class="nav-link" id="navQA" onclick="switchPage('qa')">Q&A</button>
+      <button class="nav-link" id="navProjects" onclick="switchPage('projects')">Projects</button>
+    </nav>
     <button class="admin-btn" id="adminToggleBtn" onclick="handleAdminClick()">🔒 Admin</button>
   </div>
 </div>
 
-<!-- NAV MENU -->
-<div class="nav-menu" id="navMenu">
-  <button class="nav-item active" id="navQA" onclick="switchPage('qa')"><span class="nav-icon">📚</span> Q&A</button>
-  <div class="nav-divider"></div>
-  <button class="nav-item" id="navProjects" onclick="switchPage('projects')"><span class="nav-icon">💼</span> Projects</button>
-</div>
+<!-- Nav handled in header -->
 
 <div class="layout">
+  <!-- HOME PAGE -->
+  <div id="homePage" style="display:flex;flex:1;overflow:hidden;width:100%;align-items:center;justify-content:center;background:#ffffff">
+    <div style="text-align:center;padding:40px 24px;max-width:700px">
+      <div style="margin-bottom:16px"><img src="Proeduhut_Last and Final Logo.png" alt="ProEduHut Logo" style="width:100px;height:100px;object-fit:contain"></div>
+      <div style="font-family:'DM Serif Display',serif;font-size:52px;color:#6b21e8;font-weight:400;line-height:1.1;margin-bottom:16px">Pro<span style="color:#ff6b00">Edu</span>Hut</div>
+      <div style="font-size:18px;color:#7a6fa0;font-weight:400;margin-bottom:40px;line-height:1.6">Your one-stop ServiceNow interview preparation platform</div>
+      <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+        <button onclick="switchPage('qa')" style="padding:12px 28px;background:#6b21e8;color:#fff;border:none;border-radius:8px;font-size:15px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif">Browse Q&A →</button>
+        <button onclick="switchPage('projects')" style="padding:12px 28px;background:#fff;color:#6b21e8;border:1.5px solid #6b21e8;border-radius:8px;font-size:15px;font-weight:500;cursor:pointer;font-family:'DM Sans',sans-serif">View Projects →</button>
+      </div>
+    </div>
+  </div>
+
   <!-- Q&A PAGE -->
-  <div id="qaPage" style="display:flex;flex:1;overflow:hidden;width:100%">
+  <div id="qaPage" style="display:none;flex:1;overflow:hidden;width:100%">
     <div class="sidebar" id="sidebar">
       <div class="sidebar-top">
         <div class="sidebar-label">Topics</div>
@@ -221,6 +263,7 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
     <div class="main">
       <div class="main-header">
         <div class="main-title" id="mainTitle">Loading... <span id="mainCount"></span></div>
+        <span id="headerCount" style="font-size:12px;color:var(--muted);padding:4px 12px;border:1px solid var(--border2);border-radius:20px;white-space:nowrap"></span>
         <button class="add-q-btn" id="addQBtn" onclick="openAddQ()">+ Add Question</button>
       </div>
       <div class="q-list" id="qList">
@@ -336,6 +379,7 @@ async function initData() {
     else { DATA = JSON.parse(JSON.stringify(DEFAULT_DATA)); await setDoc(DOC_REF, DATA); }
     activeTopicId = DATA.topics[0]?.id || null;
     renderTopics(); renderQuestions();
+    updateHomeStats();
   } catch(e) {
     DATA = JSON.parse(JSON.stringify(DEFAULT_DATA));
     activeTopicId = DATA.topics[0]?.id || null;
@@ -395,36 +439,62 @@ function showToast(msg) {
 }
 
 // --- Nav Menu ---
-let navOpen = false;
 let currentPage2 = 'qa';
 
-window.toggleNav = function() {
-  navOpen = !navOpen;
-  document.getElementById('navMenu').classList.toggle('open', navOpen);
+// toggleNav removed - hamburger now directly calls toggleSidebar
+
+window.closeSidebars = function() {
+  document.getElementById('sidebar').classList.remove('mobile-open');
+  document.querySelector('.proj-sidebar').classList.remove('mobile-open');
+  document.getElementById('overlay').classList.remove('show');
 };
 
-document.addEventListener('click', function(e) {
-  if (navOpen && !e.target.closest('#navMenu') && !e.target.closest('.sidebar-toggle')) {
-    navOpen = false;
-    document.getElementById('navMenu').classList.remove('open');
-  }
-});
+
 
 window.switchPage = function(page) {
   currentPage2 = page;
-  navOpen = false;
-  document.getElementById('navMenu').classList.remove('open');
+  document.getElementById('homePage').style.display = page==='home' ? 'flex' : 'none';
   document.getElementById('qaPage').style.display = page==='qa' ? 'flex' : 'none';
   document.getElementById('projectsPage').style.display = page==='projects' ? 'flex' : 'none';
+  document.getElementById('navHome').classList.toggle('active', page==='home');
   document.getElementById('navQA').classList.toggle('active', page==='qa');
   document.getElementById('navProjects').classList.toggle('active', page==='projects');
   if (page==='projects') renderProjects();
+  if (page==='home') updateHomeStats();
+};
+
+function updateHomeStats() {
+  const totalQ = (DATA.topics||[]).reduce((s,t)=>s+t.questions.length,0);
+  const totalT = (DATA.topics||[]).length;
+  const totalP = PROJECTS.length;
+  const qEl = document.getElementById('homeTotalQ');
+  const tEl = document.getElementById('homeTotalT');
+  const pEl = document.getElementById('homeTotalP');
+  if(qEl) qEl.textContent = totalQ;
+  if(tEl) tEl.textContent = totalT;
+  if(pEl) pEl.textContent = totalP;
 };
 
 // --- Sidebar toggle (only for QA) ---
 window.toggleSidebar = function() {
-  sidebarOpen = !sidebarOpen;
-  document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    if (currentPage2 === 'qa') {
+      const sb = document.getElementById('sidebar');
+      const isOpen = sb.classList.contains('mobile-open');
+      sb.classList.toggle('mobile-open', !isOpen);
+      document.getElementById('overlay').classList.toggle('show', !isOpen);
+    } else {
+      const psb = document.querySelector('.proj-sidebar');
+      const isOpen = psb.classList.contains('mobile-open');
+      psb.classList.toggle('mobile-open', !isOpen);
+      document.getElementById('overlay').classList.toggle('show', !isOpen);
+    }
+  } else {
+    sidebarOpen = !sidebarOpen;
+    document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
+    document.querySelector('.proj-sidebar').classList.toggle('collapsed', !sidebarOpen);
+  }
 };
 
 // --- Projects ---
