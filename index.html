@@ -737,7 +737,17 @@ function renderTopics() {
   }).join('');
 
   const total = topics.reduce((s,t)=>s+t.questions.length,0);
-  document.getElementById('qaBadge').textContent = `${topics.length} topics · ${total} Q&As`;
+  // Show current module stats in badge
+  const activeTopic = topics.find(t=>t.id===activeTopicId);
+  const activeModule = activeTopic?.module || null;
+  if(activeModule){
+    const modTopicsAll = topics.filter(t=>(t.module||'ITSM')===activeModule);
+    const modTotal = modTopicsAll.reduce((s,t)=>s+t.questions.length,0);
+    document.getElementById('qaBadge').textContent = `${activeModule} · ${modTopicsAll.length} topics · ${modTotal} Q&As`;
+  } else {
+    const total = topics.reduce((s,t)=>s+t.questions.length,0);
+    document.getElementById('qaBadge').textContent = `${topics.length} topics · ${total} Q&As`;
+  }
 }
 
 window.openAddModule = function() {
@@ -1042,7 +1052,14 @@ window.saveTopic = function() {
 };
 
 window.openAddQ = function() {
-  const topicSelect=(DATA.topics||[]).map((t,i)=>`<option value="${t.id}"${t.id===activeTopicId?' selected':''}>${i+1}. ${esc(t.name)}</option>`).join('');
+  // Build topic options with per-module numbering
+  const moduleCounters = {};
+  const topicSelect=(DATA.topics||[]).map((t)=>{
+    const mod = t.module||'ITSM';
+    if(!moduleCounters[mod]) moduleCounters[mod]=0;
+    moduleCounters[mod]++;
+    return `<option value="${t.id}"${t.id===activeTopicId?' selected':''}>${mod} — ${moduleCounters[mod]}. ${esc(t.name)}</option>`;
+  }).join('');
   openModal(`<h3>Add Question</h3><label>Topic</label><select id="mTopic">${topicSelect}</select><label>Question</label><input type="text" id="mQ" placeholder="Type the interview question..."><label>Answer</label><textarea id="mA" placeholder="Type the answer here..."></textarea><div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="saveQ()">Add Question</button></div>`);
   setTimeout(()=>{ const el=document.getElementById('mQ'); if(el)el.focus(); },60);
 };
