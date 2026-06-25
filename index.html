@@ -2,11 +2,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>ProEduHut — ServiceNow Interview Q&A</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0;max-width:100%}
+html{overflow-x:hidden;width:100%}
+body{overflow-x:hidden;width:100%;position:relative}
 :root{
   --bg:#fff;--surface:#f7f5ff;--surface2:#ede9ff;--border:#e0d9f7;--border2:#c9bff0;
   --text:#1a0a3c;--muted:#7a6fa0;--purple:#6b21e8;--purple-dark:#4c0fbf;--purple-light:#ede9ff;
@@ -35,7 +37,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 
 /* ===== APP SHELL ===== */
-.app{position:fixed;top:var(--header-h);left:0;right:0;bottom:0;display:flex;overflow:hidden}
+.app{position:fixed;top:var(--header-h);left:0;right:0;bottom:0;display:flex;overflow:hidden;width:100%}
 
 /* ===== SIDEBAR ===== */
 .sidebar{width:260px;min-width:260px;background:var(--white);border-right:1.5px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:all 0.25s ease;flex-shrink:0}
@@ -76,8 +78,8 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .main{flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0}
 
 /* ===== HOME PAGE ===== */
-.home-page{flex:1;overflow-y:auto;display:flex;align-items:center;justify-content:center;background:var(--white)}
-.home-content{text-align:center;padding:40px 24px;max-width:600px}
+.home-page{flex:1;overflow-y:auto;overflow-x:hidden;display:flex;align-items:center;justify-content:center;background:var(--white);width:100%}
+.home-content{text-align:center;padding:40px 24px;max-width:600px;width:100%}
 .home-title{font-family:'DM Serif Display',serif;font-size:52px;color:var(--purple);line-height:1.1;margin-bottom:12px}
 .home-title span{color:var(--orange)}
 .home-tagline{font-size:17px;color:var(--muted);margin-bottom:36px;line-height:1.6}
