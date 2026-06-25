@@ -346,7 +346,8 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
       </div>
       <div class="topic-list" id="topicList"></div>
       <div class="sidebar-footer" id="sidebarFooter">
-        <button class="add-topic-btn" onclick="openAddTopic()">+ Add new topic</button>
+        <button class="add-topic-btn" onclick="openAddModule()" style="margin-bottom:8px;border-color:#ff6b00;color:#ff6b00">+ Add Module</button>
+        <button class="add-topic-btn" onclick="openAddTopic()">+ Add Topic</button>
       </div>
     </div>
   </div>
@@ -688,7 +689,7 @@ function renderTopics() {
       <span class="module-arrow">▾</span>
     </div>
     <div class="module-topics${isCollapsed?' collapsed':''}" id="mod-${modName}" style="max-height:${isCollapsed?'0':'2000px'}">
-      ${modTopics.map(t => {
+      ${modTopics.map((t, pi) => {
         const total = t.questions.length;
         return `
           <button class="topic-btn${t.id===activeTopicId&&!searchMode?' active':''}"
@@ -700,7 +701,7 @@ function renderTopics() {
             ondrop="onDrop(event,${t._globalIdx})"
             ondragend="onDragEnd(event)">
             ${isAdmin ? '<span class="drag-handle">⠿</span>' : ''}
-            <span class="topic-num">${t._globalIdx+1}.</span>
+            <span class="topic-num">${pi+1}.</span>
             <span class="topic-name">${esc(t.name)}</span>
             <span class="topic-tc">${total}</span>
           </button>
@@ -712,6 +713,46 @@ function renderTopics() {
   const total = topics.reduce((s,t)=>s+t.questions.length,0);
   document.getElementById('qaBadge').textContent = `${topics.length} topics · ${total} Q&As`;
 }
+
+window.openAddModule = function() {
+  openModal(`<h3>Add New Module</h3>
+    <label>Module Name</label>
+    <input type="text" id="mModuleName" placeholder="e.g. ITOM, Platform, Integration...">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveModule()">Add Module</button>
+    </div>`);
+  setTimeout(()=>{ const el=document.getElementById('mModuleName'); if(el)el.focus(); },60);
+};
+
+window.saveModule = function() {
+  const name = document.getElementById('mModuleName').value.trim().toUpperCase();
+  if(!name) return;
+  // Check if module already exists
+  const existing = [...new Set((DATA.topics||[]).map(t=>t.module||'ITSM'))];
+  if(existing.includes(name)) { showToast('Module already exists!'); return; }
+  // Add a placeholder topic to create the module (user can add real topics after)
+  if(!DATA.topics) DATA.topics=[];
+  // Just store module name - will show when topics are added to it
+  // For now expand the module in UI
+  collapsedModules[name] = false;
+  closeModal();
+  // Show success and open Add Topic with this module pre-selected
+  showToast(`✅ Module ${name} created! Now add topics to it.`);
+  // Open add topic with new module pre-selected
+  const existingModules = [...existing, name];
+  const moduleOptions = existingModules.map(m=>`<option value="${m}"${m===name?' selected':''}>${m}</option>`).join('');
+  openModal(`<h3>Add Topic to ${name}</h3>
+    <label>Module</label>
+    <select id="mModule">${moduleOptions}</select>
+    <label>Topic Name</label>
+    <input type="text" id="mInput" placeholder="e.g. Event Management, Discovery...">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveTopic()">Add Topic</button>
+    </div>`);
+  setTimeout(()=>{ const el=document.getElementById('mInput'); if(el)el.focus(); },60);
+};
 
 window.toggleModule = function(modName) {
   collapsedModules[modName] = !collapsedModules[modName];
@@ -752,6 +793,19 @@ window.selectTopic = function(id) {
 };
 
 // ===== DRAG DROP =====
+window.deleteTopic = function(id) {
+  const topic = DATA.topics?.find(t=>t.id===id);
+  if(!topic) return;
+  if(topic.questions?.length > 0) {
+    if(!confirm(`"${topic.name}" has ${topic.questions.length} question(s). Delete anyway?`)) return;
+  } else {
+    if(!confirm(`Delete topic "${topic.name}"?`)) return;
+  }
+  DATA.topics = DATA.topics.filter(t=>t.id!==id);
+  if(activeTopicId===id){ activeTopicId=null; clearQAPanel(); }
+  saveData(); renderTopics();
+};
+
 window.onDragStart = function(e,idx) { dragSrcIdx=idx; e.currentTarget.classList.add('dragging'); e.dataTransfer.effectAllowed='move'; };
 window.onDragOver = function(e,idx) { e.preventDefault(); if(idx!==dragSrcIdx) e.currentTarget.classList.add('drag-over'); };
 window.onDragLeave = function(e) { e.currentTarget.classList.remove('drag-over'); };
@@ -833,14 +887,27 @@ function openModal(html){ document.getElementById('modalBox').innerHTML=html; do
 window.closeModal = function(){ document.getElementById('modalBg').classList.remove('open'); editingQ=null; editingProject=null; };
 
 window.openAddTopic = function() {
-  openModal(`<h3>Add New Topic</h3><label>Topic Name</label><input type="text" id="mInput" placeholder="e.g. Business Rules, Flow Designer..."><div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancel</button><button class="btn-primary" onclick="saveTopic()">Add Topic</button></div>`);
+  // Get unique modules from existing topics
+  const existingModules = [...new Set((DATA.topics||[]).map(t=>t.module||'ITSM'))];
+  const moduleOptions = existingModules.map(m=>`<option value="${m}">${m}</option>`).join('');
+  openModal(`<h3>Add New Topic</h3>
+    <label>Module</label>
+    <select id="mModule">${moduleOptions}</select>
+    <label>Topic Name</label>
+    <input type="text" id="mInput" placeholder="e.g. Business Rules, Flow Designer...">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveTopic()">Add Topic</button>
+    </div>`);
   setTimeout(()=>{ const el=document.getElementById('mInput'); if(el)el.focus(); },60);
 };
 window.saveTopic = function() {
   const name=document.getElementById('mInput').value.trim();
   if(!name) return;
+  const moduleEl = document.getElementById('mModule');
+  const mod = moduleEl ? moduleEl.value : 'ITSM';
   if(!DATA.topics) DATA.topics=[];
-  DATA.topics.push({id:'topic-'+Date.now(),name,module:'ITSM',questions:[]});
+  DATA.topics.push({id:'topic-'+Date.now(),name,module:mod,questions:[]});
   saveData(); closeModal(); renderTopics();
 };
 
