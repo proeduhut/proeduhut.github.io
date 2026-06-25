@@ -326,8 +326,8 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
     <button class="nav-link active" id="navHome" onclick="switchPage('home')">Home</button>
     <button class="nav-link" id="navQA" onclick="switchPage('qa')">Q&A</button>
     <button class="nav-link" id="navProjects" onclick="switchPage('projects')">Projects</button>
-    <button class="admin-btn" id="adminBtn" onclick="handleAdminClick()" style="display:none">🔓 Logout Admin</button>
-    <button class="admin-btn" id="logoutBtn" onclick="doLogout()" style="background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.2)">Logout</button>
+    <button class="admin-btn" id="adminBtn" onclick="doLogout()" style="display:none">🔓 Logout Admin</button>
+    <button class="admin-btn" id="logoutBtn" onclick="doLogout()">Logout</button>
   </div>
 </div>
 
@@ -484,12 +484,14 @@ function showApp() {
   if (isMobile) {
     document.getElementById('bottomNav').style.display = 'flex';
   }
-  // Show admin button only for admin
+  // Show correct button based on role
   if (isAdmin) {
     document.getElementById('adminBtn').style.display = 'flex';
+    document.getElementById('logoutBtn').style.display = 'none';
     document.getElementById('bnAdmin').style.display = 'flex';
   } else {
     document.getElementById('adminBtn').style.display = 'none';
+    document.getElementById('logoutBtn').style.display = 'flex';
     document.getElementById('bnAdmin').style.display = 'none';
   }
   initData();
@@ -640,8 +642,10 @@ function updateAdminUI() {
   const btn = document.getElementById('adminBtn');
   const bnBtn = document.getElementById('bnAdmin');
   const layout = document.querySelector('.app');
+  const logoutBtn = document.getElementById('logoutBtn');
   if (isAdmin) {
-    btn.style.display='flex'; btn.textContent='🔓 Logout Admin'; btn.className='admin-badge';
+    btn.style.display='flex'; btn.className='admin-badge';
+    if(logoutBtn) logoutBtn.style.display='none';
     if(bnBtn){ bnBtn.style.display='flex'; bnBtn.querySelector('.bn-icon').textContent='🔓'; }
     document.getElementById('addQBtn').style.display='flex';
     document.getElementById('sidebarFooter').style.display='block';
@@ -649,6 +653,7 @@ function updateAdminUI() {
     layout?.classList.add('admin-mode');
   } else {
     btn.style.display='none';
+    if(logoutBtn) logoutBtn.style.display='flex';
     if(bnBtn){ bnBtn.style.display='none'; }
     document.getElementById('addQBtn').style.display='none';
     document.getElementById('sidebarFooter').style.display='none';
