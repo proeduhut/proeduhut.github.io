@@ -1632,10 +1632,9 @@ window.openAddScript = function() {
   const catOpts = (SCRIPTS.categories||[]).map(c=>`<option value="${c.id}"${c.id===activeScCatId?' selected':''}>${esc(c.name)}</option>`).join('');
   openModal(`<h3>Add Script</h3>
     <label>Category</label><select id="scCatSel">${catOpts}</select>
-    <label>Title</label><input type="text" id="scTitleIn" placeholder="e.g. Auto-assign Incident via BR...">
+    <label>Title</label><input type="text" id="scTitleIn" placeholder="">
     <label>Description / Use Case</label><textarea id="scDescIn" placeholder="When to use this script, what it does..."></textarea>
-    <label>Code</label><textarea id="scCodeIn" placeholder="var gr = new GlideRecord('incident');&#10;gr.query();&#10;while(gr.next()){&#10;  // your code&#10;}" style="font-family:monospace;font-size:12px;min-height:160px"></textarea>
-    <label>Notes (optional)</label><textarea id="scNotesIn" placeholder="Gotchas, tips, related tables..." style="min-height:60px"></textarea>
+    <label>Code</label><textarea id="scCodeIn" placeholder="" style="font-family:monospace;font-size:12px;min-height:160px"></textarea>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
       <button class="btn-primary" onclick="saveScript()">Add Script</button>
@@ -1647,15 +1646,18 @@ window.openEditScript = function(i) {
   editingScript = i;
   const sc = currentScripts[i];
   openModal(`<h3>Edit Script</h3>
-    <label>Title</label><input type="text" id="scTitleIn" value="${esc(sc.title)}">
-    <label>Description / Use Case</label><textarea id="scDescIn">${esc(sc.desc||'')}</textarea>
-    <label>Code</label><textarea id="scCodeIn" style="font-family:monospace;font-size:12px;min-height:160px">${esc(sc.code||'')}</textarea>
-    <label>Notes (optional)</label><textarea id="scNotesIn" style="min-height:60px">${esc(sc.notes||'')}</textarea>
+    <label>Title</label><input type="text" id="scTitleIn">
+    <label>Description / Use Case</label><textarea id="scDescIn"></textarea>
+    <label>Code</label><textarea id="scCodeIn" style="font-family:monospace;font-size:12px;min-height:160px"></textarea>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
       <button class="btn-primary" onclick="saveScript()">Save Changes</button>
     </div>`);
-  setTimeout(()=>{ document.getElementById('scTitleIn')?.focus(); },60);
+  setTimeout(()=>{
+    const t=document.getElementById('scTitleIn'); if(t){ t.value=sc.title; t.focus(); }
+    const d=document.getElementById('scDescIn'); if(d) d.value=sc.desc||'';
+    const cod=document.getElementById('scCodeIn'); if(cod) cod.value=sc.code||'';
+  },60);
 };
 
 window.saveScript = function() {
@@ -1666,7 +1668,7 @@ window.saveScript = function() {
     title,
     desc: document.getElementById('scDescIn').value.trim(),
     code: document.getElementById('scCodeIn').value.trim(),
-    notes: document.getElementById('scNotesIn').value.trim()
+    notes: ''
   };
   if(editingScript!==null) {
     // Find and replace in correct category
