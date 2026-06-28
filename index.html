@@ -1633,7 +1633,7 @@ window.openAddScript = function() {
   openModal(`<h3>Add Script</h3>
     <label>Category</label><select id="scCatSel">${catOpts}</select>
     <label>Title</label><input type="text" id="scTitleIn" placeholder="">
-    <label>Description / Use Case</label><textarea id="scDescIn" placeholder="When to use this script, what it does..."></textarea>
+    <label>Requirement</label><textarea id="scDescIn" placeholder="Describe the requirement or use case..."></textarea>
     <label>Code</label><textarea id="scCodeIn" placeholder="" style="font-family:monospace;font-size:12px;min-height:160px"></textarea>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
@@ -1647,7 +1647,7 @@ window.openEditScript = function(i) {
   const sc = currentScripts[i];
   openModal(`<h3>Edit Script</h3>
     <label>Title</label><input type="text" id="scTitleIn">
-    <label>Description / Use Case</label><textarea id="scDescIn"></textarea>
+    <label>Requirement</label><textarea id="scDescIn"></textarea>
     <label>Code</label><textarea id="scCodeIn" style="font-family:monospace;font-size:12px;min-height:160px"></textarea>
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeModal()">Cancel</button>
