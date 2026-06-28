@@ -13,6 +13,7 @@
 <link rel="apple-touch-icon" sizes="512x512" href="/logo-512.png">
 <title>ProEduHut — ServiceNow Interview Q&A</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
 <style>
 *{box-sizing:border-box;margin:0;padding:0;max-width:100%}
 html{overflow-x:hidden;width:100%}
@@ -232,6 +233,69 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
 .bm-empty-icon{font-size:52px;margin-bottom:16px;opacity:0.35}
 .bm-empty p{color:var(--muted);font-size:14px;line-height:1.6}
 
+/* ===== SCRIPTS PAGE ===== */
+.scripts-page{flex:1;display:none;flex-direction:row;overflow:hidden}
+.sc-sidebar{width:260px;min-width:260px;background:var(--white);border-right:1.5px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
+.sc-sidebar-inner{display:flex;flex-direction:column;height:100%;min-width:260px}
+.sc-sidebar-top{padding:14px 14px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
+.sc-sidebar-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:10px}
+.sc-search-box{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.15s}
+.sc-search-box:focus{border-color:var(--purple)}
+.sc-search-box::placeholder{color:var(--muted)}
+.sc-cat-list{flex:1;overflow-y:auto;padding:8px 0}
+.sc-cat-btn{width:100%;padding:10px 12px 10px 14px;background:none;border:none;text-align:left;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:8px;transition:all 0.15s;border-left:3px solid transparent}
+.sc-cat-btn:hover{background:var(--surface);color:var(--purple)}
+.sc-cat-btn.active{background:var(--purple-light);color:var(--purple);border-left-color:var(--purple);font-weight:500}
+.sc-cat-icon{font-size:15px;flex-shrink:0}
+.sc-cat-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc-cat-count{font-size:11px;background:var(--surface2);padding:2px 7px;border-radius:10px;color:var(--muted);font-weight:500;flex-shrink:0}
+.sc-cat-btn.active .sc-cat-count{background:rgba(107,33,232,0.15);color:var(--purple)}
+.sc-sidebar-footer{padding:10px 12px;border-top:1px solid var(--border);flex-shrink:0;display:none}
+.sc-add-cat-btn{width:100%;padding:8px 12px;background:none;border:1.5px dashed var(--border2);border-radius:8px;font-size:12px;color:var(--muted);cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s}
+.sc-add-cat-btn:hover{border-color:var(--orange);color:var(--orange);background:var(--orange-light)}
+
+.sc-main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+.sc-header{padding:16px 24px 12px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--white);gap:12px}
+.sc-title{font-family:'DM Serif Display',serif;font-size:21px;color:var(--text)}
+.sc-title span{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);font-weight:400;margin-left:8px}
+.sc-header-right{display:flex;align-items:center;gap:8px;flex-shrink:0}
+.sc-badge{font-size:12px;color:var(--muted);padding:4px 10px;border:1px solid var(--border2);border-radius:20px;white-space:nowrap}
+.add-sc-btn{padding:8px 16px;background:var(--orange);color:#fff;border:none;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.15s;display:none;white-space:nowrap}
+.add-sc-btn:hover{background:#e05e00}
+.sc-list{flex:1;overflow-y:auto;padding:16px 24px 40px}
+
+/* Script cards */
+.sc-card{background:var(--white);border:1.5px solid var(--border);border-radius:12px;margin-bottom:14px;overflow:hidden;transition:box-shadow 0.15s}
+.sc-card:hover{box-shadow:0 4px 16px rgba(107,33,232,0.08)}
+.sc-card-header{padding:14px 16px;display:flex;align-items:flex-start;gap:10px;cursor:pointer}
+.sc-card-header:hover .sc-card-title{color:var(--purple)}
+.sc-card-info{flex:1;min-width:0}
+.sc-card-title{font-size:15px;font-weight:600;color:var(--text);line-height:1.35;margin-bottom:3px}
+.sc-card-desc{font-size:12px;color:var(--muted);line-height:1.4;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.sc-card-arrow{font-size:16px;color:var(--muted);transition:transform 0.25s;padding-top:2px;flex-shrink:0}
+.sc-card.open .sc-card-arrow{transform:rotate(180deg);color:var(--purple)}
+.sc-card-body{max-height:0;overflow:hidden;transition:max-height 0.35s ease}
+.sc-card.open .sc-card-body{max-height:3000px}
+.sc-card-inner{padding:0 16px 16px}
+.sc-desc-text{font-size:13px;color:#4a3d6b;line-height:1.75;margin-bottom:12px;padding:10px 12px;background:var(--surface);border-radius:8px;border-left:3px solid var(--purple)}
+.sc-notes-text{font-size:12px;color:var(--muted);line-height:1.7;margin-top:10px;padding:8px 12px;background:var(--orange-light);border-radius:8px;border-left:3px solid var(--orange)}
+.sc-code-wrap{position:relative;margin-bottom:4px}
+.sc-copy-btn{position:absolute;top:8px;right:8px;padding:4px 10px;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:6px;font-size:11px;color:#e2e8f0;cursor:pointer;font-family:'DM Sans',sans-serif;font-weight:500;transition:all 0.15s;z-index:2}
+.sc-copy-btn:hover{background:rgba(255,255,255,0.22);color:#fff}
+.sc-card-actions{display:flex;gap:8px;margin-top:10px}
+
+/* Prism overrides */
+pre[class*="language-"]{margin:0;border-radius:8px;font-size:12.5px;line-height:1.65;max-height:420px;overflow:auto}
+code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Consolas,monospace}
+
+/* Scripts empty state */
+.sc-empty{padding:60px 24px;text-align:center}
+.sc-empty-icon{font-size:48px;margin-bottom:14px;opacity:0.3}
+.sc-empty p{color:var(--muted);font-size:14px;line-height:1.6}
+.sc-welcome{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:60px 24px;text-align:center}
+.sc-welcome h2{font-family:'DM Serif Display',serif;font-size:22px;color:var(--purple);margin-bottom:8px}
+.sc-welcome p{font-size:14px;color:var(--muted);line-height:1.6}
+
 /* ===== MOBILE ===== */
 @media(max-width:900px){
   html,body{width:100vw;max-width:100vw;overflow-x:hidden}
@@ -319,6 +383,29 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
   .proj-btn-num{width:30px;height:30px;font-size:13px}
   .proj-nav{padding:8px 0}
   
+  /* SCRIPTS PAGE */
+  .scripts-page{width:100vw;flex-direction:column}
+  .sc-main{width:100vw;flex:1;display:flex;flex-direction:column;overflow:hidden}
+  .sc-header{padding:12px 16px;gap:6px}
+  .sc-title{font-size:15px}
+  .sc-badge{display:none}
+  .add-sc-btn{font-size:12px;padding:6px 12px}
+  .sc-list{padding:12px 12px 100px}
+  .sc-card-title{font-size:14px}
+  pre[class*="language-"]{font-size:11.5px}
+  .sc-sidebar{
+    position:fixed;top:var(--header-h);left:0;
+    width:100vw!important;min-width:0!important;max-width:100vw!important;
+    bottom:var(--bottom-nav-h);z-index:300;
+    background:#fff;overflow-y:auto;
+    transform:translateX(-100%);
+    transition:transform 0.2s ease;
+    border-right:none;
+  }
+  .sc-sidebar.mobile-open{transform:translateX(0)}
+  .sc-sidebar-inner{width:100%;min-width:0}
+  .sc-cat-btn{padding:14px 16px;font-size:15px}
+  
   /* No overlay */
   .overlay{display:none!important}
   
@@ -359,6 +446,7 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
     <span class="sync-dot-wrap" id="syncIndicator"><span class="sync-dot"></span> Saving...</span>
     <button class="nav-link active" id="navHome" onclick="switchPage('home')">Home</button>
     <button class="nav-link" id="navQA" onclick="switchPage('qa')">Q&A</button>
+    <button class="nav-link" id="navScripts" onclick="switchPage('scripts')">Scripts</button>
     <button class="nav-link" id="navProjects" onclick="switchPage('projects')">Projects</button>
     <button class="nav-link" id="navBookmarks" onclick="switchPage('bookmarks')">⭐ Saved</button>
     <button class="admin-btn" id="adminBtn" onclick="doLogout()" style="display:none">🔓 Logout Admin</button>
@@ -383,6 +471,20 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
       <div class="sidebar-footer" id="sidebarFooter">
         <button class="add-topic-btn" onclick="openAddModule()" style="margin-bottom:8px;border-color:#ff6b00;color:#ff6b00">+ Add Module</button>
         <button class="add-topic-btn" onclick="openAddTopic()">+ Add Topic</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCRIPTS SIDEBAR -->
+  <div class="sc-sidebar" id="scSidebar" style="display:none">
+    <div class="sc-sidebar-inner">
+      <div class="sc-sidebar-top">
+        <div class="sc-sidebar-label">Categories</div>
+        <input class="sc-search-box" type="text" placeholder="Search scripts..." id="scSearchBox" oninput="doScSearch()">
+      </div>
+      <div class="sc-cat-list" id="scCatList"></div>
+      <div class="sc-sidebar-footer" id="scSidebarFooter">
+        <button class="sc-add-cat-btn" onclick="openAddScCategory()">+ Add Category</button>
       </div>
     </div>
   </div>
@@ -439,6 +541,25 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
       <div class="bm-list" id="bmList"></div>
     </div>
 
+    <!-- SCRIPTS PAGE -->
+    <div class="scripts-page" id="scriptsPage">
+      <div class="sc-main">
+        <div class="sc-header">
+          <div class="sc-title" id="scTitle">Select a category <span id="scCount"></span></div>
+          <div class="sc-header-right">
+            <span class="sc-badge" id="scBadge"></span>
+            <button class="add-sc-btn" id="addScBtn" onclick="openAddScript()">+ Add Script</button>
+          </div>
+        </div>
+        <div class="sc-list" id="scList">
+          <div class="sc-welcome">
+            <h2>Script Library</h2>
+            <p>Select a category from the sidebar<br>to browse ServiceNow scripts.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </div>
 
@@ -446,6 +567,7 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
 <div class="bottom-nav" id="bottomNav" style="display:none">
   <button class="bottom-nav-btn active" id="bnHome" onclick="switchPage('home')"><span class="bn-icon">🏠</span>Home</button>
   <button class="bottom-nav-btn" id="bnQA" onclick="switchPage('qa')"><span class="bn-icon">📚</span>Q&A</button>
+  <button class="bottom-nav-btn" id="bnScripts" onclick="switchPage('scripts')"><span class="bn-icon">📜</span>Scripts</button>
   <button class="bottom-nav-btn" id="bnBookmarks" onclick="switchPage('bookmarks')"><span class="bn-icon">⭐</span>Saved</button>
   <button class="bottom-nav-btn" id="bnProjects" onclick="switchPage('projects')"><span class="bn-icon">💼</span>Projects</button>
   <button class="bottom-nav-btn" id="bnAdmin" onclick="handleAdminClick()"><span class="bn-icon">🔒</span>Admin</button>
@@ -467,8 +589,18 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
   <div class="ctx-item danger" onclick="ctxModDelete()">🗑️ Delete Module</div>
 </div>
 
+<!-- SCRIPTS CATEGORY CONTEXT MENU -->
+<div class="ctx-menu" id="ctxScCatMenu">
+  <div class="ctx-item" onclick="ctxScCatRename()">✏️ Rename Category</div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item danger" onclick="ctxScCatDelete()">🗑️ Delete Category</div>
+</div>
+
 <div class="modal-bg" id="modalBg"><div class="modal" id="modalBox"></div></div>
 <div class="toast" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-javascript.min.js"></script>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.0/firebase-app.js";
@@ -487,6 +619,7 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const DATA_REF = doc(db, "proeduhut", "data");
 const PROJ_REF = doc(db, "proeduhut", "projects");
+const SCRIPTS_REF = doc(db, "proeduhut", "scripts");
 
 const STUDENT_PASS = 'Arjun@2022';
 const ADMIN_PASS = 'PArjun@2022';
@@ -507,7 +640,15 @@ let saveTimeout = null;
 let sidebarOpen = true;
 let collapsedModules = {};
 let readQuestions = JSON.parse(localStorage.getItem('proeduhut_read') || '{}');
-let bookmarks = JSON.parse(localStorage.getItem('proeduhut_bookmarks') || '[]'); // array of question text hashes
+let bookmarks = JSON.parse(localStorage.getItem('proeduhut_bookmarks') || '[]');
+
+// Scripts state
+let SCRIPTS = { categories: [] }; // {id, name, scripts:[{id,title,desc,code,notes}]}
+let activeScCatId = null;
+let scSearchMode = false;
+let currentScripts = [];
+let editingScript = null;
+let ctxScCatId = null;
 
 // ===== AUTH =====
 function checkAuth() {
@@ -575,6 +716,23 @@ async function initData() {
     if (PROJECTS.length) activeProjectId = PROJECTS[0].id;
   } catch(e) {}
 
+  try {
+    const ssnap = await getDoc(SCRIPTS_REF);
+    if (ssnap.exists()) SCRIPTS = ssnap.data();
+    else { SCRIPTS = {categories:[]}; await setDoc(SCRIPTS_REF, SCRIPTS); }
+    if (SCRIPTS.categories?.length) activeScCatId = SCRIPTS.categories[0].id;
+    renderScCategories();
+  } catch(e) {}
+
+  onSnapshot(SCRIPTS_REF, snap => {
+    if (snap.exists()) {
+      SCRIPTS = snap.data();
+      if (!activeScCatId || !SCRIPTS.categories?.find(c=>c.id===activeScCatId)) activeScCatId = SCRIPTS.categories?.[0]?.id || null;
+      renderScCategories();
+      if (activePage==='scripts' && !scSearchMode) renderScripts();
+    }
+  });
+
   onSnapshot(DATA_REF, snap => {
     if (snap.exists() && !saveTimeout) {
       DATA = snap.data();
@@ -606,6 +764,13 @@ async function saveData() {
 async function saveProjects() {
   document.getElementById('syncIndicator').classList.add('show');
   try { await setDoc(PROJ_REF, { list: PROJECTS }); showToast('✅ Saved'); }
+  catch(e) { showToast('❌ Save failed'); }
+  document.getElementById('syncIndicator').classList.remove('show');
+}
+
+async function saveScripts() {
+  document.getElementById('syncIndicator').classList.add('show');
+  try { await setDoc(SCRIPTS_REF, SCRIPTS); showToast('✅ Saved'); }
   catch(e) { showToast('❌ Save failed'); }
   document.getElementById('syncIndicator').classList.remove('show');
 }
@@ -652,31 +817,34 @@ window.switchPage = function(page) {
   document.getElementById('qaPage').style.display = page==='qa' ? 'flex' : 'none';
   document.getElementById('projectsPage').style.display = page==='projects' ? 'flex' : 'none';
   document.getElementById('bookmarksPage').style.display = page==='bookmarks' ? 'flex' : 'none';
+  document.getElementById('scriptsPage').style.display = page==='scripts' ? 'flex' : 'none';
 
   const isDesktop = window.innerWidth > 900;
   if(isDesktop){
     document.getElementById('sidebar').style.display = page==='qa' ? 'flex' : 'none';
     document.getElementById('projSidebar').style.display = page==='projects' ? 'flex' : 'none';
+    document.getElementById('scSidebar').style.display = page==='scripts' ? 'flex' : 'none';
   }
 
-  ['navHome','navQA','navProjects','navBookmarks'].forEach(id => document.getElementById(id)?.classList.remove('active'));
-  const navMap = {home:'navHome',qa:'navQA',projects:'navProjects',bookmarks:'navBookmarks'};
+  ['navHome','navQA','navProjects','navBookmarks','navScripts'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+  const navMap = {home:'navHome',qa:'navQA',projects:'navProjects',bookmarks:'navBookmarks',scripts:'navScripts'};
   document.getElementById(navMap[page])?.classList.add('active');
-  ['bnHome','bnQA','bnProjects','bnBookmarks'].forEach(id => document.getElementById(id)?.classList.remove('active'));
-  const bnMap = {home:'bnHome',qa:'bnQA',projects:'bnProjects',bookmarks:'bnBookmarks'};
+  ['bnHome','bnQA','bnProjects','bnBookmarks','bnScripts'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+  const bnMap = {home:'bnHome',qa:'bnQA',projects:'bnProjects',bookmarks:'bnBookmarks',scripts:'bnScripts'};
   document.getElementById(bnMap[page])?.classList.add('active');
 
   if(page==='qa'){
-    if(window.innerWidth<=900) {
-      document.getElementById('sidebar').classList.add('mobile-open');
-    }
+    if(window.innerWidth<=900) document.getElementById('sidebar').classList.add('mobile-open');
     if(activeTopicId) renderQuestions(); else clearQAPanel();
   }
   if(page==='projects'){
-    if(window.innerWidth<=900) {
-      document.getElementById('projSidebar').classList.add('mobile-open');
-    }
+    if(window.innerWidth<=900) document.getElementById('projSidebar').classList.add('mobile-open');
     renderProjects();
+  }
+  if(page==='scripts'){
+    if(window.innerWidth<=900) document.getElementById('scSidebar').classList.add('mobile-open');
+    renderScCategories();
+    if(activeScCatId && !scSearchMode) renderScripts();
   }
   if(page==='bookmarks') renderBookmarks();
 };
@@ -685,19 +853,24 @@ window.switchPage = function(page) {
 window.toggleSidebar = function() {
   const isMobile = window.innerWidth <= 900;
   if (isMobile) {
-    const target = activePage==='projects' ? document.getElementById('projSidebar') : document.getElementById('sidebar');
+    let target;
+    if(activePage==='projects') target = document.getElementById('projSidebar');
+    else if(activePage==='scripts') target = document.getElementById('scSidebar');
+    else target = document.getElementById('sidebar');
     const isOpen = target.classList.contains('mobile-open');
     target.classList.toggle('mobile-open', !isOpen);
   } else {
     sidebarOpen = !sidebarOpen;
     document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
     document.getElementById('projSidebar').classList.toggle('collapsed', !sidebarOpen);
+    document.getElementById('scSidebar').classList.toggle('collapsed', !sidebarOpen);
   }
 };
 
 window.closeMobileSidebar = function() {
   document.getElementById('sidebar').classList.remove('mobile-open');
   document.getElementById('projSidebar').classList.remove('mobile-open');
+  document.getElementById('scSidebar').classList.remove('mobile-open');
   document.getElementById('overlay').classList.remove('show');
 };
 
@@ -738,6 +911,8 @@ function updateAdminUI() {
     document.getElementById('addQBtn').style.display='flex';
     document.getElementById('sidebarFooter').style.display='block';
     document.getElementById('projFooter').style.display='block';
+    document.getElementById('addScBtn').style.display='flex';
+    document.getElementById('scSidebarFooter').style.display='block';
     layout?.classList.add('admin-mode');
   } else {
     btn.style.display='none';
@@ -746,11 +921,14 @@ function updateAdminUI() {
     document.getElementById('addQBtn').style.display='none';
     document.getElementById('sidebarFooter').style.display='none';
     document.getElementById('projFooter').style.display='none';
+    document.getElementById('addScBtn').style.display='none';
+    document.getElementById('scSidebarFooter').style.display='none';
     layout?.classList.remove('admin-mode');
   }
   renderTopics();
   if (activePage==='qa') renderQuestions();
   if (activePage==='projects') renderProjects();
+  if (activePage==='scripts') { renderScCategories(); renderScripts(); }
 }
 
 // ===== TOPICS =====
@@ -1319,6 +1497,240 @@ window.deleteProject = function(id) {
   saveProjects(); renderProjects();
 };
 
+// ===== SCRIPTS =====
+function renderScCategories() {
+  const cats = SCRIPTS.categories || [];
+  const nav = document.getElementById('scCatList');
+  if (!cats.length) {
+    nav.innerHTML = `<div class="empty" style="padding:40px 16px"><p style="color:var(--muted);font-size:13px">${isAdmin ? 'No categories yet.<br>Click "+ Add Category" below.' : 'No categories yet.'}</p></div>`;
+    document.getElementById('scBadge').textContent = '';
+    return;
+  }
+  const totalScripts = cats.reduce((s,c)=>s+(c.scripts?.length||0),0);
+  document.getElementById('scBadge').textContent = `${cats.length} categories · ${totalScripts} scripts`;
+  nav.innerHTML = cats.map((cat,i) => {
+    const count = cat.scripts?.length || 0;
+    return `<button class="sc-cat-btn${cat.id===activeScCatId&&!scSearchMode?' active':''}"
+      onclick="selectScCat('${cat.id}')"
+      oncontextmenu="showScCatCtxMenu(event,'${cat.id}')">
+      <span class="sc-cat-icon">📁</span>
+      <span class="sc-cat-name">${esc(cat.name)}</span>
+      <span class="sc-cat-count">${count}</span>
+    </button>`;
+  }).join('');
+}
+
+window.selectScCat = function(id) {
+  activeScCatId = id; scSearchMode = false;
+  document.getElementById('scSearchBox').value = '';
+  document.getElementById('scSidebar').classList.remove('mobile-open');
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    renderScCategories();
+    renderScripts();
+    document.getElementById('scList')?.scrollTo(0,0);
+  }));
+};
+
+function renderScripts(scripts, highlight) {
+  const cat = SCRIPTS.categories?.find(c=>c.id===activeScCatId);
+  if (!cat && !scSearchMode) {
+    document.getElementById('scTitle').innerHTML = '<span style="color:var(--muted);font-family:DM Sans,sans-serif;font-size:18px;font-weight:400">Select a category</span>';
+    document.getElementById('scList').innerHTML = `<div class="sc-welcome"><h2>Script Library</h2><p>Select a category from the sidebar<br>to browse ServiceNow scripts.</p></div>`;
+    return;
+  }
+  currentScripts = scripts || (cat?.scripts || []);
+  const title = scSearchMode ? 'Search Results' : (cat?.name || '');
+  document.getElementById('scTitle').innerHTML = `${esc(title)} <span>${currentScripts.length} script${currentScripts.length!==1?'s':''}</span>`;
+
+  const list = document.getElementById('scList');
+  if (!currentScripts.length) {
+    list.innerHTML = `<div class="sc-empty"><div class="sc-empty-icon">📭</div><p>No scripts found.</p></div>`;
+    return;
+  }
+
+  list.innerHTML = currentScripts.map((sc, i) => {
+    let titleHtml = esc(sc.title);
+    if(highlight){ const re=new RegExp(`(${highlight.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'); titleHtml=titleHtml.replace(re,'<mark class="highlight">$1</mark>'); }
+    const catName = scSearchMode ? SCRIPTS.categories?.find(c=>c.scripts?.includes(sc))?.name : null;
+    const catBadge = catName ? `<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;background:var(--orange-light);color:var(--orange);border:1px solid rgba(255,107,0,0.2);margin-bottom:4px">${esc(catName)}</span>` : '';
+    const descHtml = sc.desc ? `<div class="sc-desc-text">${esc(sc.desc).replace(/\n/g,'<br>')}</div>` : '';
+    const notesHtml = sc.notes ? `<div class="sc-notes-text">💡 ${esc(sc.notes).replace(/\n/g,'<br>')}</div>` : '';
+    const codeHtml = sc.code ? `<div class="sc-code-wrap">
+      <button class="sc-copy-btn" onclick="copyScript(${i});event.stopPropagation()">Copy</button>
+      <pre><code class="language-javascript">${esc(sc.code)}</code></pre>
+    </div>` : '';
+    const adminActions = isAdmin ? `<div class="sc-card-actions"><button class="q-act" onclick="openEditScript(${i});event.stopPropagation()">Edit</button><button class="q-act del" onclick="deleteScript(${i});event.stopPropagation()">Delete</button></div>` : '';
+    return `<div class="sc-card" id="sc-${i}">
+      <div class="sc-card-header" onclick="toggleScCard(${i})">
+        
+        <div class="sc-card-info">
+          ${catBadge}
+          <div class="sc-card-title">${titleHtml}</div>
+          ${sc.desc ? `<div class="sc-card-desc">${esc(sc.desc).split('\n')[0]}</div>` : ''}
+        </div>
+        <span class="sc-card-arrow">▾</span>
+      </div>
+      <div class="sc-card-body">
+        <div class="sc-card-inner">${descHtml}${codeHtml}${notesHtml}${adminActions}</div>
+      </div>
+    </div>`;
+  }).join('');
+
+  // Highlight with Prism
+  if(window.Prism) window.Prism.highlightAll();
+}
+
+window.toggleScCard = function(i) {
+  const el = document.getElementById(`sc-${i}`);
+  const wasOpen = el.classList.contains('open');
+  document.querySelectorAll('.sc-card.open').forEach(x=>x.classList.remove('open'));
+  if(!wasOpen) el.classList.add('open');
+};
+
+window.copyScript = function(i) {
+  const sc = currentScripts[i];
+  if(!sc?.code) return;
+  navigator.clipboard.writeText(sc.code).then(()=>showToast('📋 Copied!')).catch(()=>showToast('Copy failed'));
+};
+
+window.doScSearch = function() {
+  const raw = document.getElementById('scSearchBox').value;
+  const q = raw.trim().toLowerCase();
+  if(!q){ scSearchMode=false; renderScCategories(); renderScripts(); return; }
+  scSearchMode = true;
+  const all = [];
+  SCRIPTS.categories?.forEach(c=>c.scripts?.forEach(sc=>{
+    if(sc.title.toLowerCase().includes(q)||sc.desc?.toLowerCase().includes(q)||sc.code?.toLowerCase().includes(q)||sc.notes?.toLowerCase().includes(q)) all.push(sc);
+  }));
+  renderScCategories(); renderScripts(all, raw.trim());
+};
+
+// ===== SCRIPTS ADMIN =====
+window.openAddScCategory = function() {
+  openModal(`<h3>Add Category</h3>
+    <label>Category Name</label>
+    <input type="text" id="scCatName" placeholder="e.g. Business Rules, Script Includes...">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveScCategory()">Add Category</button>
+    </div>`);
+  setTimeout(()=>{ document.getElementById('scCatName')?.focus(); },60);
+};
+
+window.saveScCategory = function() {
+  const name = document.getElementById('scCatName').value.trim();
+  if(!name) return;
+  if(!SCRIPTS.categories) SCRIPTS.categories=[];
+  const id = 'sc-cat-'+Date.now();
+  SCRIPTS.categories.push({id, name, scripts:[]});
+  activeScCatId = id;
+  saveScripts(); closeModal(); renderScCategories(); renderScripts();
+};
+
+window.openAddScript = function() {
+  editingScript = null;
+  const catOpts = (SCRIPTS.categories||[]).map(c=>`<option value="${c.id}"${c.id===activeScCatId?' selected':''}>${esc(c.name)}</option>`).join('');
+  openModal(`<h3>Add Script</h3>
+    <label>Category</label><select id="scCatSel">${catOpts}</select>
+    <label>Title</label><input type="text" id="scTitleIn" placeholder="e.g. Auto-assign Incident via BR...">
+    <label>Description / Use Case</label><textarea id="scDescIn" placeholder="When to use this script, what it does..."></textarea>
+    <label>Code</label><textarea id="scCodeIn" placeholder="var gr = new GlideRecord('incident');&#10;gr.query();&#10;while(gr.next()){&#10;  // your code&#10;}" style="font-family:monospace;font-size:12px;min-height:160px"></textarea>
+    <label>Notes (optional)</label><textarea id="scNotesIn" placeholder="Gotchas, tips, related tables..." style="min-height:60px"></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveScript()">Add Script</button>
+    </div>`);
+  setTimeout(()=>{ document.getElementById('scTitleIn')?.focus(); },60);
+};
+
+window.openEditScript = function(i) {
+  editingScript = i;
+  const sc = currentScripts[i];
+  openModal(`<h3>Edit Script</h3>
+    <label>Title</label><input type="text" id="scTitleIn" value="${esc(sc.title)}">
+    <label>Description / Use Case</label><textarea id="scDescIn">${esc(sc.desc||'')}</textarea>
+    <label>Code</label><textarea id="scCodeIn" style="font-family:monospace;font-size:12px;min-height:160px">${esc(sc.code||'')}</textarea>
+    <label>Notes (optional)</label><textarea id="scNotesIn" style="min-height:60px">${esc(sc.notes||'')}</textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="saveScript()">Save Changes</button>
+    </div>`);
+  setTimeout(()=>{ document.getElementById('scTitleIn')?.focus(); },60);
+};
+
+window.saveScript = function() {
+  const title = document.getElementById('scTitleIn').value.trim();
+  if(!title) return;
+  const sc = {
+    id: (editingScript!==null ? currentScripts[editingScript].id : null) || 'sc-'+Date.now(),
+    title,
+    desc: document.getElementById('scDescIn').value.trim(),
+    code: document.getElementById('scCodeIn').value.trim(),
+    notes: document.getElementById('scNotesIn').value.trim()
+  };
+  if(editingScript!==null) {
+    // Find and replace in correct category
+    SCRIPTS.categories?.forEach(c=>{ const idx=c.scripts?.findIndex(s=>s.id===sc.id); if(idx>-1) c.scripts[idx]=sc; });
+  } else {
+    const catId = document.getElementById('scCatSel').value;
+    const cat = SCRIPTS.categories?.find(c=>c.id===catId);
+    if(cat) { cat.scripts.push(sc); activeScCatId=catId; }
+  }
+  saveScripts(); closeModal(); scSearchMode=false; document.getElementById('scSearchBox').value='';
+  renderScCategories(); renderScripts();
+};
+
+window.deleteScript = function(i) {
+  const sc = currentScripts[i];
+  if(!confirm(`Delete "${sc.title}"?`)) return;
+  SCRIPTS.categories?.forEach(c=>{ const idx=c.scripts?.findIndex(s=>s.id===sc.id); if(idx>-1) c.scripts.splice(idx,1); });
+  saveScripts(); renderScCategories(); renderScripts();
+};
+
+// Scripts category context menu
+window.showScCatCtxMenu = function(e, id) {
+  e.preventDefault();
+  if(!isAdmin) return;
+  ctxScCatId = id;
+  const menu = document.getElementById('ctxScCatMenu');
+  menu.classList.add('show');
+  const x = Math.min(e.clientX, window.innerWidth-180);
+  const y = Math.min(e.clientY, window.innerHeight-100);
+  menu.style.left = x+'px'; menu.style.top = y+'px';
+};
+
+window.ctxScCatRename = function() {
+  const cat = SCRIPTS.categories?.find(c=>c.id===ctxScCatId);
+  if(!cat) return;
+  hideCtxMenu();
+  openModal(`<h3>Rename Category</h3>
+    <label>Category Name</label>
+    <input type="text" id="mInput" value="${esc(cat.name)}">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="renameScCat()">Save</button>
+    </div>`);
+  setTimeout(()=>{ const el=document.getElementById('mInput'); if(el){ el.focus(); el.select(); } },60);
+};
+
+window.renameScCat = function() {
+  const name = document.getElementById('mInput').value.trim();
+  if(!name) return;
+  const cat = SCRIPTS.categories?.find(c=>c.id===ctxScCatId);
+  if(cat) { cat.name=name; saveScripts(); renderScCategories(); }
+  closeModal();
+};
+
+window.ctxScCatDelete = function() {
+  const cat = SCRIPTS.categories?.find(c=>c.id===ctxScCatId);
+  if(!cat) return;
+  hideCtxMenu();
+  if(!confirm(`Delete category "${cat.name}" and all ${cat.scripts?.length||0} script(s)?`)) return;
+  SCRIPTS.categories = SCRIPTS.categories.filter(c=>c.id!==ctxScCatId);
+  if(activeScCatId===ctxScCatId) activeScCatId = SCRIPTS.categories[0]?.id||null;
+  saveScripts(); renderScCategories(); renderScripts();
+};
+
 // ===== EVENTS =====
 document.getElementById('modalBg').addEventListener('click',function(e){ if(e.target===this) window.closeModal(); });
 document.addEventListener('keydown',function(e){ if(e.key==='Escape') window.closeModal(); });
@@ -1328,6 +1740,7 @@ checkAuth();
 // On desktop hide sidebar initially until QA page is shown
 if(window.innerWidth>768){
   document.getElementById('sidebar').style.display='none';
+  document.getElementById('scSidebar').style.display='none';
 }
 
 // Register PWA Service Worker
