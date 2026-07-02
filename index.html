@@ -713,11 +713,9 @@ function showApp() {
   if (isAdmin) {
     document.getElementById('adminBtn').style.display = 'flex';
     document.getElementById('logoutBtn').style.display = 'none';
-    document.getElementById('bnAdmin').style.display = 'flex';
   } else {
     document.getElementById('adminBtn').style.display = 'none';
     document.getElementById('logoutBtn').style.display = 'flex';
-    document.getElementById('bnAdmin').style.display = 'none';
   }
   initData();
   if (isAdmin) updateAdminUI();
@@ -939,13 +937,13 @@ window.doLogout = function() {
 };
 function updateAdminUI() {
   const btn = document.getElementById('adminBtn');
-  const bnBtn = document.getElementById('bnAdmin');
+  const bnBtn = null; // bnAdmin removed - now in More drawer
   const layout = document.querySelector('.app');
   const logoutBtn = document.getElementById('logoutBtn');
   if (isAdmin) {
     btn.style.display='flex'; btn.className='admin-badge';
     if(logoutBtn) logoutBtn.style.display='none';
-    if(bnBtn){ bnBtn.style.display='flex'; bnBtn.querySelector('.bn-icon').textContent='🔓'; }
+    // admin shown in More drawer
     // Update drawer admin icon
     const diAdmin = document.getElementById('diAdmin');
     if(diAdmin){ diAdmin.querySelector('.di-icon').textContent='🔓'; }
@@ -958,7 +956,7 @@ function updateAdminUI() {
   } else {
     btn.style.display='none';
     if(logoutBtn) logoutBtn.style.display='flex';
-    if(bnBtn){ bnBtn.style.display='none'; }
+    // admin shown in More drawer
     const diAdmin = document.getElementById('diAdmin');
     if(diAdmin){ diAdmin.querySelector('.di-icon').textContent='🔒'; }
     document.getElementById('addQBtn').style.display='none';
