@@ -415,11 +415,25 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
 }
 
 /* ===== BOTTOM NAV (mobile) ===== */
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav-h);background:var(--white);border-top:1.5px solid var(--border);z-index:100;align-items:center;justify-content:space-around}
-.bottom-nav-btn{background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:11px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:8px 16px;transition:all 0.15s;font-weight:500}
-.bottom-nav-btn .bn-icon{font-size:20px}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav-h);background:var(--white);border-top:1.5px solid var(--border);z-index:200;align-items:center;justify-content:space-around}
+.bottom-nav-btn{background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:10px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;transition:all 0.15s;font-weight:500;flex:1}
+.bottom-nav-btn .bn-icon{font-size:22px;line-height:1}
 .bottom-nav-btn.active{color:var(--purple)}
-.bottom-nav-btn.active .bn-icon{transform:scale(1.1)}
+.bottom-nav-btn.active .bn-icon{transform:scale(1.15)}
+
+/* More Drawer */
+.more-drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:300}
+.more-drawer-overlay.show{display:block}
+.more-drawer{position:fixed;bottom:0;left:0;right:0;background:var(--white);border-radius:20px 20px 0 0;z-index:301;padding:0 0 32px;transform:translateY(100%);transition:transform 0.3s cubic-bezier(0.4,0,0.2,1)}
+.more-drawer.show{transform:translateY(0)}
+.more-drawer-handle{width:40px;height:4px;background:var(--border2);border-radius:2px;margin:12px auto 8px}
+.more-drawer-title{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:8px 20px 12px}
+.more-drawer-item{display:flex;align-items:center;gap:14px;padding:14px 20px;cursor:pointer;transition:background 0.15s;border:none;background:none;width:100%;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);font-weight:500}
+.more-drawer-item:hover{background:var(--surface)}
+.more-drawer-item .di-icon{font-size:22px;width:28px;text-align:center}
+.more-drawer-item.active{color:var(--purple)}
+.more-drawer-item.danger{color:#e24b4a}
+.more-drawer-divider{height:1px;background:var(--border);margin:8px 0}
 </style>
 </head>
 <body>
@@ -569,9 +583,18 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
   <button class="bottom-nav-btn" id="bnQA" onclick="switchPage('qa')"><span class="bn-icon">📚</span>Q&A</button>
   <button class="bottom-nav-btn" id="bnScripts" onclick="switchPage('scripts')"><span class="bn-icon">📜</span>Scripts</button>
   <button class="bottom-nav-btn" id="bnBookmarks" onclick="switchPage('bookmarks')"><span class="bn-icon">⭐</span>Saved</button>
-  <button class="bottom-nav-btn" id="bnProjects" onclick="switchPage('projects')"><span class="bn-icon">💼</span>Projects</button>
-  <button class="bottom-nav-btn" id="bnAdmin" onclick="handleAdminClick()"><span class="bn-icon">🔒</span>Admin</button>
-  <button class="bottom-nav-btn" onclick="doLogout()"><span class="bn-icon">🚪</span>Logout</button>
+  <button class="bottom-nav-btn" id="bnMore" onclick="openMoreDrawer()"><span class="bn-icon">☰</span>More</button>
+</div>
+
+<!-- MORE DRAWER -->
+<div class="more-drawer-overlay" id="moreDrawerOverlay" onclick="closeMoreDrawer()"></div>
+<div class="more-drawer" id="moreDrawer">
+  <div class="more-drawer-handle"></div>
+  <div class="more-drawer-title">Menu</div>
+  <button class="more-drawer-item" id="diProjects" onclick="switchPage('projects');closeMoreDrawer()"><span class="di-icon">💼</span>Projects</button>
+  <div class="more-drawer-divider"></div>
+  <button class="more-drawer-item" id="diAdmin" onclick="handleAdminClick();closeMoreDrawer()"><span class="di-icon">🔒</span>Admin</button>
+  <button class="more-drawer-item danger" onclick="doLogout();closeMoreDrawer()"><span class="di-icon">🚪</span>Logout</button>
 </div>
 
 <!-- MODAL -->
@@ -809,6 +832,15 @@ function showToast(msg) {
   setTimeout(()=>t.classList.remove('show'), 2500);
 }
 
+window.openMoreDrawer = function() {
+  document.getElementById('moreDrawerOverlay').classList.add('show');
+  document.getElementById('moreDrawer').classList.add('show');
+};
+window.closeMoreDrawer = function() {
+  document.getElementById('moreDrawerOverlay').classList.remove('show');
+  document.getElementById('moreDrawer').classList.remove('show');
+};
+
 // ===== PAGE SWITCHING =====
 window.switchPage = function(page) {
   activePage = page;
@@ -824,14 +856,20 @@ window.switchPage = function(page) {
     document.getElementById('sidebar').style.display = page==='qa' ? 'flex' : 'none';
     document.getElementById('projSidebar').style.display = page==='projects' ? 'flex' : 'none';
     document.getElementById('scSidebar').style.display = page==='scripts' ? 'flex' : 'none';
+  } else {
+    document.getElementById('sidebar').style.display = 'none';
+    document.getElementById('projSidebar').style.display = 'none';
+    document.getElementById('scSidebar').style.display = 'none';
   }
 
   ['navHome','navQA','navProjects','navBookmarks','navScripts'].forEach(id => document.getElementById(id)?.classList.remove('active'));
   const navMap = {home:'navHome',qa:'navQA',projects:'navProjects',bookmarks:'navBookmarks',scripts:'navScripts'};
   document.getElementById(navMap[page])?.classList.add('active');
-  ['bnHome','bnQA','bnProjects','bnBookmarks','bnScripts'].forEach(id => document.getElementById(id)?.classList.remove('active'));
-  const bnMap = {home:'bnHome',qa:'bnQA',projects:'bnProjects',bookmarks:'bnBookmarks',scripts:'bnScripts'};
+  ['bnHome','bnQA','bnScripts','bnBookmarks','bnMore'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+  const bnMap = {home:'bnHome',qa:'bnQA',scripts:'bnScripts',bookmarks:'bnBookmarks',projects:'bnMore'};
   document.getElementById(bnMap[page])?.classList.add('active');
+  // Highlight Projects in drawer too
+  document.getElementById('diProjects')?.classList.toggle('active', page==='projects');
 
   if(page==='qa'){
     if(window.innerWidth<=900) document.getElementById('sidebar').classList.add('mobile-open');
@@ -908,6 +946,9 @@ function updateAdminUI() {
     btn.style.display='flex'; btn.className='admin-badge';
     if(logoutBtn) logoutBtn.style.display='none';
     if(bnBtn){ bnBtn.style.display='flex'; bnBtn.querySelector('.bn-icon').textContent='🔓'; }
+    // Update drawer admin icon
+    const diAdmin = document.getElementById('diAdmin');
+    if(diAdmin){ diAdmin.querySelector('.di-icon').textContent='🔓'; }
     document.getElementById('addQBtn').style.display='flex';
     document.getElementById('sidebarFooter').style.display='block';
     document.getElementById('projFooter').style.display='block';
@@ -918,6 +959,8 @@ function updateAdminUI() {
     btn.style.display='none';
     if(logoutBtn) logoutBtn.style.display='flex';
     if(bnBtn){ bnBtn.style.display='none'; }
+    const diAdmin = document.getElementById('diAdmin');
+    if(diAdmin){ diAdmin.querySelector('.di-icon').textContent='🔒'; }
     document.getElementById('addQBtn').style.display='none';
     document.getElementById('sidebarFooter').style.display='none';
     document.getElementById('projFooter').style.display='none';
