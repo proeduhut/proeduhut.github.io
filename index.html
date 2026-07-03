@@ -194,10 +194,7 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ===== PROJECTS PAGE ===== */
-.projects-page{flex:1;display:none;overflow:hidden;flex-direction:row}
-.proj-sidebar{width:260px;min-width:260px;border-right:1.5px solid var(--border);background:var(--white);display:flex;flex-direction:column;overflow-y:auto;flex-shrink:0}
-.proj-sidebar-top{padding:16px 14px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
-.proj-sidebar-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:0}
+.projects-page{flex:1;display:none;flex-direction:column;overflow:hidden}
 .proj-nav{flex:1;padding:8px 0}
 .proj-btn{width:100%;padding:10px 14px;background:none;border:none;text-align:left;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);display:flex;align-items:center;gap:10px;transition:all 0.15s;border-left:3px solid transparent}
 .proj-btn:hover{background:var(--surface);color:var(--purple)}
@@ -291,7 +288,45 @@ mark.highlight{background:rgba(255,107,0,0.18);border-radius:2px;padding:0 2px;c
 .bm-empty p{color:var(--muted);font-size:14px;line-height:1.6}
 
 /* ===== SCRIPTS PAGE ===== */
-.scripts-page{flex:1;display:none;flex-direction:row;overflow:hidden}
+.projects-page{flex:1;display:none;flex-direction:column;overflow:hidden}
+.proj-toolbar{padding:14px 24px 12px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;background:var(--white)}
+.proj-toolbar-title{font-family:"DM Serif Display",serif;font-size:20px;color:var(--text);flex:1}
+.proj-scroll{flex:1;overflow-y:auto;padding:16px 24px 60px}
+.proj-acc-item{border:1.5px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden;transition:box-shadow 0.15s}
+.proj-acc-item:hover{box-shadow:0 4px 16px rgba(107,33,232,0.07)}
+.proj-acc-header{display:flex;align-items:center;gap:14px;padding:16px 20px;cursor:pointer;background:var(--surface);transition:background 0.15s;user-select:none}
+.proj-acc-header:hover{background:var(--purple-light)}
+.proj-acc-num{font-size:12px;font-weight:700;color:var(--orange);min-width:28px;flex-shrink:0}
+.proj-acc-name{font-size:15px;font-weight:600;color:var(--text);flex:1}
+.proj-acc-item.open .proj-acc-name{color:var(--purple)}
+.proj-acc-arrow{font-size:18px;font-weight:300;color:var(--muted);width:22px;text-align:center}
+.proj-acc-item.open .proj-acc-arrow{color:var(--purple)}
+.proj-acc-body{display:none;padding:20px 24px;border-top:1px solid var(--border);background:var(--white)}
+.proj-acc-item.open .proj-acc-body{display:block}
+.proj-acc-section{margin-bottom:18px}
+.proj-acc-section:last-child{margin-bottom:0}
+.proj-acc-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:8px}
+.proj-acc-content{font-size:14px;color:var(--text);line-height:1.75}
+.proj-acc-content p{margin-bottom:6px}
+.proj-acc-admin{display:flex;gap:8px;margin-top:14px;padding-top:14px;border-top:1px solid var(--border)}
+
+/* SCRIPTS ACCORDION */
+.scripts-page{flex:1;display:none;flex-direction:column;overflow:hidden}
+.sc-toolbar{padding:14px 24px 12px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;background:var(--white)}
+.sc-toolbar-title{font-family:"DM Serif Display",serif;font-size:20px;color:var(--text);flex:1}
+.sc-scroll{flex:1;overflow-y:auto;padding:16px 24px 60px}
+.sc-acc-cat{border:1.5px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.sc-acc-cat-header{display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;background:var(--surface);transition:background 0.15s;user-select:none}
+.sc-acc-cat-header:hover{background:var(--purple-light)}
+.sc-acc-cat-name{font-size:15px;font-weight:600;color:var(--text);flex:1}
+.sc-acc-cat.open .sc-acc-cat-name{color:var(--purple)}
+.sc-acc-cat-count{font-size:11px;background:var(--surface2);padding:2px 8px;border-radius:10px;color:var(--muted);font-weight:500}
+.sc-acc-cat.open .sc-acc-cat-count{background:rgba(107,33,232,0.15);color:var(--purple)}
+.sc-acc-cat-arrow{font-size:18px;font-weight:300;color:var(--muted);width:22px;text-align:center}
+.sc-acc-cat.open .sc-acc-cat-arrow{color:var(--purple)}
+.sc-acc-cat-body{display:none;border-top:1px solid var(--border)}
+.sc-acc-cat.open .sc-acc-cat-body{display:block}
+
 .sc-sidebar{width:260px;min-width:260px;background:var(--white);border-right:1.5px solid var(--border);display:flex;flex-direction:column;overflow:hidden;flex-shrink:0}
 .sc-sidebar-inner{display:flex;flex-direction:column;height:100%;min-width:260px}
 .sc-sidebar-top{padding:14px 14px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
@@ -395,16 +430,11 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
   .acc-q-answer p{font-size:13px}
   .add-q-btn{font-size:12px;padding:6px 10px}
   
-  /* PROJECTS PAGE - full width, no sidebar */
-  .projects-page{width:100vw;flex-direction:column}
-  .proj-main{width:100vw;flex:1;overflow-y:auto}
-  .proj-content{padding:16px 16px 100px;width:100%}
-  .proj-header-bar{flex-direction:column;gap:10px;margin-bottom:16px}
-  .proj-title{font-size:20px}
-  .proj-title-num{font-size:11px}
-  .proj-section{margin-bottom:18px}
-  .proj-section-content{font-size:13px;padding:12px 14px;line-height:1.7}
-  .proj-section-content p{margin-bottom:6px}
+  /* PROJECTS PAGE mobile */
+  .proj-toolbar{padding:10px 14px}
+  .proj-scroll{padding:12px 12px 100px}
+  .proj-acc-header{padding:14px 16px}
+  .proj-acc-body{padding:14px 16px}
   
   /* SIDEBARS - full screen slide-in panels */
 
@@ -414,16 +444,7 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
   .topic-tc{font-size:12px;padding:3px 9px}
   .module-header{padding:14px 16px 8px;font-size:12px}
   
-  .proj-sidebar{
-    position:fixed;top:var(--header-h);left:0;
-    width:100vw!important;min-width:0!important;max-width:100vw!important;
-    bottom:var(--bottom-nav-h);z-index:300;
-    background:#fff;overflow-y:auto;
-    transform:translateX(-100%);
-    transition:transform 0.2s ease;
-    border-right:none;
-  }
-  .proj-sidebar.mobile-open{transform:translateX(0)}
+
   .proj-btn{padding:16px 16px;font-size:15px}
   .proj-btn-num{width:30px;height:30px;font-size:13px}
   .proj-nav{padding:8px 0}
@@ -438,18 +459,7 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
   .sc-list{padding:12px 12px 100px}
   .sc-card-title{font-size:14px}
   pre[class*="language-"]{font-size:11.5px}
-  .sc-sidebar{
-    position:fixed;top:var(--header-h);left:0;
-    width:100vw!important;min-width:0!important;max-width:100vw!important;
-    bottom:var(--bottom-nav-h);z-index:300;
-    background:#fff;overflow-y:auto;
-    transform:translateX(-100%);
-    transition:transform 0.2s ease;
-    border-right:none;
-  }
-  .sc-sidebar.mobile-open{transform:translateX(0)}
-  .sc-sidebar-inner{width:100%;min-width:0}
-  .sc-cat-btn{padding:14px 16px;font-size:15px}
+
   
   /* No overlay */
   .overlay{display:none!important}
@@ -520,21 +530,7 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
 <div class="app" id="mainApp" style="display:none">
 
   <!-- SCRIPTS SIDEBAR -->
-  <div class="sc-sidebar" id="scSidebar" style="display:none">
-    <div class="sc-sidebar-inner">
-      <div class="sc-sidebar-top">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-          <div class="sc-sidebar-label">Categories</div>
-          <button onclick="toggleSidebar()" style="display:none;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);padding:2px 6px" id="scSidebarCloseBtn">✕</button>
-        </div>
-        <input class="sc-search-box" type="text" placeholder="Search scripts..." id="scSearchBox" oninput="doScSearch()">
-      </div>
-      <div class="sc-cat-list" id="scCatList"></div>
-      <div class="sc-sidebar-footer" id="scSidebarFooter">
-        <button class="sc-add-cat-btn" onclick="openAddScCategory()">+ Add Category</button>
-      </div>
-    </div>
-  </div>
+
 
   <!-- MAIN CONTENT -->
   <div class="main">
@@ -567,14 +563,12 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
 
     <!-- PROJECTS PAGE -->
     <div class="projects-page" id="projectsPage">
-      <div class="proj-sidebar" id="projSidebar">
-        <div class="proj-sidebar-top"><div class="proj-sidebar-label">Projects</div></div>
-        <div class="proj-nav" id="projNav"></div>
-        <div class="proj-footer" id="projFooter">
-          <button class="proj-add-btn" onclick="openAddProject()">+ Add Project</button>
-        </div>
+      <div class="proj-toolbar">
+        <div class="proj-toolbar-title">Projects</div>
+        <span id="projStats" style="font-size:12px;color:var(--muted)"></span>
+        <button class="proj-edit-btn" id="projFooter" onclick="openAddProject()" style="display:none;padding:8px 16px;font-size:13px;background:var(--orange);color:#fff;border:none;border-radius:8px;font-family:DM Sans,sans-serif;font-weight:600;cursor:pointer">+ Add Project</button>
       </div>
-      <div class="proj-main"><div id="projContent"></div></div>
+      <div class="proj-scroll" id="projScroll"></div>
     </div>
 
     <!-- BOOKMARKS PAGE -->
@@ -588,21 +582,13 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
 
     <!-- SCRIPTS PAGE -->
     <div class="scripts-page" id="scriptsPage">
-      <div class="sc-main">
-        <div class="sc-header">
-          <div class="sc-title" id="scTitle">Select a category <span id="scCount"></span></div>
-          <div class="sc-header-right">
-            <span class="sc-badge" id="scBadge"></span>
-            <button class="add-sc-btn" id="addScBtn" onclick="openAddScript()">+ Add Script</button>
-          </div>
-        </div>
-        <div class="sc-list" id="scList">
-          <div class="sc-welcome">
-            <h2>Script Library</h2>
-            <p>Select a category from the sidebar<br>to browse ServiceNow scripts.</p>
-          </div>
-        </div>
+      <div class="sc-toolbar">
+        <div class="sc-toolbar-title">Scripts</div>
+        <input class="qa-search" type="text" placeholder="🔍 Search scripts..." id="scSearchBox" oninput="doScSearch()" style="max-width:300px">
+        <span id="scStatsBadge" style="font-size:12px;color:var(--muted)"></span>
+        <button class="add-sc-btn" id="addScBtn" onclick="openAddScript()" style="display:none">+ Add Script</button>
       </div>
+      <div class="sc-scroll" id="scScroll"></div>
     </div>
 
   </div>
@@ -906,12 +892,12 @@ window.switchPage = function(page) {
   const isDesktop = window.innerWidth > 900;
   if(isDesktop){
     // sidebar removed
-    document.getElementById('projSidebar').style.display = page==='projects' ? 'flex' : 'none';
-    document.getElementById('scSidebar').style.display = page==='scripts' ? 'flex' : 'none';
+    // projSidebar removed
+    // scSidebar removed
   } else {
     // sidebar removed
     document.getElementById('projSidebar').style.display = 'none';
-    document.getElementById('scSidebar').style.display = 'none';
+    // scSidebar removed
   }
 
   ['navHome','navQA','navProjects','navBookmarks','navScripts'].forEach(id => document.getElementById(id)?.classList.remove('active'));
@@ -926,15 +912,8 @@ window.switchPage = function(page) {
   if(page==='qa'){
     renderQAAccordion();
   }
-  if(page==='projects'){
-    if(window.innerWidth<=900) document.getElementById('projSidebar').classList.add('mobile-open');
-    renderProjects();
-  }
-  if(page==='scripts'){
-    if(window.innerWidth<=900) document.getElementById('scSidebar').classList.add('mobile-open');
-    renderScCategories();
-    if(activeScCatId && !scSearchMode) renderScripts();
-  }
+  if(page==='projects'){ renderProjects(); }
+  if(page==='scripts'){ renderScAccordion(); }
   if(page==='bookmarks') renderBookmarks();
 };
 
@@ -952,7 +931,7 @@ window.toggleSidebar = function() {
     } else {
       // Close all sidebars first
       // sidebar removed
-      document.getElementById('projSidebar').classList.remove('mobile-open');
+    
       document.getElementById('scSidebar').classList.remove('mobile-open');
       target.classList.add('mobile-open');
     }
@@ -966,7 +945,7 @@ window.toggleSidebar = function() {
 
 window.closeMobileSidebar = function() {
   // sidebar removed
-  document.getElementById('projSidebar').classList.remove('mobile-open');
+
   document.getElementById('scSidebar').classList.remove('mobile-open');
   
 };
@@ -1012,7 +991,7 @@ function updateAdminUI() {
     document.getElementById('accAdminToolbar').classList.add('show');
     document.getElementById('projFooter').style.display='block';
     document.getElementById('addScBtn').style.display='flex';
-    document.getElementById('scSidebarFooter').style.display='block';
+    // scSidebarFooter removed
     layout?.classList.add('admin-mode');
   } else {
     btn.style.display='none';
@@ -1024,7 +1003,7 @@ function updateAdminUI() {
     document.getElementById('accAdminToolbar').classList.remove('show');
     document.getElementById('projFooter').style.display='none';
     document.getElementById('addScBtn').style.display='none';
-    document.getElementById('scSidebarFooter').style.display='none';
+    // scSidebarFooter removed
     layout?.classList.remove('admin-mode');
   }
   renderTopics();
@@ -1561,21 +1540,57 @@ window.clearAllBookmarks = function() {
 
 // ===== PROJECTS =====
 function renderProjects() {
-  const nav=document.getElementById('projNav');
-  document.getElementById('projFooter').style.display=isAdmin?'block':'none';
+  const scroll = document.getElementById('projScroll');
+  const stats = document.getElementById('projStats');
+  const addBtn = document.getElementById('projFooter');
+  if(addBtn) addBtn.style.display = isAdmin ? 'block' : 'none';
+  if(stats) stats.textContent = PROJECTS.length ? `${PROJECTS.length} project${PROJECTS.length!==1?'s':''}` : '';
+
+  if(!scroll) return;
   if(!PROJECTS.length){
-    nav.innerHTML='';
-    document.getElementById('projContent').innerHTML=`<div class="proj-empty"><div style="font-size:40px;margin-bottom:14px;opacity:0.3">💼</div><p>${isAdmin?'No projects yet. Click "+ Add Project" to start.':'No projects added yet.'}</p></div>`;
+    scroll.innerHTML = `<div style="padding:80px 24px;text-align:center"><div style="font-size:48px;margin-bottom:16px;opacity:0.3">💼</div><p style="color:var(--muted);font-size:14px">${isAdmin?'No projects yet. Click "+ Add Project" to start.':'No projects added yet.'}</p></div>`;
     return;
   }
-  nav.innerHTML=PROJECTS.map((p,i)=>`
-    <button class="proj-btn${p.id===activeProjectId?' active':''}" onclick="selectProject('${p.id}')">
-      <span class="proj-btn-num">${i+1}</span>
-      <span class="proj-btn-name">${esc(p.name)}</span>
-    </button>`).join('');
-  const proj=PROJECTS.find(p=>p.id===activeProjectId)||PROJECTS[0];
-  if(proj) renderProjectDetail(proj);
+
+  scroll.innerHTML = PROJECTS.map((p,i) => {
+    const fields = [
+      {label:'Project Objective', key:'objective', numbered:false},
+      {label:'Project Explanation', key:'explanation', numbered:true},
+      {label:'Role & Responsibilities', key:'role', numbered:true}
+    ];
+    const fieldsHtml = fields.map(f => p[f.key] ? `
+      <div class="proj-acc-section">
+        <div class="proj-acc-label">${f.label}</div>
+        <div class="proj-acc-content">${formatContent(p[f.key], f.numbered)}</div>
+      </div>` : '').join('');
+    const adminBtns = isAdmin ? `<div class="proj-acc-admin">
+      <button class="proj-edit-btn" onclick="openEditProject('${p.id}');event.stopPropagation()">Edit</button>
+      <button class="proj-del-btn" onclick="deleteProject('${p.id}');event.stopPropagation()">Delete</button>
+    </div>` : '';
+    const isOpen = activeProjectId === p.id;
+    return `<div class="proj-acc-item${isOpen?' open':''}" id="pacc-${p.id}">
+      <div class="proj-acc-header" onclick="toggleProjAcc('${p.id}')">
+        <span class="proj-acc-num">Project ${i+1}</span>
+        <span class="proj-acc-name">${esc(p.name)}</span>
+        <span class="proj-acc-arrow">${isOpen?'−':'+'}</span>
+      </div>
+      <div class="proj-acc-body">${fieldsHtml}${adminBtns}</div>
+    </div>`;
+  }).join('');
 }
+
+window.toggleProjAcc = function(id) {
+  const wasOpen = activeProjectId === id;
+  activeProjectId = wasOpen ? null : id;
+  document.querySelectorAll('.proj-acc-item').forEach(el => {
+    el.classList.remove('open');
+    el.querySelector('.proj-acc-arrow').textContent = '+';
+  });
+  if(!wasOpen) {
+    const el = document.getElementById('pacc-'+id);
+    if(el) { el.classList.add('open'); el.querySelector('.proj-acc-arrow').textContent = '−'; }
+  }
+};
 
 function formatContent(text, numbered=false) {
   if(!text) return '';
@@ -1612,7 +1627,7 @@ function renderProjectDetail(proj) {
 window.selectProject = function(id) {
   activeProjectId = id;
   // First close sidebar
-  document.getElementById('projSidebar').classList.remove('mobile-open');
+
   
   // Then render after transition
   requestAnimationFrame(() => {
@@ -1671,112 +1686,141 @@ window.deleteProject = function(id) {
 };
 
 // ===== SCRIPTS =====
-function renderScCategories() {
+// ===== SCRIPTS ACCORDION =====
+function renderScCategories() { renderScAccordion(); }
+
+function renderScAccordion(searchScripts, highlight) {
+  const scroll = document.getElementById('scScroll');
+  if(!scroll) return;
   const cats = SCRIPTS.categories || [];
-  const nav = document.getElementById('scCatList');
-  if (!cats.length) {
-    nav.innerHTML = `<div class="empty" style="padding:40px 16px"><p style="color:var(--muted);font-size:13px">${isAdmin ? 'No categories yet.<br>Click "+ Add Category" below.' : 'No categories yet.'}</p></div>`;
-    document.getElementById('scBadge').textContent = '';
-    return;
-  }
+
+  // Stats
   const totalScripts = cats.reduce((s,c)=>s+(c.scripts?.length||0),0);
-  document.getElementById('scBadge').textContent = `${cats.length} categories · ${totalScripts} scripts`;
-  nav.innerHTML = cats.map((cat,i) => {
-    const count = cat.scripts?.length || 0;
-    return `<button class="sc-cat-btn${cat.id===activeScCatId&&!scSearchMode?' active':''}"
-      onclick="selectScCat('${cat.id}')"
-      oncontextmenu="showScCatCtxMenu(event,'${cat.id}')">
-      <span class="sc-cat-icon">📁</span>
-      <span class="sc-cat-name">${esc(cat.name)}</span>
-      <span class="sc-cat-count">${count}</span>
-    </button>`;
-  }).join('');
-}
+  const badge = document.getElementById('scStatsBadge');
+  if(badge) badge.textContent = cats.length ? `${cats.length} categories · ${totalScripts} scripts` : '';
 
-window.selectScCat = function(id) {
-  activeScCatId = id; scSearchMode = false;
-  document.getElementById('scSearchBox').value = '';
-  document.getElementById('scSidebar').classList.remove('mobile-open');
-  requestAnimationFrame(() => requestAnimationFrame(() => {
-    renderScCategories();
-    renderScripts();
-    document.getElementById('scList')?.scrollTo(0,0);
-  }));
-};
-
-function renderScripts(scripts, highlight) {
-  const cat = SCRIPTS.categories?.find(c=>c.id===activeScCatId);
-  if (!cat && !scSearchMode) {
-    document.getElementById('scTitle').innerHTML = '<span style="color:var(--muted);font-family:DM Sans,sans-serif;font-size:18px;font-weight:400">Select a category</span>';
-    document.getElementById('scList').innerHTML = `<div class="sc-welcome"><h2>Script Library</h2><p>Select a category from the sidebar<br>to browse ServiceNow scripts.</p></div>`;
-    return;
-  }
-  currentScripts = scripts || (cat?.scripts || []);
-  const title = scSearchMode ? 'Search Results' : (cat?.name || '');
-  document.getElementById('scTitle').innerHTML = `${esc(title)} <span>${currentScripts.length} script${currentScripts.length!==1?'s':''}</span>`;
-
-  const list = document.getElementById('scList');
-  if (!currentScripts.length) {
-    list.innerHTML = `<div class="sc-empty"><div class="sc-empty-icon">📭</div><p>No scripts found.</p></div>`;
-    return;
-  }
-
-  list.innerHTML = currentScripts.map((sc, i) => {
-    let titleHtml = esc(sc.title);
-    if(highlight){ const re=new RegExp(`(${highlight.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'); titleHtml=titleHtml.replace(re,'<mark class="highlight">$1</mark>'); }
-    const catName = scSearchMode ? SCRIPTS.categories?.find(c=>c.scripts?.includes(sc))?.name : null;
-    const catBadge = catName ? `<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;background:var(--orange-light);color:var(--orange);border:1px solid rgba(255,107,0,0.2);margin-bottom:4px">${esc(catName)}</span>` : '';
-    const descHtml = sc.desc ? `<div class="sc-desc-text">${esc(sc.desc).replace(/\n/g,'<br>')}</div>` : '';
-    const notesHtml = sc.notes ? `<div class="sc-notes-text">💡 ${esc(sc.notes).replace(/\n/g,'<br>')}</div>` : '';
-    const codeHtml = sc.code ? `<div class="sc-code-wrap">
-      <button class="sc-copy-btn" onclick="copyScript(${i});event.stopPropagation()">Copy</button>
-      <pre><code class="language-javascript">${esc(sc.code)}</code></pre>
-    </div>` : '';
-    const adminActions = isAdmin ? `<div class="sc-card-actions"><button class="q-act" onclick="openEditScript(${i});event.stopPropagation()">Edit</button><button class="q-act del" onclick="deleteScript(${i});event.stopPropagation()">Delete</button></div>` : '';
-    return `<div class="sc-card" id="sc-${i}">
-      <div class="sc-card-header" onclick="toggleScCard(${i})">
-        
-        <div class="sc-card-info">
-          ${catBadge}
-          <div class="sc-card-title">${titleHtml}</div>
-          ${sc.desc ? `<div class="sc-card-desc">${esc(sc.desc).split('\n')[0]}</div>` : ''}
+  // Search mode
+  if(searchScripts !== undefined) {
+    if(!searchScripts.length){ scroll.innerHTML='<div class="empty"><p>No scripts found.</p></div>'; return; }
+    scroll.innerHTML = '<div style="padding:0">' + searchScripts.map((sc,i) => {
+      const catName = SCRIPTS.categories?.find(c=>c.scripts?.find(s=>s.id===sc.id))?.name || '';
+      let titleHtml = esc(sc.title);
+      if(highlight){ const re=new RegExp(`(${highlight.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'); titleHtml=titleHtml.replace(re,'<mark class="highlight">$1</mark>'); }
+      const descHtml = sc.desc ? `<div style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:6px">Requirement</div><div class="sc-desc-text">${esc(sc.desc).replace(/\n/g,'<br>')}</div>` : '';
+      const codeHtml = sc.code ? `<div class="sc-code-wrap"><button class="sc-copy-btn" onclick="copyScriptById('${sc.id}');event.stopPropagation()">Copy</button><pre><code class="language-javascript">${esc(sc.code)}</code></pre></div>` : '';
+      return `<div class="sc-card" id="scs-${i}" style="margin-bottom:10px;border-radius:10px">
+        <div style="font-size:10px;color:var(--orange);font-weight:600;padding:8px 16px 0;letter-spacing:0.08em;text-transform:uppercase">${esc(catName)}</div>
+        <div class="sc-card-header" onclick="this.closest('.sc-card').classList.toggle('open')">
+          <div class="sc-card-info"><div class="sc-card-title">${titleHtml}</div></div>
+          <span class="sc-card-arrow">▾</span>
         </div>
-        <span class="sc-card-arrow">▾</span>
+        <div class="sc-card-body"><div class="sc-card-inner">${descHtml}${codeHtml}</div></div>
+      </div>`;
+    }).join('') + '</div>';
+    if(window.Prism) window.Prism.highlightAll();
+    return;
+  }
+
+  if(!cats.length){
+    scroll.innerHTML = `<div style="padding:80px 24px;text-align:center"><div style="font-size:48px;margin-bottom:16px;opacity:0.3">📜</div><p style="color:var(--muted);font-size:14px">${isAdmin?'No categories yet. Click "+ Add Script" to add a category first.':'No scripts added yet.'}</p></div>`;
+    return;
+  }
+
+  scroll.innerHTML = cats.map(cat => {
+    const count = cat.scripts?.length || 0;
+    const isOpen = activeScCatId === cat.id;
+    const adminCatActions = isAdmin ? `<button onclick="showScCatCtxMenu(event,'${cat.id}');event.stopPropagation()" style="background:none;border:none;font-size:16px;cursor:pointer;padding:2px 8px;color:var(--muted)">⋯</button>` : '';
+    const scriptsHtml = (cat.scripts||[]).map((sc,i) => {
+      const descHtml = sc.desc ? `<div style="font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--orange);font-weight:700;margin-bottom:6px">Requirement</div><div class="sc-desc-text">${esc(sc.desc).replace(/\n/g,'<br>')}</div>` : '';
+      const codeHtml = sc.code ? `<div class="sc-code-wrap"><button class="sc-copy-btn" onclick="copyScriptById('${sc.id}');event.stopPropagation()">Copy</button><pre><code class="language-javascript">${esc(sc.code)}</code></pre></div>` : '';
+      const adminActions = isAdmin ? `<div class="sc-card-actions"><button class="q-act" onclick="openEditScriptById('${cat.id}','${sc.id}');event.stopPropagation()">Edit</button><button class="q-act del" onclick="deleteScriptById('${cat.id}','${sc.id}');event.stopPropagation()">Delete</button></div>` : '';
+      return `<div class="sc-card" id="sc-${cat.id}-${i}" style="margin:10px 16px;border-radius:10px">
+        <div class="sc-card-header" onclick="this.closest('.sc-card').classList.toggle('open')">
+          <div class="sc-card-info"><div class="sc-card-title">${esc(sc.title)}</div></div>
+          <span class="sc-card-arrow">▾</span>
+        </div>
+        <div class="sc-card-body"><div class="sc-card-inner">${descHtml}${codeHtml}${adminActions}</div></div>
+      </div>`;
+    }).join('');
+    const addScriptBtn = isAdmin ? `<div style="padding:10px 16px 14px"><button onclick="accOpenAddScript('${cat.id}')" style="background:none;border:1.5px dashed var(--border2);border-radius:6px;padding:7px 14px;font-size:12px;color:var(--muted);cursor:pointer;font-family:DM Sans,sans-serif;width:100%;transition:all 0.15s" onmouseover="this.style.borderColor='var(--purple)';this.style.color='var(--purple)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">+ Add Script</button></div>` : '';
+    return `<div class="sc-acc-cat${isOpen?' open':''}" id="sccat-${cat.id}">
+      <div class="sc-acc-cat-header" onclick="toggleScAccCat('${cat.id}')">
+        <span class="sc-acc-cat-name">${esc(cat.name)}</span>
+        <span class="sc-acc-cat-count">${count}</span>
+        ${adminCatActions}
+        <span class="sc-acc-cat-arrow">${isOpen?'−':'+'}</span>
       </div>
-      <div class="sc-card-body">
-        <div class="sc-card-inner">${descHtml}${codeHtml}${notesHtml}${adminActions}</div>
-      </div>
+      <div class="sc-acc-cat-body">${scriptsHtml}${addScriptBtn}</div>
     </div>`;
   }).join('');
 
-  // Highlight with Prism
   if(window.Prism) window.Prism.highlightAll();
 }
 
-window.toggleScCard = function(i) {
-  const el = document.getElementById(`sc-${i}`);
-  const wasOpen = el.classList.contains('open');
-  document.querySelectorAll('.sc-card.open').forEach(x=>x.classList.remove('open'));
-  if(!wasOpen) el.classList.add('open');
+window.toggleScAccCat = function(id) {
+  const wasOpen = activeScCatId === id;
+  activeScCatId = wasOpen ? null : id;
+  document.querySelectorAll('.sc-acc-cat').forEach(el => {
+    el.classList.remove('open');
+    const arr = el.querySelector('.sc-acc-cat-arrow');
+    if(arr) arr.textContent = '+';
+  });
+  if(!wasOpen) {
+    const el = document.getElementById('sccat-'+id);
+    if(el) {
+      el.classList.add('open');
+      const arr = el.querySelector('.sc-acc-cat-arrow');
+      if(arr) arr.textContent = '−';
+    }
+  }
+  if(window.Prism) setTimeout(()=>window.Prism.highlightAll(), 50);
 };
 
-window.copyScript = function(i) {
-  const sc = currentScripts[i];
+window.accOpenAddScript = function(catId) {
+  activeScCatId = catId;
+  openAddScript();
+};
+
+window.copyScriptById = function(id) {
+  let sc = null;
+  SCRIPTS.categories?.forEach(c => c.scripts?.forEach(s => { if(s.id===id) sc=s; }));
   if(!sc?.code) return;
   navigator.clipboard.writeText(sc.code).then(()=>showToast('📋 Copied!')).catch(()=>showToast('Copy failed'));
 };
 
+window.openEditScriptById = function(catId, scId) {
+  activeScCatId = catId;
+  const cat = SCRIPTS.categories?.find(c=>c.id===catId);
+  const idx = cat?.scripts?.findIndex(s=>s.id===scId);
+  if(idx === undefined || idx < 0) return;
+  currentScripts = cat.scripts;
+  openEditScript(idx);
+};
+
+window.deleteScriptById = function(catId, scId) {
+  if(!confirm('Delete this script?')) return;
+  const cat = SCRIPTS.categories?.find(c=>c.id===catId);
+  if(!cat) return;
+  cat.scripts = cat.scripts.filter(s=>s.id!==scId);
+  saveScripts(); renderScAccordion();
+};
+
+window.selectScCat = function(id) { toggleScAccCat(id); };
+function renderScripts(scripts, highlight) { renderScAccordion(scripts, highlight); }
+
 window.doScSearch = function() {
   const raw = document.getElementById('scSearchBox').value;
   const q = raw.trim().toLowerCase();
-  if(!q){ scSearchMode=false; renderScCategories(); renderScripts(); return; }
+  if(!q){ scSearchMode=false; renderScAccordion(); return; }
   scSearchMode = true;
   const all = [];
   SCRIPTS.categories?.forEach(c=>c.scripts?.forEach(sc=>{
-    if(sc.title.toLowerCase().includes(q)||sc.desc?.toLowerCase().includes(q)||sc.code?.toLowerCase().includes(q)||sc.notes?.toLowerCase().includes(q)) all.push(sc);
+    if(sc.title.toLowerCase().includes(q)||sc.desc?.toLowerCase().includes(q)||sc.code?.toLowerCase().includes(q)) all.push(sc);
   }));
-  renderScCategories(); renderScripts(all, raw.trim());
+  renderScAccordion(all, raw.trim());
 };
+
+window.copyScript = function(i) { copyScriptById(currentScripts[i]?.id); };
 
 // ===== SCRIPTS ADMIN =====
 window.openAddScCategory = function() {
