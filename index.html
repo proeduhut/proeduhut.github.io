@@ -896,7 +896,7 @@ window.switchPage = function(page) {
     // scSidebar removed
   } else {
     // sidebar removed
-    document.getElementById('projSidebar').style.display = 'none';
+    // projSidebar removed
     // scSidebar removed
   }
 
@@ -922,8 +922,8 @@ window.toggleSidebar = function() {
   const isMobile = window.innerWidth <= 900;
   if (isMobile) {
     let target;
-    if(activePage==='projects') target = document.getElementById('projSidebar');
-    else if(activePage==='scripts') target = document.getElementById('scSidebar');
+    if(activePage==='projects') target = null;
+    else if(activePage==='scripts') target = null;
     else target = null;
     const isOpen = target.classList.contains('mobile-open');
     if(isOpen) {
@@ -932,21 +932,21 @@ window.toggleSidebar = function() {
       // Close all sidebars first
       // sidebar removed
     
-      document.getElementById('scSidebar').classList.remove('mobile-open');
+  
       target.classList.add('mobile-open');
     }
   } else {
     sidebarOpen = !sidebarOpen;
     // sidebar removed
-    document.getElementById('projSidebar').classList.toggle('collapsed', !sidebarOpen);
-    document.getElementById('scSidebar').classList.toggle('collapsed', !sidebarOpen);
+    // projSidebar removed
+    
   }
 };
 
 window.closeMobileSidebar = function() {
   // sidebar removed
 
-  document.getElementById('scSidebar').classList.remove('mobile-open');
+  
   
 };
 
@@ -1610,32 +1610,12 @@ function renderProjectDetail(proj) {
     {label:'Project Explanation',key:'explanation',numbered:true},
     {label:'Role & Responsibilities',key:'role',numbered:true}
   ];
-  document.getElementById('projContent').innerHTML=`
-    <div class="proj-content">
-      <div class="proj-header-bar">
-        <div><span class="proj-title-num">Project ${idx+1}</span><div class="proj-title">${esc(proj.name)}</div></div>
-        ${adminBtns}
-      </div>
-      ${fields.map(f=>proj[f.key]?`
-        <div class="proj-section">
-          <div class="proj-section-label">${f.label}</div>
-          <div class="proj-section-content">${formatContent(proj[f.key],f.numbered)}</div>
-        </div>`:'').join('')}
-    </div>`;
+// renderProjectDetail replaced by accordion in renderProjects
 }
 
 window.selectProject = function(id) {
   activeProjectId = id;
-  // First close sidebar
-
-  
-  // Then render after transition
-  requestAnimationFrame(() => {
-    requestAnimationFrame(() => {
-      renderProjects();
-      document.querySelector('.proj-main')?.scrollTo(0,0);
-    });
-  });
+  renderProjects();
 };
 
 window.openAddProject = function() {
@@ -1959,7 +1939,7 @@ checkAuth();
 // On desktop hide sidebar initially until QA page is shown
 if(window.innerWidth>768){
   // sidebar removed
-  document.getElementById('scSidebar').style.display='none';
+
 }
 
 // Register PWA Service Worker
