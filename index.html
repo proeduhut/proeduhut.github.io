@@ -408,6 +408,7 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
   
   /* No overlay */
   .overlay{display:none!important}
+  #sidebarCloseBtn, #scSidebarCloseBtn{display:flex!important}
   
   /* Modal */
   .modal{width:100%;max-width:100%;border-radius:12px 12px 0 0;position:fixed;bottom:0;left:0;right:0;max-height:85vh;margin:0}
@@ -478,7 +479,10 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
   <div class="sidebar" id="sidebar">
     <div class="sidebar-inner">
       <div class="sidebar-top">
-        <div class="sidebar-label">Topics</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div class="sidebar-label">Topics</div>
+          <button onclick="toggleSidebar()" style="display:none;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);padding:2px 6px" id="sidebarCloseBtn">✕</button>
+        </div>
         <input class="search-box" type="text" placeholder="Search questions..." id="searchBox" oninput="doSearch()">
       </div>
       <div class="topic-list" id="topicList"></div>
@@ -493,7 +497,10 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
   <div class="sc-sidebar" id="scSidebar" style="display:none">
     <div class="sc-sidebar-inner">
       <div class="sc-sidebar-top">
-        <div class="sc-sidebar-label">Categories</div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
+          <div class="sc-sidebar-label">Categories</div>
+          <button onclick="toggleSidebar()" style="display:none;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);padding:2px 6px" id="scSidebarCloseBtn">✕</button>
+        </div>
         <input class="sc-search-box" type="text" placeholder="Search scripts..." id="scSearchBox" oninput="doScSearch()">
       </div>
       <div class="sc-cat-list" id="scCatList"></div>
@@ -894,7 +901,15 @@ window.toggleSidebar = function() {
     else if(activePage==='scripts') target = document.getElementById('scSidebar');
     else target = document.getElementById('sidebar');
     const isOpen = target.classList.contains('mobile-open');
-    target.classList.toggle('mobile-open', !isOpen);
+    if(isOpen) {
+      target.classList.remove('mobile-open');
+    } else {
+      // Close all sidebars first
+      document.getElementById('sidebar').classList.remove('mobile-open');
+      document.getElementById('projSidebar').classList.remove('mobile-open');
+      document.getElementById('scSidebar').classList.remove('mobile-open');
+      target.classList.add('mobile-open');
+    }
   } else {
     sidebarOpen = !sidebarOpen;
     document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
