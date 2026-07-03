@@ -49,11 +49,7 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .app{position:fixed;top:var(--header-h);left:0;right:0;bottom:0;display:flex;overflow:hidden;width:100%}
 
 /* ===== SIDEBAR ===== */
-.sidebar{width:260px;min-width:260px;background:var(--white);border-right:1.5px solid var(--border);display:flex;flex-direction:column;overflow:hidden;transition:all 0.25s ease;flex-shrink:0}
-.sidebar.collapsed{width:0;min-width:0;border-right:none}
-.sidebar-inner{display:flex;flex-direction:column;height:100%;min-width:260px}
-.sidebar-top{padding:14px 14px 10px;border-bottom:1px solid var(--border);flex-shrink:0}
-.sidebar-label{font-size:10px;letter-spacing:0.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:10px}
+/* sidebar removed - using accordion QA */
 .search-wrap{position:relative}
 .search-box{width:100%;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.15s}
 .search-box:focus{border-color:var(--purple)}
@@ -100,8 +96,69 @@ body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-serif;min
 .home-btn-secondary:hover{background:var(--purple-light)}
 
 /* ===== Q&A PAGE ===== */
-.qa-page{flex:1;display:none;overflow:hidden;flex-direction:row}
-.qa-content{flex:1;display:flex;flex-direction:column;overflow:hidden}
+
+/* ===== QA ACCORDION (Udemy style) ===== */
+.qa-page{flex:1;display:none;flex-direction:column;overflow:hidden}
+.qa-toolbar{padding:14px 24px 12px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;gap:12px;flex-shrink:0;background:var(--white)}
+.qa-search{flex:1;max-width:400px;background:var(--surface);border:1.5px solid var(--border);border-radius:8px;padding:8px 14px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none;transition:border-color 0.15s}
+.qa-search:focus{border-color:var(--purple)}
+.qa-search::placeholder{color:var(--muted)}
+.qa-stats{font-size:12px;color:var(--muted);margin-left:auto}
+.qa-scroll{flex:1;overflow-y:auto;padding:16px 24px 60px}
+
+/* Module section */
+.acc-module{border:1.5px solid var(--border);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.acc-module-header{display:flex;align-items:center;gap:12px;padding:14px 18px;cursor:pointer;background:var(--surface);transition:background 0.15s;user-select:none}
+.acc-module-header:hover{background:var(--purple-light)}
+.acc-module-icon{font-size:16px;flex-shrink:0}
+.acc-module-name{font-size:15px;font-weight:600;color:var(--text);flex:1}
+.acc-module-meta{font-size:12px;color:var(--muted)}
+.acc-module-arrow{font-size:20px;font-weight:300;color:var(--muted);flex-shrink:0;width:24px;text-align:center;line-height:1}
+.acc-module.open .acc-module-arrow{color:var(--purple)}
+.acc-module-body{display:none;border-top:1px solid var(--border)}
+.acc-module.open .acc-module-body{display:block}
+
+/* Topic row */
+.acc-topic{display:flex;align-items:center;gap:12px;padding:12px 18px 12px 24px;cursor:pointer;border-bottom:1px solid var(--border);transition:background 0.15s;background:var(--white)}
+.acc-topic:last-child{border-bottom:none}
+.acc-topic:hover{background:var(--surface)}
+.acc-topic.open{background:var(--purple-light)}
+.acc-topic-num{font-size:11px;font-weight:700;color:var(--orange);min-width:22px;flex-shrink:0}
+.acc-topic-name{font-size:14px;color:var(--text);font-weight:500;flex:1}
+.acc-topic.open .acc-topic-name{color:var(--purple)}
+.acc-topic-count{font-size:11px;background:var(--surface2);padding:2px 8px;border-radius:10px;color:var(--muted);font-weight:500;flex-shrink:0}
+.acc-topic.open .acc-topic-count{background:rgba(107,33,232,0.15);color:var(--purple)}
+.acc-topic-arrow{font-size:18px;font-weight:300;color:var(--muted);flex-shrink:0;width:22px;text-align:center;line-height:1}
+.acc-topic.open .acc-topic-arrow{color:var(--purple)}
+
+/* Admin topic actions */
+.acc-topic-actions{display:flex;gap:6px;flex-shrink:0}
+
+/* Questions under topic */
+.acc-questions{display:none;background:#fafafa;border-top:1px solid var(--border);padding:8px 0 4px}
+.acc-topic.open + .acc-questions{display:block}
+.acc-q-item{border-bottom:1px solid var(--border)}
+.acc-q-item:last-child{border-bottom:none}
+.acc-q-header{display:flex;align-items:flex-start;gap:10px;padding:14px 24px;cursor:pointer;transition:background 0.15s}
+.acc-q-header:hover{background:var(--surface)}
+.acc-q-num{font-size:12px;color:var(--muted);min-width:22px;flex-shrink:0;padding-top:1px}
+.acc-q-text{font-size:14px;color:var(--text);flex:1;line-height:1.5}
+.acc-q-item.open .acc-q-text{color:var(--purple);font-weight:500}
+.acc-q-arrow{font-size:13px;color:var(--muted);transition:transform 0.2s;flex-shrink:0;padding-top:2px}
+.acc-q-item.open .acc-q-arrow{transform:rotate(180deg);color:var(--purple)}
+.acc-q-answer{display:none;padding:0 24px 16px 56px;background:#fafafa}
+.acc-q-item.open .acc-q-answer{display:block}
+.acc-q-answer p{font-size:13px;color:var(--text);line-height:1.75;margin-bottom:6px}
+.acc-admin-bar{display:flex;align-items:center;justify-content:space-between;margin-top:8px;padding-top:8px;border-top:1px solid var(--border)}
+
+/* Search results */
+.acc-search-result{background:var(--white);border:1.5px solid var(--border);border-radius:10px;margin-bottom:10px;overflow:hidden}
+.acc-search-topic-label{font-size:10px;letter-spacing:0.08em;text-transform:uppercase;color:var(--orange);font-weight:700;padding:10px 16px 0}
+
+/* Admin add buttons */
+.acc-admin-toolbar{display:none;padding:12px 24px;border-bottom:1px solid var(--border);background:var(--white);gap:8px;flex-shrink:0}
+.acc-admin-toolbar.show{display:flex}
+
 .qa-header{padding:16px 24px 12px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;justify-content:space-between;flex-shrink:0;background:var(--white);gap:12px}
 .qa-title{font-family:'DM Serif Display',serif;font-size:21px;color:var(--text)}
 .qa-title span{font-family:'DM Sans',sans-serif;font-size:13px;color:var(--muted);font-weight:400;margin-left:8px}
@@ -324,20 +381,19 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
   .home-btns{flex-direction:column;gap:12px}
   .home-btn-primary,.home-btn-secondary{width:100%;padding:14px 20px;font-size:15px}
   
-  /* QA PAGE - full width, no sidebar */
-  .qa-page{width:100vw;flex-direction:column}
-  .qa-content{width:100vw;flex:1;display:flex;flex-direction:column;overflow:hidden}
-  .qa-header{padding:12px 16px;flex-wrap:nowrap;gap:6px;width:100%}
-  .qa-title{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .qa-badge{display:none}
-  .add-q-btn{font-size:12px;padding:6px 12px}
-  .q-list{padding:0 16px 100px;width:100%}
-  .q-header{padding:14px 0;gap:10px}
-  .q-num{font-size:12px;min-width:22px}
-  .q-text{font-size:14px}
-  .q-arrow{font-size:14px}
-  .q-answer-inner{padding:0 0 14px 22px}
-  .q-answer-inner p{font-size:13px;line-height:1.7}
+  /* QA ACCORDION mobile */
+  .qa-toolbar{padding:10px 14px;gap:8px}
+  .qa-search{font-size:13px;padding:7px 12px}
+  .qa-stats{display:none}
+  .qa-scroll{padding:12px 12px 100px}
+  .acc-module-header{padding:12px 14px}
+  .acc-module-name{font-size:14px}
+  .acc-topic{padding:12px 14px 12px 20px}
+  .acc-topic-name{font-size:14px}
+  .acc-q-header{padding:12px 14px}
+  .acc-q-answer{padding:0 14px 12px 44px}
+  .acc-q-answer p{font-size:13px}
+  .add-q-btn{font-size:12px;padding:6px 10px}
   
   /* PROJECTS PAGE - full width, no sidebar */
   .projects-page{width:100vw;flex-direction:column}
@@ -351,18 +407,7 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
   .proj-section-content p{margin-bottom:6px}
   
   /* SIDEBARS - full screen slide-in panels */
-  .sidebar{
-    position:fixed;top:var(--header-h);left:0;
-    width:100vw!important;min-width:0!important;max-width:100vw!important;
-    bottom:var(--bottom-nav-h);z-index:300;
-    background:#fff;overflow-y:auto;
-    transform:translateX(-100%);
-    transition:transform 0.2s ease;
-    border-right:none;
-  }
-  .sidebar.mobile-open{transform:translateX(0)}
-  .sidebar-inner{width:100%;min-width:0}
-  .sidebar-top{padding:14px 16px 10px}
+
   .topic-list{padding:4px 0}
   .topic-btn{padding:14px 16px;font-size:15px}
   .topic-num{font-size:13px;min-width:24px}
@@ -408,7 +453,6 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
   
   /* No overlay */
   .overlay{display:none!important}
-  #sidebarCloseBtn, #scSidebarCloseBtn{display:flex!important}
   
   /* Modal */
   .modal{width:100%;max-width:100%;border-radius:12px 12px 0 0;position:fixed;bottom:0;left:0;right:0;max-height:85vh;margin:0}
@@ -416,11 +460,11 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
 }
 
 /* ===== BOTTOM NAV (mobile) ===== */
-.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav-h);background:var(--white);border-top:1.5px solid var(--border);z-index:200;align-items:center;justify-content:space-around}
-.bottom-nav-btn{background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:10px;color:var(--muted);display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 0;transition:all 0.15s;font-weight:500;flex:1}
-.bottom-nav-btn .bn-icon{font-size:22px;line-height:1}
+.bottom-nav{display:none;position:fixed;bottom:0;left:0;right:0;height:var(--bottom-nav-h);background:var(--white);border-top:1px solid var(--border);z-index:200;align-items:center;justify-content:space-around}
+.bottom-nav-btn{background:none;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:10px;color:#aaa;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;transition:color 0.15s;font-weight:500;flex:1;letter-spacing:0.01em}
+.bottom-nav-btn svg{width:24px;height:24px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;transition:stroke 0.15s}
 .bottom-nav-btn.active{color:var(--purple)}
-.bottom-nav-btn.active .bn-icon{transform:scale(1.15)}
+.bottom-nav-btn.active svg{stroke:var(--purple)}
 
 /* More Drawer */
 .more-drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.35);z-index:300}
@@ -431,7 +475,8 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
 .more-drawer-title{font-size:11px;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);font-weight:600;padding:8px 20px 12px}
 .more-drawer-item{display:flex;align-items:center;gap:14px;padding:14px 20px;cursor:pointer;transition:background 0.15s;border:none;background:none;width:100%;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--text);font-weight:500}
 .more-drawer-item:hover{background:var(--surface)}
-.more-drawer-item .di-icon{font-size:22px;width:28px;text-align:center}
+.more-drawer-item .di-icon{width:22px;height:22px;flex-shrink:0;color:var(--text)}
+.more-drawer-item.danger .di-icon{color:#e24b4a}
 .more-drawer-item.active{color:var(--purple)}
 .more-drawer-item.danger{color:#e24b4a}
 .more-drawer-divider{height:1px;background:var(--border);margin:8px 0}
@@ -454,7 +499,6 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
 <!-- HEADER -->
 <div class="header" id="mainHeader" style="display:none">
   <div class="header-left">
-    <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
     <div class="logo-text" onclick="switchPage('home')">Pro<span>Edu</span>Hut</div>
   </div>
   <div class="header-right">
@@ -474,24 +518,6 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
 
 <!-- APP -->
 <div class="app" id="mainApp" style="display:none">
-
-  <!-- SIDEBAR (Q&A topics) -->
-  <div class="sidebar" id="sidebar">
-    <div class="sidebar-inner">
-      <div class="sidebar-top">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-          <div class="sidebar-label">Topics</div>
-          <button onclick="toggleSidebar()" style="display:none;background:none;border:none;font-size:20px;cursor:pointer;color:var(--muted);padding:2px 6px" id="sidebarCloseBtn">✕</button>
-        </div>
-        <input class="search-box" type="text" placeholder="Search questions..." id="searchBox" oninput="doSearch()">
-      </div>
-      <div class="topic-list" id="topicList"></div>
-      <div class="sidebar-footer" id="sidebarFooter">
-        <button class="add-topic-btn" onclick="openAddModule()" style="margin-bottom:8px;border-color:#ff6b00;color:#ff6b00">+ Add Module</button>
-        <button class="add-topic-btn" onclick="openAddTopic()">+ Add Topic</button>
-      </div>
-    </div>
-  </div>
 
   <!-- SCRIPTS SIDEBAR -->
   <div class="sc-sidebar" id="scSidebar" style="display:none">
@@ -527,18 +553,16 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
 
     <!-- Q&A PAGE -->
     <div class="qa-page" id="qaPage">
-      <div class="qa-content">
-        <div class="qa-header">
-          <div class="qa-title" id="qaTitle">Select a topic <span id="qaCount"></span></div>
-          <div class="qa-header-right">
-            <span class="qa-badge" id="qaBadge"></span>
-            <button class="add-q-btn" id="addQBtn" onclick="openAddQ()">+ Add Question</button>
-          </div>
-        </div>
-        <div class="q-list" id="qList">
-          <div class="loading"><div class="loading-spinner"></div>Loading...</div>
-        </div>
+      <div class="qa-toolbar">
+        <input class="qa-search" type="text" placeholder="🔍 Search questions..." id="searchBox" oninput="doSearch()">
+        <span class="qa-stats" id="qaStats"></span>
+        <button class="add-q-btn" id="addQBtn" onclick="openAddQ()" style="display:none">+ Add Question</button>
       </div>
+      <div class="acc-admin-toolbar" id="accAdminToolbar">
+        <button class="add-topic-btn" onclick="openAddModule()" style="border-color:#ff6b00;color:#ff6b00">+ Add Module</button>
+        <button class="add-topic-btn" onclick="openAddTopic()">+ Add Topic</button>
+      </div>
+      <div class="qa-scroll" id="qaScroll"></div>
     </div>
 
     <!-- PROJECTS PAGE -->
@@ -586,11 +610,26 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
 
 <!-- BOTTOM NAV (mobile) -->
 <div class="bottom-nav" id="bottomNav" style="display:none">
-  <button class="bottom-nav-btn active" id="bnHome" onclick="switchPage('home')"><span class="bn-icon">🏠</span>Home</button>
-  <button class="bottom-nav-btn" id="bnQA" onclick="switchPage('qa')"><span class="bn-icon">📚</span>Q&A</button>
-  <button class="bottom-nav-btn" id="bnScripts" onclick="switchPage('scripts')"><span class="bn-icon">📜</span>Scripts</button>
-  <button class="bottom-nav-btn" id="bnBookmarks" onclick="switchPage('bookmarks')"><span class="bn-icon">⭐</span>Saved</button>
-  <button class="bottom-nav-btn" id="bnMore" onclick="openMoreDrawer()"><span class="bn-icon">☰</span>More</button>
+  <button class="bottom-nav-btn active" id="bnHome" onclick="switchPage('home')">
+    <svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H5a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+    Home
+  </button>
+  <button class="bottom-nav-btn" id="bnQA" onclick="switchPage('qa')">
+    <svg viewBox="0 0 24 24"><path d="M4 6h16M4 10h16M4 14h10"/><circle cx="17" cy="17" r="3"/><path d="M21 21l-1.5-1.5"/></svg>
+    Q&A
+  </button>
+  <button class="bottom-nav-btn" id="bnScripts" onclick="switchPage('scripts')">
+    <svg viewBox="0 0 24 24"><path d="M8 3H6a2 2 0 00-2 2v14a2 2 0 002 2h12a2 2 0 002-2V5a2 2 0 00-2-2h-2"/><path d="M8 3a2 2 0 012-2h4a2 2 0 012 2v0a2 2 0 01-2 2h-4a2 2 0 01-2-2v0z"/><path d="M9 12l2 2 4-4"/></svg>
+    Scripts
+  </button>
+  <button class="bottom-nav-btn" id="bnBookmarks" onclick="switchPage('bookmarks')">
+    <svg viewBox="0 0 24 24"><path d="M19 21l-7-5-7 5V5a2 2 0 012-2h10a2 2 0 012 2z"/></svg>
+    Saved
+  </button>
+  <button class="bottom-nav-btn" id="bnMore" onclick="openMoreDrawer()">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="5" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1" fill="currentColor" stroke="none"/></svg>
+    More
+  </button>
 </div>
 
 <!-- MORE DRAWER -->
@@ -598,10 +637,19 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
 <div class="more-drawer" id="moreDrawer">
   <div class="more-drawer-handle"></div>
   <div class="more-drawer-title">Menu</div>
-  <button class="more-drawer-item" id="diProjects" onclick="switchPage('projects');closeMoreDrawer()"><span class="di-icon">💼</span>Projects</button>
+  <button class="more-drawer-item" id="diProjects" onclick="switchPage('projects');closeMoreDrawer()">
+    <svg class="di-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+    Projects
+  </button>
   <div class="more-drawer-divider"></div>
-  <button class="more-drawer-item" id="diAdmin" onclick="handleAdminClick();closeMoreDrawer()"><span class="di-icon">🔒</span>Admin</button>
-  <button class="more-drawer-item danger" onclick="doLogout();closeMoreDrawer()"><span class="di-icon">🚪</span>Logout</button>
+  <button class="more-drawer-item" id="diAdmin" onclick="handleAdminClick();closeMoreDrawer()">
+    <svg class="di-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+    Admin
+  </button>
+  <button class="more-drawer-item danger" onclick="doLogout();closeMoreDrawer()">
+    <svg class="di-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+    Logout
+  </button>
 </div>
 
 <!-- MODAL -->
@@ -734,7 +782,6 @@ async function initData() {
     const snap = await getDoc(DATA_REF);
     if (snap.exists()) DATA = snap.data();
     else { DATA = {topics:[]}; await setDoc(DATA_REF, DATA); }
-    if (DATA.topics?.length) activeTopicId = DATA.topics[0].id;
     renderTopics();
   } catch(e) { showToast('⚠️ Offline mode'); }
 
@@ -858,11 +905,11 @@ window.switchPage = function(page) {
 
   const isDesktop = window.innerWidth > 900;
   if(isDesktop){
-    document.getElementById('sidebar').style.display = page==='qa' ? 'flex' : 'none';
+    // sidebar removed
     document.getElementById('projSidebar').style.display = page==='projects' ? 'flex' : 'none';
     document.getElementById('scSidebar').style.display = page==='scripts' ? 'flex' : 'none';
   } else {
-    document.getElementById('sidebar').style.display = 'none';
+    // sidebar removed
     document.getElementById('projSidebar').style.display = 'none';
     document.getElementById('scSidebar').style.display = 'none';
   }
@@ -877,8 +924,7 @@ window.switchPage = function(page) {
   document.getElementById('diProjects')?.classList.toggle('active', page==='projects');
 
   if(page==='qa'){
-    if(window.innerWidth<=900) document.getElementById('sidebar').classList.add('mobile-open');
-    if(activeTopicId) renderQuestions(); else clearQAPanel();
+    renderQAAccordion();
   }
   if(page==='projects'){
     if(window.innerWidth<=900) document.getElementById('projSidebar').classList.add('mobile-open');
@@ -899,30 +945,30 @@ window.toggleSidebar = function() {
     let target;
     if(activePage==='projects') target = document.getElementById('projSidebar');
     else if(activePage==='scripts') target = document.getElementById('scSidebar');
-    else target = document.getElementById('sidebar');
+    else target = null;
     const isOpen = target.classList.contains('mobile-open');
     if(isOpen) {
       target.classList.remove('mobile-open');
     } else {
       // Close all sidebars first
-      document.getElementById('sidebar').classList.remove('mobile-open');
+      // sidebar removed
       document.getElementById('projSidebar').classList.remove('mobile-open');
       document.getElementById('scSidebar').classList.remove('mobile-open');
       target.classList.add('mobile-open');
     }
   } else {
     sidebarOpen = !sidebarOpen;
-    document.getElementById('sidebar').classList.toggle('collapsed', !sidebarOpen);
+    // sidebar removed
     document.getElementById('projSidebar').classList.toggle('collapsed', !sidebarOpen);
     document.getElementById('scSidebar').classList.toggle('collapsed', !sidebarOpen);
   }
 };
 
 window.closeMobileSidebar = function() {
-  document.getElementById('sidebar').classList.remove('mobile-open');
+  // sidebar removed
   document.getElementById('projSidebar').classList.remove('mobile-open');
   document.getElementById('scSidebar').classList.remove('mobile-open');
-  document.getElementById('overlay').classList.remove('show');
+  
 };
 
 // ===== ADMIN =====
@@ -961,9 +1007,9 @@ function updateAdminUI() {
     // admin shown in More drawer
     // Update drawer admin icon
     const diAdmin = document.getElementById('diAdmin');
-    if(diAdmin){ diAdmin.querySelector('.di-icon').textContent='🔓'; }
+    if(diAdmin){ diAdmin.classList.add('unlocked'); }
     document.getElementById('addQBtn').style.display='flex';
-    document.getElementById('sidebarFooter').style.display='block';
+    document.getElementById('accAdminToolbar').classList.add('show');
     document.getElementById('projFooter').style.display='block';
     document.getElementById('addScBtn').style.display='flex';
     document.getElementById('scSidebarFooter').style.display='block';
@@ -973,9 +1019,9 @@ function updateAdminUI() {
     if(logoutBtn) logoutBtn.style.display='flex';
     // admin shown in More drawer
     const diAdmin = document.getElementById('diAdmin');
-    if(diAdmin){ diAdmin.querySelector('.di-icon').textContent='🔒'; }
+    if(diAdmin){ diAdmin.classList.remove('unlocked'); }
     document.getElementById('addQBtn').style.display='none';
-    document.getElementById('sidebarFooter').style.display='none';
+    document.getElementById('accAdminToolbar').classList.remove('show');
     document.getElementById('projFooter').style.display='none';
     document.getElementById('addScBtn').style.display='none';
     document.getElementById('scSidebarFooter').style.display='none';
@@ -987,64 +1033,189 @@ function updateAdminUI() {
   if (activePage==='scripts') { renderScCategories(); renderScripts(); }
 }
 
-// ===== TOPICS =====
+// ===== QA ACCORDION =====
 function renderTopics() {
-  const topics = DATA.topics || [];
-  const nav = document.getElementById('topicList');
-  if (!topics.length) { nav.innerHTML='<div class="empty"><p>No topics yet.</p></div>'; return; }
+  renderQAAccordion();
+}
 
-  // Group by module (for now all ITSM)
+function renderQAAccordion(searchQs, highlight) {
+  const scroll = document.getElementById('qaScroll');
+  if (!scroll) return;
+  const topics = DATA.topics || [];
+
+  // Stats
+  const totalTopics = topics.filter(t=>!t._isModule).length;
+  const totalQs = topics.filter(t=>!t._isModule).reduce((s,t)=>s+(t.questions?.length||0),0);
+  const statsEl = document.getElementById('qaStats');
+  if(statsEl) statsEl.textContent = `${totalTopics} topics · ${totalQs} Q&As`;
+
+  // Search mode
+  if(searchQs) {
+    if(!searchQs.length){ scroll.innerHTML='<div class="empty"><div class="empty-icon">🔍</div><p>No results found.</p></div>'; return; }
+    scroll.innerHTML = searchQs.map((qa,i) => {
+      let qText = esc(qa.q);
+      if(highlight){ const re=new RegExp(`(${highlight.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'); qText=qText.replace(re,'<mark class="highlight">$1</mark>'); }
+      const topicName = DATA.topics?.find(t=>t.questions?.includes(qa))?.name || '';
+      const ansHtml = qa.a.split('\n').filter(l=>l.trim()).map(l=>`<p>${esc(l)}</p>`).join('');
+      const bmKey = encodeURIComponent(qa.q).slice(0,120);
+      const isBm = bookmarks.includes(bmKey);
+      return `<div class="acc-search-result">
+        <div class="acc-search-topic-label">${esc(topicName)}</div>
+        <div class="acc-q-item" id="sqi-${i}">
+          <div class="acc-q-header" onclick="toggleAccQ('sqi-${i}')">
+            <span class="acc-q-num">${i+1}.</span>
+            <span class="acc-q-text">${qText}</span>
+            <button class="bm-btn${isBm?' active':''}" onclick="toggleBookmark(event,'${qa.q.replace(/'/g,"&#39;")}');event.stopPropagation()">${isBm?'⭐':'☆'}</button>
+            <span class="acc-q-arrow">▾</span>
+          </div>
+          <div class="acc-q-answer" style="display:none">${ansHtml}</div>
+        </div>
+      </div>`;
+    }).join('');
+    return;
+  }
+
+  if(!topics.length){
+    scroll.innerHTML='<div style="padding:80px 24px;text-align:center"><div style="font-size:48px;margin-bottom:16px;opacity:0.3">📚</div><p style="color:var(--muted)">No topics yet.</p></div>';
+    return;
+  }
+
+  // Group by module
   const modules = {};
-  topics.forEach((t,i) => {
-    const mod = t.module || 'ITSM';
-    if (!modules[mod]) modules[mod] = [];
-    modules[mod].push({...t, _globalIdx: i});
+  const moduleOrder = [];
+  topics.forEach(t => {
+    const mod = t.module || 'General';
+    if(!modules[mod]){ modules[mod]=[]; moduleOrder.push(mod); }
+    modules[mod].push(t);
   });
 
-  nav.innerHTML = Object.entries(modules).map(([modName, modTopics]) => {
-    const isCollapsed = collapsedModules[modName] || false;
-    const totalQ = modTopics.reduce((s,t)=>s+t.questions.length,0);
-    return `
-    <div class="module-header${isCollapsed?' collapsed':''}" onclick="toggleModule('${modName}')" oncontextmenu="showModuleCtxMenu(event,'${modName}')">
-      <span>${esc(modName)} <span style="font-size:10px;font-weight:400;opacity:0.7">(${modTopics.length} topics · ${totalQ} Q&As)</span></span>
-      <span class="module-arrow">▾</span>
-    </div>
-    <div class="module-topics${isCollapsed?' collapsed':''}" id="mod-${modName}" style="max-height:${isCollapsed?'0':'2000px'}">
-      ${modTopics.map((t, pi) => {
-        const total = t.questions.length;
-        return `
-          <button class="topic-btn${t.id===activeTopicId&&!searchMode?' active':''}"
-            onclick="selectTopic('${t.id}')"
-            oncontextmenu="showCtxMenu(event,'${t.id}')"
-            draggable="${isAdmin}"
-            ondragstart="onDragStart(event,${t._globalIdx})"
-            ondragover="onDragOver(event,${t._globalIdx})"
-            ondragleave="onDragLeave(event)"
-            ondrop="onDrop(event,${t._globalIdx})"
-            ondragend="onDragEnd(event)">
-            ${isAdmin ? '<span class="drag-handle">⠿</span>' : ''}
-            <span class="topic-num">${pi+1}.</span>
-            <span class="topic-name">${esc(t.name)}</span>
-            <span class="topic-tc">${total}</span>
-          </button>
-          `;
-      }).join('')}
+  scroll.innerHTML = moduleOrder.map(modName => {
+    let topicCounter = 0;
+    const modTopics = modules[modName];
+    const totalQ = modTopics.reduce((s,t)=>s+(t.questions?.length||0),0);
+    const isOpen = !collapsedModules[modName];
+    const adminModActions = isAdmin ? `<button onclick="showModuleCtxMenu(event,'${modName}');event.stopPropagation()" style="background:none;border:none;font-size:16px;cursor:pointer;padding:2px 6px;color:var(--muted)">⋯</button>` : '';
+    return `<div class="acc-module${isOpen?' open':''}" id="amod-${modName}">
+      <div class="acc-module-header" onclick="toggleAccModule('${modName}')">
+        <span class="acc-module-name">${esc(modName)}</span>
+        <span class="acc-module-meta">${modTopics.length} topics · ${totalQ} Q&As</span>
+        ${adminModActions}
+        <span class="acc-module-arrow">${isOpen?'−':'+'}</span>
+      </div>
+      <div class="acc-module-body">
+        ${modTopics.map(t => {
+          topicCounter++;
+          const qCount = t.questions?.length || 0;
+          const adminTopicActions = isAdmin ? `<span class="acc-topic-actions"><button onclick="showCtxMenu(event,'${t.id}');event.stopPropagation()" style="background:none;border:none;font-size:14px;cursor:pointer;padding:2px 6px;color:var(--muted)">⋯</button></span>` : '';
+          const qs = t.questions || [];
+          const qHtml = qs.map((qa,qi) => {
+            const ansHtml = qa.a.split('\n').filter(l=>l.trim()).map(l=>`<p>${esc(l)}</p>`).join('');
+            const bmKey = encodeURIComponent(qa.q).slice(0,120);
+            const isBm = bookmarks.includes(bmKey);
+            const adminQActions = isAdmin ? `<div class="acc-admin-bar"><div style="font-size:11px;color:var(--muted)">Q${qi+1}</div><div style="display:flex;gap:6px"><button class="q-act" onclick="accEditQ('${t.id}',${qi});event.stopPropagation()">Edit</button><button class="q-act del" onclick="accDeleteQ('${t.id}',${qi});event.stopPropagation()">Delete</button></div></div>` : '';
+            return `<div class="acc-q-item" id="aqi-${t.id}-${qi}">
+              <div class="acc-q-header" onclick="toggleAccQ('aqi-${t.id}-${qi}','${t.id}',${qi})">
+                <span class="acc-q-num">${qi+1}.</span>
+                <span class="acc-q-text">${esc(qa.q)}</span>
+                <button class="bm-btn${isBm?' active':''}" onclick="toggleBookmark(event,'${qa.q.replace(/'/g,"&#39;")}');event.stopPropagation()">${isBm?'⭐':'☆'}</button>
+                <span class="acc-q-arrow">▾</span>
+              </div>
+              <div class="acc-q-answer" style="display:none">${ansHtml}${adminQActions}</div>
+            </div>`;
+          }).join('');
+          const addQBtn = isAdmin ? `<div style="padding:10px 24px;border-top:1px dashed var(--border)"><button onclick="accOpenAddQ('${t.id}')" style="background:none;border:1.5px dashed var(--border2);border-radius:6px;padding:6px 14px;font-size:12px;color:var(--muted);cursor:pointer;font-family:DM Sans,sans-serif;width:100%;transition:all 0.15s" onmouseover="this.style.borderColor='var(--purple)';this.style.color='var(--purple)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--muted)'">+ Add Question</button></div>` : '';
+          return `<div>
+            <div class="acc-topic${activeTopicId===t.id?' open':''}" id="atopic-${t.id}" onclick="toggleAccTopic('${t.id}')">
+              <span class="acc-topic-num">${topicCounter}.</span>
+              <span class="acc-topic-name">${esc(t.name)}</span>
+              ${adminTopicActions}
+              <span class="acc-topic-count">${qCount}</span>
+              <span class="acc-topic-arrow">${activeTopicId===t.id?'−':'+'}</span>
+            </div>
+            <div class="acc-questions" id="aqblock-${t.id}" style="display:${activeTopicId===t.id?'block':'none'}">
+              ${qHtml}
+              ${addQBtn}
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
     </div>`;
   }).join('');
-
-  const total = topics.reduce((s,t)=>s+t.questions.length,0);
-  // Show current module stats in badge
-  const activeTopic = topics.find(t=>t.id===activeTopicId);
-  const activeModule = activeTopic?.module || null;
-  if(activeModule){
-    const modTopicsAll = topics.filter(t=>(t.module||'ITSM')===activeModule);
-    const modTotal = modTopicsAll.reduce((s,t)=>s+t.questions.length,0);
-    document.getElementById('qaBadge').textContent = `${activeModule} · ${modTopicsAll.length} topics · ${modTotal} Q&As`;
-  } else {
-    const total = topics.reduce((s,t)=>s+t.questions.length,0);
-    document.getElementById('qaBadge').textContent = `${topics.length} topics · ${total} Q&As`;
-  }
 }
+
+window.toggleAccModule = function(modName) {
+  collapsedModules[modName] = !collapsedModules[modName];
+  const el = document.getElementById('amod-'+modName);
+  if(el){
+    const isOpen = !collapsedModules[modName];
+    el.classList.toggle('open', isOpen);
+    const arrow = el.querySelector('.acc-module-arrow');
+    if(arrow) arrow.textContent = isOpen ? '−' : '+';
+  }
+};
+
+window.toggleAccTopic = function(id) {
+  const wasActive = activeTopicId === id;
+  // Reset all topic arrows to +
+  document.querySelectorAll('.acc-topic-arrow').forEach(el => el.textContent = '+');
+  document.querySelectorAll('.acc-topic').forEach(el => el.classList.remove('open'));
+  document.querySelectorAll('.acc-questions').forEach(el => el.style.display='none');
+
+  activeTopicId = wasActive ? null : id;
+  searchMode = false;
+
+  if(!wasActive){
+    const topicEl = document.getElementById('atopic-'+id);
+    const qBlock = document.getElementById('aqblock-'+id);
+    if(topicEl){
+      topicEl.classList.add('open');
+      const arrow = topicEl.querySelector('.acc-topic-arrow');
+      if(arrow) arrow.textContent = '−';
+    }
+    if(qBlock) qBlock.style.display='block';
+  }
+};
+
+window.toggleAccQ = function(elId, topicId, qi) {
+  const el = document.getElementById(elId);
+  if(!el) return;
+  const ans = el.querySelector('.acc-q-answer');
+  const isOpen = el.classList.contains('open');
+  // Close all in same block
+  const block = el.closest('.acc-questions, .acc-search-result');
+  block?.querySelectorAll('.acc-q-item.open').forEach(x => {
+    x.classList.remove('open');
+    x.querySelector('.acc-q-answer').style.display='none';
+  });
+  if(!isOpen){
+    el.classList.add('open');
+    if(ans) ans.style.display='block';
+    // Track read progress
+    if(topicId && qi!==undefined){
+      if(!readQuestions[topicId]) readQuestions[topicId]=[];
+      if(!readQuestions[topicId].includes(qi)){ readQuestions[topicId].push(qi); saveReadProgress(); }
+    }
+  }
+};
+
+window.accOpenAddQ = function(topicId) {
+  activeTopicId = topicId;
+  openAddQ();
+};
+
+window.accEditQ = function(topicId, qi) {
+  activeTopicId = topicId;
+  const topic = DATA.topics?.find(t=>t.id===topicId);
+  currentQs = topic?.questions || [];
+  openEditQ(qi);
+};
+
+window.accDeleteQ = function(topicId, qi) {
+  activeTopicId = topicId;
+  const topic = DATA.topics?.find(t=>t.id===topicId);
+  currentQs = topic?.questions || [];
+  deleteQ(qi);
+};
 
 window.openAddModule = function() {
   openModal(`<h3>Add New Module</h3>
@@ -1097,23 +1268,14 @@ window.toggleModule = function(modName) {
   }
 };
 
-function clearQAPanel() {
-  document.getElementById('qaTitle').innerHTML = '<span style="color:var(--muted);font-family:DM Sans,sans-serif;font-size:18px;font-weight:400">Select a topic to start reading</span>';
-  document.getElementById('qaBadge').textContent = '';
-  document.getElementById('qList').innerHTML = `
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;padding:80px 24px;text-align:center">
-      <div style="font-size:56px;margin-bottom:20px">📖</div>
-      <div style="font-size:17px;font-weight:500;color:var(--purple);margin-bottom:8px">Ready to learn?</div>
-      <div style="font-size:14px;color:var(--muted)">Expand a module from the sidebar and select a topic to start reading.</div>
-    </div>`;
-}
+function clearQAPanel() { renderQAAccordion(); }
 
 window.selectTopic = function(id) {
   activeTopicId = id; searchMode = false;
   document.getElementById('searchBox').value = '';
   // First close sidebar
-  document.getElementById('sidebar').classList.remove('mobile-open');
-  document.getElementById('overlay').classList.remove('show');
+  // sidebar removed
+  
   // Then render after transition
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
@@ -1208,8 +1370,11 @@ window.renameModule = function(oldName) {
   const newName = document.getElementById('mInput').value.trim().toUpperCase();
   if(!newName || newName===oldName) { closeModal(); return; }
   DATA.topics?.forEach(t=>{ if((t.module||'ITSM')===oldName) t.module=newName; });
-  if(collapsedModules[oldName]!==undefined){ collapsedModules[newName]=collapsedModules[oldName]; delete collapsedModules[oldName]; }
-  saveData(); closeModal(); renderTopics();
+  collapsedModules[newName] = collapsedModules[oldName] || false;
+  delete collapsedModules[oldName];
+  closeModal();
+  saveData();
+  setTimeout(()=>renderQAAccordion(), 100);
 };
 
 window.ctxModDelete = function() {
@@ -1258,68 +1423,20 @@ window.onDragEnd = function(e) {
   dragSrcIdx=null;
 };
 
+window.selectTopic = function(id) { toggleAccTopic(id); };
+
 // ===== QUESTIONS =====
-function renderQuestions(qs, highlight) {
-  const topic = DATA.topics?.find(t=>t.id===activeTopicId);
-  if (!topic && !searchMode) {
-    clearQAPanel();
-    return;
-  }
-  currentQs = qs || (topic?.questions || []);
-  const title = searchMode ? 'Search Results' : (topic?.name||'');
-  document.getElementById('qaTitle').innerHTML = `${esc(title)} <span>${currentQs.length} question${currentQs.length!==1?'s':''}</span>`;
-
-  const list = document.getElementById('qList');
-  if (!currentQs.length) { list.innerHTML='<div class="empty"><div class="empty-icon">📭</div><p>No questions found.</p></div>'; return; }
-
-  list.innerHTML = currentQs.map((qa,i) => {
-    let qText = esc(qa.q);
-    if(highlight){ const re=new RegExp(`(${highlight.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`, 'gi'); qText=qText.replace(re,'<mark class="highlight">$1</mark>'); }
-    const ansHtml = qa.a.split('\n').filter(l=>l.trim()).map(l=>`<p>${esc(l)}</p>`).join('');
-    const topicName = searchMode ? DATA.topics?.find(t=>t.questions?.includes(qa))?.name : null;
-    const badge = topicName ? `<span style="display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;font-weight:600;background:var(--orange-light);color:var(--orange);border:1px solid rgba(255,107,0,0.2);margin-bottom:4px">${esc(topicName)}</span><br>` : '';
-    const adminActions = isAdmin ? `<div class="q-actions"><button class="q-act" onclick="openEditQ(${i});event.stopPropagation()">Edit</button><button class="q-act del" onclick="deleteQ(${i});event.stopPropagation()">Delete</button></div>` : '';
-    const bmKey = encodeURIComponent(qa.q).slice(0,120);
-    const isBm = bookmarks.includes(bmKey);
-    const starBtn = `<button class="bm-btn${isBm?' active':''}" onclick="toggleBookmark(event,'${qa.q.replace(/'/g,"&#39;")}')" title="${isBm?'Remove bookmark':'Save question'}">${isBm?'⭐':'☆'}</button>`;
-    return `<div class="q-item" id="qi-${i}">
-      <div class="q-header" onclick="toggleQ(${i})">
-        <span class="q-num">${i+1}.</span>
-        <span class="q-text">${badge}${qText}</span>
-        ${starBtn}
-        <span class="q-arrow">▾</span>
-      </div>
-      <div class="q-answer"><div class="q-answer-inner">${ansHtml}${adminActions}</div></div>
-    </div>`;
-  }).join('');
-}
-
-window.toggleQ = function(i) {
-  const el=document.getElementById(`qi-${i}`);
-  const isOpen=el.classList.contains('open');
-  document.querySelectorAll('.q-item.open').forEach(x=>x.classList.remove('open'));
-  if(!isOpen){
-    el.classList.add('open');
-    // Track progress
-    if(activeTopicId && !searchMode){
-      if(!readQuestions[activeTopicId]) readQuestions[activeTopicId]=[];
-      if(!readQuestions[activeTopicId].includes(i)) {
-        readQuestions[activeTopicId].push(i);
-        saveReadProgress();
-        renderTopics();
-      }
-    }
-  }
-};
+function renderQuestions(qs, highlight) { renderQAAccordion(qs, highlight); }
+window.toggleQ = function(i) { toggleAccQ('qi-'+i); };
 
 window.doSearch = function() {
-  const raw=document.getElementById('searchBox').value;
-  const q=raw.trim().toLowerCase();
-  if(!q){ searchMode=false; renderTopics(); renderQuestions(); return; }
-  searchMode=true;
-  const all=[];
+  const raw = document.getElementById('searchBox').value;
+  const q = raw.trim().toLowerCase();
+  if(!q){ searchMode=false; renderQAAccordion(); return; }
+  searchMode = true;
+  const all = [];
   DATA.topics?.forEach(t=>t.questions?.forEach(qa=>{ if(qa.q.toLowerCase().includes(q)||qa.a.toLowerCase().includes(q)) all.push(qa); }));
-  renderTopics(); renderQuestions(all, raw.trim());
+  renderQAAccordion(all, raw.trim());
 };
 
 // ===== MODAL =====
@@ -1496,7 +1613,7 @@ window.selectProject = function(id) {
   activeProjectId = id;
   // First close sidebar
   document.getElementById('projSidebar').classList.remove('mobile-open');
-  document.getElementById('overlay').classList.remove('show');
+  
   // Then render after transition
   requestAnimationFrame(() => {
     requestAnimationFrame(() => {
@@ -1797,7 +1914,7 @@ document.addEventListener('keydown',function(e){ if(e.key==='Escape') window.clo
 checkAuth();
 // On desktop hide sidebar initially until QA page is shown
 if(window.innerWidth>768){
-  document.getElementById('sidebar').style.display='none';
+  // sidebar removed
   document.getElementById('scSidebar').style.display='none';
 }
 
