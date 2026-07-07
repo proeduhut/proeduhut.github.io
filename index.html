@@ -643,12 +643,19 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
 <div class="ctx-menu" id="ctxMenu">
   <div class="ctx-item" onclick="ctxRename()">✏️ Rename Topic</div>
   <div class="ctx-divider"></div>
+  <div class="ctx-item" onclick="ctxMoveUp()">⬆️ Move Up</div>
+  <div class="ctx-item" onclick="ctxMoveDown()">⬇️ Move Down</div>
+  <div class="ctx-item" onclick="ctxMoveToModule()">📁 Move to Module</div>
+  <div class="ctx-divider"></div>
   <div class="ctx-item danger" onclick="ctxDelete()">🗑️ Delete Topic</div>
 </div>
 
 <!-- MODULE CONTEXT MENU -->
 <div class="ctx-menu" id="ctxModMenu">
   <div class="ctx-item" onclick="ctxModRename()">✏️ Rename Module</div>
+  <div class="ctx-divider"></div>
+  <div class="ctx-item" onclick="ctxModMoveUp()">⬆️ Move Up</div>
+  <div class="ctx-item" onclick="ctxModMoveDown()">⬇️ Move Down</div>
   <div class="ctx-divider"></div>
   <div class="ctx-item danger" onclick="ctxModDelete()">🗑️ Delete Module</div>
 </div>
@@ -1059,14 +1066,19 @@ function renderQAAccordion(searchQs, highlight) {
     return;
   }
 
-  // Group by module
+  // Group by module - use stored order
   const modules = {};
-  const moduleOrder = [];
+  const seenModules = [];
   topics.forEach(t => {
-    const mod = t.module || 'General';
-    if(!modules[mod]){ modules[mod]=[]; moduleOrder.push(mod); }
+    const mod = t.module || 'ITSM';
+    if(!modules[mod]){ modules[mod]=[]; seenModules.push(mod); }
     modules[mod].push(t);
   });
+
+  // Merge stored order with discovered modules
+  const moduleOrder = DATA.moduleOrder?.length
+    ? [...DATA.moduleOrder.filter(m=>seenModules.includes(m)), ...seenModules.filter(m=>!DATA.moduleOrder.includes(m))]
+    : seenModules;
 
   scroll.innerHTML = moduleOrder.map(modName => {
     let topicCounter = 0;
@@ -1307,6 +1319,99 @@ window.renameTopic = function() {
 window.ctxDelete = function() {
   hideCtxMenu();
   deleteTopic(ctxTopicId);
+};
+
+// ── Topic Move functions ──────────────────────────────────
+function getTopicModuleOrder() {
+  const topics = DATA.topics || [];
+  const seenMods = [];
+  topics.forEach(t => { const m = t.module||'ITSM'; if(!seenMods.includes(m)) seenMods.push(m); });
+  return DATA.moduleOrder?.length
+    ? [...DATA.moduleOrder.filter(m=>seenMods.includes(m)), ...seenMods.filter(m=>!DATA.moduleOrder.includes(m))]
+    : seenMods;
+}
+
+window.ctxMoveUp = function() {
+  hideCtxMenu();
+  const id = ctxTopicId;
+  const topic = DATA.topics?.find(t=>t.id===id);
+  if(!topic) return;
+  const mod = topic.module || 'ITSM';
+  const modTopics = DATA.topics.filter(t=>(t.module||'ITSM')===mod);
+  const idx = modTopics.findIndex(t=>t.id===id);
+  if(idx <= 0) { showToast('Already at top'); return; }
+  // Swap in DATA.topics
+  const globalIdx = DATA.topics.indexOf(modTopics[idx]);
+  const globalPrev = DATA.topics.indexOf(modTopics[idx-1]);
+  [DATA.topics[globalIdx], DATA.topics[globalPrev]] = [DATA.topics[globalPrev], DATA.topics[globalIdx]];
+  saveData(); renderTopics();
+};
+
+window.ctxMoveDown = function() {
+  hideCtxMenu();
+  const id = ctxTopicId;
+  const topic = DATA.topics?.find(t=>t.id===id);
+  if(!topic) return;
+  const mod = topic.module || 'ITSM';
+  const modTopics = DATA.topics.filter(t=>(t.module||'ITSM')===mod);
+  const idx = modTopics.findIndex(t=>t.id===id);
+  if(idx >= modTopics.length-1) { showToast('Already at bottom'); return; }
+  const globalIdx = DATA.topics.indexOf(modTopics[idx]);
+  const globalNext = DATA.topics.indexOf(modTopics[idx+1]);
+  [DATA.topics[globalIdx], DATA.topics[globalNext]] = [DATA.topics[globalNext], DATA.topics[globalIdx]];
+  saveData(); renderTopics();
+};
+
+window.ctxMoveToModule = function() {
+  hideCtxMenu();
+  const id = ctxTopicId;
+  const topic = DATA.topics?.find(t=>t.id===id);
+  if(!topic) return;
+  const currentMod = topic.module || 'ITSM';
+  const allMods = getTopicModuleOrder().filter(m=>m!==currentMod);
+  if(!allMods.length) { showToast('No other modules available'); return; }
+  const opts = allMods.map(m=>`<option value="${m}">${esc(m)}</option>`).join('');
+  openModal(`<h3>Move Topic</h3>
+    <p style="font-size:13px;color:var(--muted);margin-bottom:14px">Moving: <strong>${esc(topic.name)}</strong></p>
+    <label>Move to Module</label>
+    <select id="moveModSel">${opts}</select>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" onclick="confirmMoveToModule('${id}')">Move</button>
+    </div>`);
+};
+
+window.confirmMoveToModule = function(id) {
+  const newMod = document.getElementById('moveModSel').value;
+  const topic = DATA.topics?.find(t=>t.id===id);
+  if(!topic || !newMod) return;
+  topic.module = newMod;
+  closeModal();
+  saveData(); renderTopics();
+  showToast(`✅ Moved to ${newMod}`);
+};
+
+// ── Module Move functions ─────────────────────────────────
+window.ctxModMoveUp = function() {
+  hideCtxMenu();
+  const name = ctxModName;
+  const order = getTopicModuleOrder();
+  const idx = order.indexOf(name);
+  if(idx <= 0) { showToast('Already at top'); return; }
+  [order[idx], order[idx-1]] = [order[idx-1], order[idx]];
+  DATA.moduleOrder = order;
+  saveData(); renderTopics();
+};
+
+window.ctxModMoveDown = function() {
+  hideCtxMenu();
+  const name = ctxModName;
+  const order = getTopicModuleOrder();
+  const idx = order.indexOf(name);
+  if(idx >= order.length-1) { showToast('Already at bottom'); return; }
+  [order[idx], order[idx+1]] = [order[idx+1], order[idx]];
+  DATA.moduleOrder = order;
+  saveData(); renderTopics();
 };
 
 function hideCtxMenu() {
