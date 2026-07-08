@@ -557,6 +557,7 @@ code[class*="language-"]{font-family:'Fira Code','Fira Mono','Cascadia Code',Con
       <div class="acc-admin-toolbar" id="accAdminToolbar">
         <button class="add-topic-btn" onclick="openAddModule()" style="border-color:#ff6b00;color:#ff6b00">+ Add Module</button>
         <button class="add-topic-btn" onclick="openAddTopic()">+ Add Topic</button>
+        <button class="add-topic-btn" onclick="showRestoreBackup()" style="border-color:#6b21e8;color:#6b21e8;margin-left:auto">🔄 Restore Backup</button>
       </div>
       <div class="qa-scroll" id="qaScroll"></div>
     </div>
@@ -805,6 +806,15 @@ async function initData() {
     if (snap.exists() && !saveTimeout) {
       DATA = snap.data();
       if (!activeTopicId || !DATA.topics?.find(t=>t.id===activeTopicId)) activeTopicId = DATA.topics?.[0]?.id || null;
+      // ── AUTO BACKUP ──────────────────────────────
+      if(DATA.topics?.length) {
+        try {
+          localStorage.setItem('proeduhut_backup', JSON.stringify(DATA));
+          localStorage.setItem('proeduhut_backup_time', new Date().toLocaleString());
+          localStorage.setItem('proeduhut_backup_count', DATA.topics.length);
+        } catch(e) {}
+      }
+      // ─────────────────────────────────────────────
       renderTopics();
       if (!searchMode && activePage==='qa') renderQuestions();
     }
@@ -1208,6 +1218,66 @@ window.accDeleteQ = function(topicId, qi) {
   deleteQ(qi);
 };
 
+// ===== BACKUP & RESTORE =====
+window.showRestoreBackup = function() {
+  const backup = localStorage.getItem('proeduhut_backup');
+  const time = localStorage.getItem('proeduhut_backup_time');
+
+  if(!backup) {
+    openModal(`<h3>🔄 Restore Backup</h3>
+      <div style="padding:20px 0;text-align:center;color:var(--muted)">
+        <div style="font-size:40px;margin-bottom:12px">📭</div>
+        <p>No backup found on this device.</p>
+        <p style="font-size:12px;margin-top:8px">Backups are saved automatically every time data loads from Firebase.</p>
+      </div>
+      <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Close</button></div>`);
+    return;
+  }
+
+  let parsed;
+  try { parsed = JSON.parse(backup); } catch(e) {
+    openModal(`<h3>🔄 Restore Backup</h3><p>Backup data is corrupted.</p><div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Close</button></div>`);
+    return;
+  }
+
+  const topicCount = parsed.topics?.length || 0;
+  const qCount = parsed.topics?.reduce((s,t)=>s+(t.questions?.length||0),0) || 0;
+  const modules = [...new Set(parsed.topics?.map(t=>t.module||'ITSM')||[])];
+
+  openModal(`<h3>🔄 Restore Backup</h3>
+    <div style="background:var(--surface);border-radius:10px;padding:16px;margin-bottom:16px">
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:0.08em;color:var(--muted);margin-bottom:10px">Backup Details</div>
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--muted)">Saved on</span><strong>${time||'Unknown'}</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--muted)">Topics</span><strong>${topicCount}</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--muted)">Questions</span><strong>${qCount}</strong></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px"><span style="color:var(--muted)">Modules</span><strong>${modules.join(', ')}</strong></div>
+      </div>
+    </div>
+    <div style="background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:12px;font-size:12px;color:#856404;margin-bottom:16px">
+      ⚠️ This will <strong>replace all current Q&A data</strong> with the backup. This cannot be undone.
+    </div>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-primary" style="background:#6b21e8" onclick="confirmRestore()">Restore Now</button>
+    </div>`);
+};
+
+window.confirmRestore = function() {
+  const backup = localStorage.getItem('proeduhut_backup');
+  if(!backup) return;
+  try {
+    DATA = JSON.parse(backup);
+    closeModal();
+    saveData();
+    renderTopics();
+    clearQAPanel();
+    showToast('✅ Data restored successfully!');
+  } catch(e) {
+    showToast('❌ Restore failed');
+  }
+};
+
 window.openAddModule = function() {
   openModal(`<h3>Add New Module</h3>
     <label>Module Name</label>
@@ -1317,8 +1387,9 @@ window.renameTopic = function() {
 };
 
 window.ctxDelete = function() {
+  const id = ctxTopicId;
   hideCtxMenu();
-  deleteTopic(ctxTopicId);
+  deleteTopic(id);
 };
 
 // ── Topic Move functions ──────────────────────────────────
@@ -1332,39 +1403,36 @@ function getTopicModuleOrder() {
 }
 
 window.ctxMoveUp = function() {
+  const id = ctxTopicId; // read BEFORE hideCtxMenu clears it
   hideCtxMenu();
-  const id = ctxTopicId;
-  const topic = DATA.topics?.find(t=>t.id===id);
-  if(!topic) return;
-  const mod = topic.module || 'ITSM';
-  const modTopics = DATA.topics.filter(t=>(t.module||'ITSM')===mod);
-  const idx = modTopics.findIndex(t=>t.id===id);
-  if(idx <= 0) { showToast('Already at top'); return; }
-  // Swap in DATA.topics
-  const globalIdx = DATA.topics.indexOf(modTopics[idx]);
-  const globalPrev = DATA.topics.indexOf(modTopics[idx-1]);
-  [DATA.topics[globalIdx], DATA.topics[globalPrev]] = [DATA.topics[globalPrev], DATA.topics[globalIdx]];
+  if(!id) return;
+  const mod = DATA.topics?.find(t=>t.id===id)?.module || 'ITSM';
+  const modIndices = DATA.topics.reduce((arr,t,i) => { if((t.module||'ITSM')===mod) arr.push(i); return arr; }, []);
+  const posInMod = modIndices.findIndex(i => DATA.topics[i].id===id);
+  if(posInMod <= 0) { showToast('Already at top'); return; }
+  const idxA = modIndices[posInMod];
+  const idxB = modIndices[posInMod-1];
+  [DATA.topics[idxA], DATA.topics[idxB]] = [DATA.topics[idxB], DATA.topics[idxA]];
   saveData(); renderTopics();
 };
 
 window.ctxMoveDown = function() {
+  const id = ctxTopicId; // read BEFORE hideCtxMenu clears it
   hideCtxMenu();
-  const id = ctxTopicId;
-  const topic = DATA.topics?.find(t=>t.id===id);
-  if(!topic) return;
-  const mod = topic.module || 'ITSM';
-  const modTopics = DATA.topics.filter(t=>(t.module||'ITSM')===mod);
-  const idx = modTopics.findIndex(t=>t.id===id);
-  if(idx >= modTopics.length-1) { showToast('Already at bottom'); return; }
-  const globalIdx = DATA.topics.indexOf(modTopics[idx]);
-  const globalNext = DATA.topics.indexOf(modTopics[idx+1]);
-  [DATA.topics[globalIdx], DATA.topics[globalNext]] = [DATA.topics[globalNext], DATA.topics[globalIdx]];
+  if(!id) return;
+  const mod = DATA.topics?.find(t=>t.id===id)?.module || 'ITSM';
+  const modIndices = DATA.topics.reduce((arr,t,i) => { if((t.module||'ITSM')===mod) arr.push(i); return arr; }, []);
+  const posInMod = modIndices.findIndex(i => DATA.topics[i].id===id);
+  if(posInMod >= modIndices.length-1) { showToast('Already at bottom'); return; }
+  const idxA = modIndices[posInMod];
+  const idxB = modIndices[posInMod+1];
+  [DATA.topics[idxA], DATA.topics[idxB]] = [DATA.topics[idxB], DATA.topics[idxA]];
   saveData(); renderTopics();
 };
 
 window.ctxMoveToModule = function() {
-  hideCtxMenu();
   const id = ctxTopicId;
+  hideCtxMenu();
   const topic = DATA.topics?.find(t=>t.id===id);
   if(!topic) return;
   const currentMod = topic.module || 'ITSM';
@@ -1393,8 +1461,9 @@ window.confirmMoveToModule = function(id) {
 
 // ── Module Move functions ─────────────────────────────────
 window.ctxModMoveUp = function() {
-  hideCtxMenu();
   const name = ctxModName;
+  hideCtxMenu();
+  if(!name) return;
   const order = getTopicModuleOrder();
   const idx = order.indexOf(name);
   if(idx <= 0) { showToast('Already at top'); return; }
@@ -1404,8 +1473,9 @@ window.ctxModMoveUp = function() {
 };
 
 window.ctxModMoveDown = function() {
-  hideCtxMenu();
   const name = ctxModName;
+  hideCtxMenu();
+  if(!name) return;
   const order = getTopicModuleOrder();
   const idx = order.indexOf(name);
   if(idx >= order.length-1) { showToast('Already at bottom'); return; }
